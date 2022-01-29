@@ -1,0 +1,4916 @@
+{
+  "algorithm": "gumbel_muzero",
+  "algorithm_config": {
+    "gumbel_scale": 0.0,
+    "max_num_considered_actions": 8,
+    "qtransform": "qtransform_completed_by_mix_value",
+    "qtransform_kwargs": {
+      "maxvisit_init": 20.0,
+      "rescale_values": false,
+      "value_scale": 0.1
+    }
+  },
+  "env_config": {
+    "discount": 0.997,
+    "zero_reward": false
+  },
+  "tree": {
+    "child_stats": [
+      {
+        "action": 0,
+        "child_stats": [],
+        "prior": 0.031807259
+      },
+      {
+        "action": 1,
+        "child_stats": [
+          {
+            "action": 0,
+            "child_stats": [],
+            "prior": 0.027759546
+          },
+          {
+            "action": 1,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.024157295
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.040320456
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.053657766
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.036001984
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.036746874
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.043796346
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.0095616272
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.016304253
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.018325329
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.12684168
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.062415499
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.0049094758
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.030964103
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.10213295
+              },
+              {
+                "action": 14,
+                "child_stats": [],
+                "prior": 0.11528218
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.14529668
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.090283513
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.043001965
+              }
+            ],
+            "evaluation_index": 34,
+            "prior": 0.091378257,
+            "raw_value_view": -0.70582581,
+            "reward": -0.99481821,
+            "value_view": -0.70582581,
+            "visit": 1
+          },
+          {
+            "action": 2,
+            "child_stats": [],
+            "prior": 0.059370242
+          },
+          {
+            "action": 3,
+            "child_stats": [],
+            "prior": 0.019740265
+          },
+          {
+            "action": 4,
+            "child_stats": [],
+            "prior": 0.0086575598
+          },
+          {
+            "action": 5,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.026279666
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.010688952
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.005352234
+              },
+              {
+                "action": 3,
+                "child_stats": [
+                  {
+                    "action": 0,
+                    "child_stats": [],
+                    "prior": 0.052629236
+                  },
+                  {
+                    "action": 1,
+                    "child_stats": [],
+                    "prior": 0.044031654
+                  },
+                  {
+                    "action": 2,
+                    "child_stats": [],
+                    "prior": 0.084126636
+                  },
+                  {
+                    "action": 3,
+                    "child_stats": [],
+                    "prior": 0.094244391
+                  },
+                  {
+                    "action": 4,
+                    "child_stats": [],
+                    "prior": 0.073087774
+                  },
+                  {
+                    "action": 5,
+                    "child_stats": [],
+                    "prior": 0.01446418
+                  },
+                  {
+                    "action": 6,
+                    "child_stats": [],
+                    "prior": 0.023757404
+                  },
+                  {
+                    "action": 7,
+                    "child_stats": [
+                      {
+                        "action": 0,
+                        "child_stats": [],
+                        "prior": 0.025066141
+                      },
+                      {
+                        "action": 1,
+                        "child_stats": [],
+                        "prior": 0.011111749
+                      },
+                      {
+                        "action": 2,
+                        "child_stats": [],
+                        "prior": 0.069807701
+                      },
+                      {
+                        "action": 3,
+                        "child_stats": [],
+                        "prior": 0.023760436
+                      },
+                      {
+                        "action": 4,
+                        "child_stats": [],
+                        "prior": 0.0089704515
+                      },
+                      {
+                        "action": 5,
+                        "child_stats": [],
+                        "prior": 0.039323855
+                      },
+                      {
+                        "action": 6,
+                        "child_stats": [],
+                        "prior": 0.069856949
+                      },
+                      {
+                        "action": 7,
+                        "child_stats": [],
+                        "prior": 0.02956632
+                      },
+                      {
+                        "action": 8,
+                        "child_stats": [],
+                        "prior": 0.01631389
+                      },
+                      {
+                        "action": 9,
+                        "child_stats": [],
+                        "prior": 0.050002337
+                      },
+                      {
+                        "action": 10,
+                        "child_stats": [],
+                        "prior": 0.0082393819
+                      },
+                      {
+                        "action": 11,
+                        "child_stats": [],
+                        "prior": 0.071505614
+                      },
+                      {
+                        "action": 12,
+                        "child_stats": [],
+                        "prior": 0.16788323
+                      },
+                      {
+                        "action": 13,
+                        "child_stats": [],
+                        "prior": 0.077292845
+                      },
+                      {
+                        "action": 14,
+                        "child_stats": [],
+                        "prior": 0.10842641
+                      },
+                      {
+                        "action": 15,
+                        "child_stats": [],
+                        "prior": 0.024925886
+                      },
+                      {
+                        "action": 16,
+                        "child_stats": [],
+                        "prior": 0.18961596
+                      },
+                      {
+                        "action": 17,
+                        "child_stats": [],
+                        "prior": 0.0083308658
+                      }
+                    ],
+                    "evaluation_index": 36,
+                    "prior": 0.16970553,
+                    "raw_value_view": -0.82484126,
+                    "reward": -0.22640634,
+                    "value_view": -0.82484126,
+                    "visit": 1
+                  },
+                  {
+                    "action": 8,
+                    "child_stats": [],
+                    "prior": 0.046125583
+                  },
+                  {
+                    "action": 9,
+                    "child_stats": [],
+                    "prior": 0.0065438133
+                  },
+                  {
+                    "action": 10,
+                    "child_stats": [],
+                    "prior": 0.068696223
+                  },
+                  {
+                    "action": 11,
+                    "child_stats": [],
+                    "prior": 0.039029952
+                  },
+                  {
+                    "action": 12,
+                    "child_stats": [],
+                    "prior": 0.16078222
+                  },
+                  {
+                    "action": 13,
+                    "child_stats": [],
+                    "prior": 0.038635094
+                  },
+                  {
+                    "action": 14,
+                    "child_stats": [],
+                    "prior": 0.011160516
+                  },
+                  {
+                    "action": 15,
+                    "child_stats": [],
+                    "prior": 0.0088122748
+                  },
+                  {
+                    "action": 16,
+                    "child_stats": [],
+                    "prior": 0.042114113
+                  },
+                  {
+                    "action": 17,
+                    "child_stats": [],
+                    "prior": 0.022053434
+                  }
+                ],
+                "evaluation_index": 17,
+                "prior": 0.2636928,
+                "raw_value_view": -0.49593735,
+                "reward": 0.62798262,
+                "value_view": -0.7723552,
+                "visit": 2
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.058631979
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.011596499
+              },
+              {
+                "action": 6,
+                "child_stats": [
+                  {
+                    "action": 0,
+                    "child_stats": [],
+                    "prior": 0.022690723
+                  },
+                  {
+                    "action": 1,
+                    "child_stats": [],
+                    "prior": 0.10565472
+                  },
+                  {
+                    "action": 2,
+                    "child_stats": [],
+                    "prior": 0.027496655
+                  },
+                  {
+                    "action": 3,
+                    "child_stats": [],
+                    "prior": 0.015018417
+                  },
+                  {
+                    "action": 4,
+                    "child_stats": [],
+                    "prior": 0.092903957
+                  },
+                  {
+                    "action": 5,
+                    "child_stats": [],
+                    "prior": 0.018238369
+                  },
+                  {
+                    "action": 6,
+                    "child_stats": [],
+                    "prior": 0.025271887
+                  },
+                  {
+                    "action": 7,
+                    "child_stats": [],
+                    "prior": 0.044694006
+                  },
+                  {
+                    "action": 8,
+                    "child_stats": [],
+                    "prior": 0.095482372
+                  },
+                  {
+                    "action": 9,
+                    "child_stats": [],
+                    "prior": 0.14132053
+                  },
+                  {
+                    "action": 10,
+                    "child_stats": [],
+                    "prior": 0.044975623
+                  },
+                  {
+                    "action": 11,
+                    "child_stats": [],
+                    "prior": 0.13632022
+                  },
+                  {
+                    "action": 12,
+                    "child_stats": [],
+                    "prior": 0.034502607
+                  },
+                  {
+                    "action": 13,
+                    "child_stats": [],
+                    "prior": 0.10946304
+                  },
+                  {
+                    "action": 14,
+                    "child_stats": [],
+                    "prior": 0.027055107
+                  },
+                  {
+                    "action": 15,
+                    "child_stats": [],
+                    "prior": 0.037093796
+                  },
+                  {
+                    "action": 16,
+                    "child_stats": [],
+                    "prior": 0.0038335759
+                  },
+                  {
+                    "action": 17,
+                    "child_stats": [],
+                    "prior": 0.017984409
+                  }
+                ],
+                "evaluation_index": 25,
+                "prior": 0.18166006,
+                "raw_value_view": -0.82962394,
+                "reward": 0.6618247,
+                "value_view": -0.82962394,
+                "visit": 1
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.018686952
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.020590778
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.052557204
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.0179084
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.016506443
+              },
+              {
+                "action": 12,
+                "child_stats": [
+                  {
+                    "action": 0,
+                    "child_stats": [],
+                    "prior": 0.086220808
+                  },
+                  {
+                    "action": 1,
+                    "child_stats": [],
+                    "prior": 0.018192325
+                  },
+                  {
+                    "action": 2,
+                    "child_stats": [],
+                    "prior": 0.037970923
+                  },
+                  {
+                    "action": 3,
+                    "child_stats": [],
+                    "prior": 0.069774508
+                  },
+                  {
+                    "action": 4,
+                    "child_stats": [
+                      {
+                        "action": 0,
+                        "child_stats": [],
+                        "prior": 0.10441292
+                      },
+                      {
+                        "action": 1,
+                        "child_stats": [],
+                        "prior": 0.04348908
+                      },
+                      {
+                        "action": 2,
+                        "child_stats": [],
+                        "prior": 0.025408002
+                      },
+                      {
+                        "action": 3,
+                        "child_stats": [],
+                        "prior": 0.0074630403
+                      },
+                      {
+                        "action": 4,
+                        "child_stats": [],
+                        "prior": 0.028434923
+                      },
+                      {
+                        "action": 5,
+                        "child_stats": [],
+                        "prior": 0.051733084
+                      },
+                      {
+                        "action": 6,
+                        "child_stats": [],
+                        "prior": 0.046130121
+                      },
+                      {
+                        "action": 7,
+                        "child_stats": [],
+                        "prior": 0.052092906
+                      },
+                      {
+                        "action": 8,
+                        "child_stats": [],
+                        "prior": 0.038289487
+                      },
+                      {
+                        "action": 9,
+                        "child_stats": [],
+                        "prior": 0.058816172
+                      },
+                      {
+                        "action": 10,
+                        "child_stats": [],
+                        "prior": 0.045913462
+                      },
+                      {
+                        "action": 11,
+                        "child_stats": [],
+                        "prior": 0.10552439
+                      },
+                      {
+                        "action": 12,
+                        "child_stats": [
+                          {
+                            "action": 0,
+                            "child_stats": [],
+                            "prior": 0.047483403
+                          },
+                          {
+                            "action": 1,
+                            "child_stats": [],
+                            "prior": 0.01992641
+                          },
+                          {
+                            "action": 2,
+                            "child_stats": [],
+                            "prior": 0.072091885
+                          },
+                          {
+                            "action": 3,
+                            "child_stats": [],
+                            "prior": 0.096307196
+                          },
+                          {
+                            "action": 4,
+                            "child_stats": [],
+                            "prior": 0.093491398
+                          },
+                          {
+                            "action": 5,
+                            "child_stats": [],
+                            "prior": 0.040560015
+                          },
+                          {
+                            "action": 6,
+                            "child_stats": [],
+                            "prior": 0.15922637
+                          },
+                          {
+                            "action": 7,
+                            "child_stats": [],
+                            "prior": 0.06140117
+                          },
+                          {
+                            "action": 8,
+                            "child_stats": [],
+                            "prior": 0.048023477
+                          },
+                          {
+                            "action": 9,
+                            "child_stats": [],
+                            "prior": 0.0099987471
+                          },
+                          {
+                            "action": 10,
+                            "child_stats": [],
+                            "prior": 0.049485635
+                          },
+                          {
+                            "action": 11,
+                            "child_stats": [],
+                            "prior": 0.086711109
+                          },
+                          {
+                            "action": 12,
+                            "child_stats": [],
+                            "prior": 0.018079851
+                          },
+                          {
+                            "action": 13,
+                            "child_stats": [],
+                            "prior": 0.0044801338
+                          },
+                          {
+                            "action": 14,
+                            "child_stats": [],
+                            "prior": 0.11071848
+                          },
+                          {
+                            "action": 15,
+                            "child_stats": [],
+                            "prior": 0.034872156
+                          },
+                          {
+                            "action": 16,
+                            "child_stats": [],
+                            "prior": 0.0073172594
+                          },
+                          {
+                            "action": 17,
+                            "child_stats": [],
+                            "prior": 0.039825246
+                          }
+                        ],
+                        "evaluation_index": 47,
+                        "prior": 0.15733744,
+                        "raw_value_view": 0.44642425,
+                        "reward": -0.64633465,
+                        "value_view": 0.44642425,
+                        "visit": 1
+                      },
+                      {
+                        "action": 13,
+                        "child_stats": [],
+                        "prior": 0.13838553
+                      },
+                      {
+                        "action": 14,
+                        "child_stats": [],
+                        "prior": 0.043047052
+                      },
+                      {
+                        "action": 15,
+                        "child_stats": [],
+                        "prior": 0.017920915
+                      },
+                      {
+                        "action": 16,
+                        "child_stats": [],
+                        "prior": 0.013443603
+                      },
+                      {
+                        "action": 17,
+                        "child_stats": [],
+                        "prior": 0.022157807
+                      }
+                    ],
+                    "evaluation_index": 41,
+                    "prior": 0.17351131,
+                    "raw_value_view": 0.9513967,
+                    "reward": 0.10034418,
+                    "value_view": 0.37507349,
+                    "visit": 2
+                  },
+                  {
+                    "action": 5,
+                    "child_stats": [],
+                    "prior": 0.027084028
+                  },
+                  {
+                    "action": 6,
+                    "child_stats": [
+                      {
+                        "action": 0,
+                        "child_stats": [],
+                        "prior": 0.17364235
+                      },
+                      {
+                        "action": 1,
+                        "child_stats": [],
+                        "prior": 0.09161517
+                      },
+                      {
+                        "action": 2,
+                        "child_stats": [],
+                        "prior": 0.0077504041
+                      },
+                      {
+                        "action": 3,
+                        "child_stats": [],
+                        "prior": 0.040527299
+                      },
+                      {
+                        "action": 4,
+                        "child_stats": [],
+                        "prior": 0.018787365
+                      },
+                      {
+                        "action": 5,
+                        "child_stats": [],
+                        "prior": 0.0033732939
+                      },
+                      {
+                        "action": 6,
+                        "child_stats": [],
+                        "prior": 0.019914757
+                      },
+                      {
+                        "action": 7,
+                        "child_stats": [],
+                        "prior": 0.10623144
+                      },
+                      {
+                        "action": 8,
+                        "child_stats": [],
+                        "prior": 0.16468719
+                      },
+                      {
+                        "action": 9,
+                        "child_stats": [],
+                        "prior": 0.0034157729
+                      },
+                      {
+                        "action": 10,
+                        "child_stats": [],
+                        "prior": 0.0085332012
+                      },
+                      {
+                        "action": 11,
+                        "child_stats": [],
+                        "prior": 0.020063382
+                      },
+                      {
+                        "action": 12,
+                        "child_stats": [],
+                        "prior": 0.01455294
+                      },
+                      {
+                        "action": 13,
+                        "child_stats": [],
+                        "prior": 0.013440949
+                      },
+                      {
+                        "action": 14,
+                        "child_stats": [],
+                        "prior": 0.2046297
+                      },
+                      {
+                        "action": 15,
+                        "child_stats": [],
+                        "prior": 0.034009114
+                      },
+                      {
+                        "action": 16,
+                        "child_stats": [],
+                        "prior": 0.027761186
+                      },
+                      {
+                        "action": 17,
+                        "child_stats": [],
+                        "prior": 0.047064517
+                      }
+                    ],
+                    "evaluation_index": 45,
+                    "prior": 0.10990862,
+                    "raw_value_view": -0.06069088,
+                    "reward": 0.86944771,
+                    "value_view": -0.06069088,
+                    "visit": 1
+                  },
+                  {
+                    "action": 7,
+                    "child_stats": [],
+                    "prior": 0.005483713
+                  },
+                  {
+                    "action": 8,
+                    "child_stats": [],
+                    "prior": 0.0034494735
+                  },
+                  {
+                    "action": 9,
+                    "child_stats": [],
+                    "prior": 0.012959193
+                  },
+                  {
+                    "action": 10,
+                    "child_stats": [],
+                    "prior": 0.023023548
+                  },
+                  {
+                    "action": 11,
+                    "child_stats": [],
+                    "prior": 0.0054022926
+                  },
+                  {
+                    "action": 12,
+                    "child_stats": [],
+                    "prior": 0.060578737
+                  },
+                  {
+                    "action": 13,
+                    "child_stats": [
+                      {
+                        "action": 0,
+                        "child_stats": [],
+                        "prior": 0.022479381
+                      },
+                      {
+                        "action": 1,
+                        "child_stats": [],
+                        "prior": 0.0052899108
+                      },
+                      {
+                        "action": 2,
+                        "child_stats": [],
+                        "prior": 0.057588995
+                      },
+                      {
+                        "action": 3,
+                        "child_stats": [],
+                        "prior": 0.020187575
+                      },
+                      {
+                        "action": 4,
+                        "child_stats": [],
+                        "prior": 0.037353154
+                      },
+                      {
+                        "action": 5,
+                        "child_stats": [],
+                        "prior": 0.089725077
+                      },
+                      {
+                        "action": 6,
+                        "child_stats": [],
+                        "prior": 0.059895556
+                      },
+                      {
+                        "action": 7,
+                        "child_stats": [],
+                        "prior": 0.12842274
+                      },
+                      {
+                        "action": 8,
+                        "child_stats": [],
+                        "prior": 0.069762632
+                      },
+                      {
+                        "action": 9,
+                        "child_stats": [],
+                        "prior": 0.13083619
+                      },
+                      {
+                        "action": 10,
+                        "child_stats": [],
+                        "prior": 0.006498144
+                      },
+                      {
+                        "action": 11,
+                        "child_stats": [],
+                        "prior": 0.018167187
+                      },
+                      {
+                        "action": 12,
+                        "child_stats": [],
+                        "prior": 0.010728727
+                      },
+                      {
+                        "action": 13,
+                        "child_stats": [],
+                        "prior": 0.026385706
+                      },
+                      {
+                        "action": 14,
+                        "child_stats": [],
+                        "prior": 0.10490704
+                      },
+                      {
+                        "action": 15,
+                        "child_stats": [],
+                        "prior": 0.12095904
+                      },
+                      {
+                        "action": 16,
+                        "child_stats": [],
+                        "prior": 0.023322061
+                      },
+                      {
+                        "action": 17,
+                        "child_stats": [],
+                        "prior": 0.067490846
+                      }
+                    ],
+                    "evaluation_index": 49,
+                    "prior": 0.093903482,
+                    "raw_value_view": -0.76827836,
+                    "reward": -0.23690653,
+                    "value_view": -0.76827836,
+                    "visit": 1
+                  },
+                  {
+                    "action": 14,
+                    "child_stats": [],
+                    "prior": 0.02861405
+                  },
+                  {
+                    "action": 15,
+                    "child_stats": [],
+                    "prior": 0.034722157
+                  },
+                  {
+                    "action": 16,
+                    "child_stats": [
+                      {
+                        "action": 0,
+                        "child_stats": [],
+                        "prior": 0.10556516
+                      },
+                      {
+                        "action": 1,
+                        "child_stats": [],
+                        "prior": 0.079800434
+                      },
+                      {
+                        "action": 2,
+                        "child_stats": [],
+                        "prior": 0.10326295
+                      },
+                      {
+                        "action": 3,
+                        "child_stats": [],
+                        "prior": 0.0061471704
+                      },
+                      {
+                        "action": 4,
+                        "child_stats": [],
+                        "prior": 0.019455599
+                      },
+                      {
+                        "action": 5,
+                        "child_stats": [],
+                        "prior": 0.027357982
+                      },
+                      {
+                        "action": 6,
+                        "child_stats": [],
+                        "prior": 0.013063176
+                      },
+                      {
+                        "action": 7,
+                        "child_stats": [],
+                        "prior": 0.034477275
+                      },
+                      {
+                        "action": 8,
+                        "child_stats": [],
+                        "prior": 0.15139599
+                      },
+                      {
+                        "action": 9,
+                        "child_stats": [],
+                        "prior": 0.029264186
+                      },
+                      {
+                        "action": 10,
+                        "child_stats": [],
+                        "prior": 0.11243597
+                      },
+                      {
+                        "action": 11,
+                        "child_stats": [],
+                        "prior": 0.053347673
+                      },
+                      {
+                        "action": 12,
+                        "child_stats": [],
+                        "prior": 0.092211716
+                      },
+                      {
+                        "action": 13,
+                        "child_stats": [],
+                        "prior": 0.032684214
+                      },
+                      {
+                        "action": 14,
+                        "child_stats": [],
+                        "prior": 0.036472376
+                      },
+                      {
+                        "action": 15,
+                        "child_stats": [],
+                        "prior": 0.08721678
+                      },
+                      {
+                        "action": 16,
+                        "child_stats": [],
+                        "prior": 0.0061323531
+                      },
+                      {
+                        "action": 17,
+                        "child_stats": [],
+                        "prior": 0.0097090108
+                      }
+                    ],
+                    "evaluation_index": 43,
+                    "prior": 0.11625528,
+                    "raw_value_view": -0.61993861,
+                    "reward": 0.25322843,
+                    "value_view": -0.61993861,
+                    "visit": 1
+                  },
+                  {
+                    "action": 17,
+                    "child_stats": [],
+                    "prior": 0.092945591
+                  }
+                ],
+                "evaluation_index": 39,
+                "prior": 0.060943674,
+                "raw_value_view": 0.59453082,
+                "reward": 0.49657416,
+                "value_view": 0.16405404,
+                "visit": 6
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.047981121
+              },
+              {
+                "action": 14,
+                "child_stats": [
+                  {
+                    "action": 0,
+                    "child_stats": [],
+                    "prior": 0.045401003
+                  },
+                  {
+                    "action": 1,
+                    "child_stats": [],
+                    "prior": 0.11035082
+                  },
+                  {
+                    "action": 2,
+                    "child_stats": [],
+                    "prior": 0.030432543
+                  },
+                  {
+                    "action": 3,
+                    "child_stats": [],
+                    "prior": 0.035002939
+                  },
+                  {
+                    "action": 4,
+                    "child_stats": [],
+                    "prior": 0.053128902
+                  },
+                  {
+                    "action": 5,
+                    "child_stats": [],
+                    "prior": 0.047901504
+                  },
+                  {
+                    "action": 6,
+                    "child_stats": [],
+                    "prior": 0.047160424
+                  },
+                  {
+                    "action": 7,
+                    "child_stats": [],
+                    "prior": 0.087167121
+                  },
+                  {
+                    "action": 8,
+                    "child_stats": [],
+                    "prior": 0.07984966
+                  },
+                  {
+                    "action": 9,
+                    "child_stats": [],
+                    "prior": 0.032930318
+                  },
+                  {
+                    "action": 10,
+                    "child_stats": [],
+                    "prior": 0.15963143
+                  },
+                  {
+                    "action": 11,
+                    "child_stats": [],
+                    "prior": 0.055242419
+                  },
+                  {
+                    "action": 12,
+                    "child_stats": [],
+                    "prior": 0.0070272684
+                  },
+                  {
+                    "action": 13,
+                    "child_stats": [],
+                    "prior": 0.0072091832
+                  },
+                  {
+                    "action": 14,
+                    "child_stats": [],
+                    "prior": 0.026371397
+                  },
+                  {
+                    "action": 15,
+                    "child_stats": [],
+                    "prior": 0.026680568
+                  },
+                  {
+                    "action": 16,
+                    "child_stats": [],
+                    "prior": 0.088986881
+                  },
+                  {
+                    "action": 17,
+                    "child_stats": [],
+                    "prior": 0.059525553
+                  }
+                ],
+                "evaluation_index": 38,
+                "prior": 0.067849524,
+                "raw_value_view": -0.30379605,
+                "reward": 0.16735291,
+                "value_view": -0.30379605,
+                "visit": 1
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.0062598162
+              },
+              {
+                "action": 16,
+                "child_stats": [
+                  {
+                    "action": 0,
+                    "child_stats": [],
+                    "prior": 0.14186254
+                  },
+                  {
+                    "action": 1,
+                    "child_stats": [],
+                    "prior": 0.026300335
+                  },
+                  {
+                    "action": 2,
+                    "child_stats": [],
+                    "prior": 0.061723679
+                  },
+                  {
+                    "action": 3,
+                    "child_stats": [],
+                    "prior": 0.028180853
+                  },
+                  {
+                    "action": 4,
+                    "child_stats": [],
+                    "prior": 0.155205
+                  },
+                  {
+                    "action": 5,
+                    "child_stats": [],
+                    "prior": 0.013739757
+                  },
+                  {
+                    "action": 6,
+                    "child_stats": [],
+                    "prior": 0.024385847
+                  },
+                  {
+                    "action": 7,
+                    "child_stats": [],
+                    "prior": 0.050235346
+                  },
+                  {
+                    "action": 8,
+                    "child_stats": [],
+                    "prior": 0.041801095
+                  },
+                  {
+                    "action": 9,
+                    "child_stats": [],
+                    "prior": 0.039021265
+                  },
+                  {
+                    "action": 10,
+                    "child_stats": [],
+                    "prior": 0.14220446
+                  },
+                  {
+                    "action": 11,
+                    "child_stats": [],
+                    "prior": 0.013081404
+                  },
+                  {
+                    "action": 12,
+                    "child_stats": [],
+                    "prior": 0.021677399
+                  },
+                  {
+                    "action": 13,
+                    "child_stats": [],
+                    "prior": 0.090734608
+                  },
+                  {
+                    "action": 14,
+                    "child_stats": [],
+                    "prior": 0.057876214
+                  },
+                  {
+                    "action": 15,
+                    "child_stats": [],
+                    "prior": 0.030551467
+                  },
+                  {
+                    "action": 16,
+                    "child_stats": [],
+                    "prior": 0.026876392
+                  },
+                  {
+                    "action": 17,
+                    "child_stats": [],
+                    "prior": 0.034542244
+                  }
+                ],
+                "evaluation_index": 29,
+                "prior": 0.11948504,
+                "raw_value_view": -0.96507025,
+                "reward": -0.22215009,
+                "value_view": -0.96507025,
+                "visit": 1
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.013328834
+              }
+            ],
+            "evaluation_index": 13,
+            "prior": 0.1870001,
+            "raw_value_view": 0.99389672,
+            "reward": 0.46588922,
+            "value_view": 0.26545289,
+            "visit": 12
+          },
+          {
+            "action": 6,
+            "child_stats": [],
+            "prior": 0.021593962
+          },
+          {
+            "action": 7,
+            "child_stats": [],
+            "prior": 0.0090553872
+          },
+          {
+            "action": 8,
+            "child_stats": [],
+            "prior": 0.06196988
+          },
+          {
+            "action": 9,
+            "child_stats": [],
+            "prior": 0.081400961
+          },
+          {
+            "action": 10,
+            "child_stats": [],
+            "prior": 0.02138727
+          },
+          {
+            "action": 11,
+            "child_stats": [],
+            "prior": 0.063067339
+          },
+          {
+            "action": 12,
+            "child_stats": [],
+            "prior": 0.0667248
+          },
+          {
+            "action": 13,
+            "child_stats": [],
+            "prior": 0.069516122
+          },
+          {
+            "action": 14,
+            "child_stats": [],
+            "prior": 0.0057140444
+          },
+          {
+            "action": 15,
+            "child_stats": [],
+            "prior": 0.042212084
+          },
+          {
+            "action": 16,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.030934727
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.11461996
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.046177257
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.18742369
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.021990521
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.013307856
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.030736526
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.014264244
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.0057919435
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.0056143557
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.0086580124
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.027940279
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.03645315
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.20340696
+              },
+              {
+                "action": 14,
+                "child_stats": [],
+                "prior": 0.11641364
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.01931785
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.01481485
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.10213416
+              }
+            ],
+            "evaluation_index": 21,
+            "prior": 0.15145712,
+            "raw_value_view": -0.43068194,
+            "reward": -0.70243788,
+            "value_view": -0.43068194,
+            "visit": 1
+          },
+          {
+            "action": 17,
+            "child_stats": [],
+            "prior": 0.011995069
+          }
+        ],
+        "evaluation_index": 7,
+        "prior": 0.05470673,
+        "raw_value_view": -0.82669115,
+        "reward": 0.91873097,
+        "value_view": 0.34063357,
+        "visit": 15
+      },
+      {
+        "action": 2,
+        "child_stats": [],
+        "prior": 0.021140829
+      },
+      {
+        "action": 3,
+        "child_stats": [],
+        "prior": 0.007827593
+      },
+      {
+        "action": 4,
+        "child_stats": [],
+        "prior": 0.025768386
+      },
+      {
+        "action": 5,
+        "child_stats": [
+          {
+            "action": 0,
+            "child_stats": [],
+            "prior": 0.0025611846
+          },
+          {
+            "action": 1,
+            "child_stats": [],
+            "prior": 0.025693472
+          },
+          {
+            "action": 2,
+            "child_stats": [],
+            "prior": 0.039557725
+          },
+          {
+            "action": 3,
+            "child_stats": [],
+            "prior": 0.053619441
+          },
+          {
+            "action": 4,
+            "child_stats": [],
+            "prior": 0.015864383
+          },
+          {
+            "action": 5,
+            "child_stats": [],
+            "prior": 0.030530389
+          },
+          {
+            "action": 6,
+            "child_stats": [],
+            "prior": 0.007737332
+          },
+          {
+            "action": 7,
+            "child_stats": [],
+            "prior": 0.013578346
+          },
+          {
+            "action": 8,
+            "child_stats": [],
+            "prior": 0.063368984
+          },
+          {
+            "action": 9,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.0047357585
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.027257446
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.019812582
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.029220907
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.037488077
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.020394666
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.060136814
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.0099511584
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.017607374
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.054229539
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.013998101
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.050072081
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.027297089
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.065724909
+              },
+              {
+                "action": 14,
+                "child_stats": [],
+                "prior": 0.080226421
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.40014806
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.028154589
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.053544499
+              }
+            ],
+            "evaluation_index": 23,
+            "prior": 0.087023698,
+            "raw_value_view": -0.1429987,
+            "reward": -0.09026742,
+            "value_view": -0.1429987,
+            "visit": 1
+          },
+          {
+            "action": 10,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.014726801
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.018690581
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.034868948
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.012172821
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.050498195
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.26648393
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.045419119
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.0050719101
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.040527388
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.035865948
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.12937941
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.11892924
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.023046298
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.01551233
+              },
+              {
+                "action": 14,
+                "child_stats": [],
+                "prior": 0.044263478
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.034473743
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.053470753
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.056599095
+              }
+            ],
+            "evaluation_index": 18,
+            "prior": 0.16564196,
+            "raw_value_view": -0.76099515,
+            "reward": -0.83839893,
+            "value_view": -0.76099515,
+            "visit": 1
+          },
+          {
+            "action": 11,
+            "child_stats": [],
+            "prior": 0.01238632
+          },
+          {
+            "action": 12,
+            "child_stats": [],
+            "prior": 0.032455284
+          },
+          {
+            "action": 13,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.053090118
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.01332845
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.05107047
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.035849102
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.058049351
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.038878281
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.013575933
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.021355521
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.0051500611
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.0092111826
+              },
+              {
+                "action": 10,
+                "child_stats": [
+                  {
+                    "action": 0,
+                    "child_stats": [],
+                    "prior": 0.034863207
+                  },
+                  {
+                    "action": 1,
+                    "child_stats": [],
+                    "prior": 0.029573236
+                  },
+                  {
+                    "action": 2,
+                    "child_stats": [],
+                    "prior": 0.010913235
+                  },
+                  {
+                    "action": 3,
+                    "child_stats": [],
+                    "prior": 0.029898984
+                  },
+                  {
+                    "action": 4,
+                    "child_stats": [],
+                    "prior": 0.050688993
+                  },
+                  {
+                    "action": 5,
+                    "child_stats": [],
+                    "prior": 0.078199014
+                  },
+                  {
+                    "action": 6,
+                    "child_stats": [],
+                    "prior": 0.022522967
+                  },
+                  {
+                    "action": 7,
+                    "child_stats": [],
+                    "prior": 0.081208959
+                  },
+                  {
+                    "action": 8,
+                    "child_stats": [],
+                    "prior": 0.048206136
+                  },
+                  {
+                    "action": 9,
+                    "child_stats": [],
+                    "prior": 0.073471241
+                  },
+                  {
+                    "action": 10,
+                    "child_stats": [],
+                    "prior": 0.2138757
+                  },
+                  {
+                    "action": 11,
+                    "child_stats": [],
+                    "prior": 0.028051445
+                  },
+                  {
+                    "action": 12,
+                    "child_stats": [],
+                    "prior": 0.033712447
+                  },
+                  {
+                    "action": 13,
+                    "child_stats": [],
+                    "prior": 0.01923384
+                  },
+                  {
+                    "action": 14,
+                    "child_stats": [],
+                    "prior": 0.18312149
+                  },
+                  {
+                    "action": 15,
+                    "child_stats": [],
+                    "prior": 0.023053681
+                  },
+                  {
+                    "action": 16,
+                    "child_stats": [],
+                    "prior": 0.016467789
+                  },
+                  {
+                    "action": 17,
+                    "child_stats": [],
+                    "prior": 0.022937708
+                  }
+                ],
+                "evaluation_index": 31,
+                "prior": 0.12700363,
+                "raw_value_view": 0.78933764,
+                "reward": -0.072941542,
+                "value_view": 0.78933764,
+                "visit": 1
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.07196828
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.021353055
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.049255669
+              },
+              {
+                "action": 14,
+                "child_stats": [],
+                "prior": 0.11142375
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.11554364
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.086829908
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.11706363
+              }
+            ],
+            "evaluation_index": 26,
+            "prior": 0.074373685,
+            "raw_value_view": -0.0041363239,
+            "reward": 0.025028944,
+            "value_view": 0.35494587,
+            "visit": 2
+          },
+          {
+            "action": 14,
+            "child_stats": [],
+            "prior": 0.011874738
+          },
+          {
+            "action": 15,
+            "child_stats": [],
+            "prior": 0.010520231
+          },
+          {
+            "action": 16,
+            "child_stats": [],
+            "prior": 0.046074595
+          },
+          {
+            "action": 17,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.016748831
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.020370441
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.075757816
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.061261799
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.26524881
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.0045984969
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.026468176
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.022597857
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.0097626401
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.0067046201
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.043149866
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.052555133
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.034638535
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.039939895
+              },
+              {
+                "action": 14,
+                "child_stats": [],
+                "prior": 0.22116147
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.060548324
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.016000085
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.022487143
+              }
+            ],
+            "evaluation_index": 9,
+            "prior": 0.30713823,
+            "raw_value_view": -0.20285463,
+            "reward": -0.85070992,
+            "value_view": -0.20285463,
+            "visit": 1
+          }
+        ],
+        "evaluation_index": 4,
+        "prior": 0.094184466,
+        "raw_value_view": 0.88755941,
+        "reward": 0.85143304,
+        "value_view": -0.20625414,
+        "visit": 6
+      },
+      {
+        "action": 6,
+        "child_stats": [],
+        "prior": 0.016630026
+      },
+      {
+        "action": 7,
+        "child_stats": [
+          {
+            "action": 0,
+            "child_stats": [],
+            "prior": 0.071076982
+          },
+          {
+            "action": 1,
+            "child_stats": [],
+            "prior": 0.045428157
+          },
+          {
+            "action": 2,
+            "child_stats": [],
+            "prior": 0.0068420204
+          },
+          {
+            "action": 3,
+            "child_stats": [],
+            "prior": 0.0076094549
+          },
+          {
+            "action": 4,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.0077350312
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.067054957
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.047156814
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.084907413
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.021648079
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.035587203
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.035846647
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.02669617
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.050229549
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.024014594
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.099433094
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.014508539
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.025435532
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.1264372
+              },
+              {
+                "action": 14,
+                "child_stats": [],
+                "prior": 0.024209971
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.15585539
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.020877717
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.13236611
+              }
+            ],
+            "evaluation_index": 11,
+            "prior": 0.29194167,
+            "raw_value_view": -0.95713735,
+            "reward": -0.69310451,
+            "value_view": -0.95713735,
+            "visit": 1
+          },
+          {
+            "action": 5,
+            "child_stats": [],
+            "prior": 0.0097608715
+          },
+          {
+            "action": 6,
+            "child_stats": [],
+            "prior": 0.026992723
+          },
+          {
+            "action": 7,
+            "child_stats": [],
+            "prior": 0.032404877
+          },
+          {
+            "action": 8,
+            "child_stats": [],
+            "prior": 0.026912451
+          },
+          {
+            "action": 9,
+            "child_stats": [],
+            "prior": 0.026554195
+          },
+          {
+            "action": 10,
+            "child_stats": [],
+            "prior": 0.047487263
+          },
+          {
+            "action": 11,
+            "child_stats": [],
+            "prior": 0.013062782
+          },
+          {
+            "action": 12,
+            "child_stats": [],
+            "prior": 0.025034478
+          },
+          {
+            "action": 13,
+            "child_stats": [],
+            "prior": 0.040944751
+          },
+          {
+            "action": 14,
+            "child_stats": [],
+            "prior": 0.1319294
+          },
+          {
+            "action": 15,
+            "child_stats": [],
+            "prior": 0.074475311
+          },
+          {
+            "action": 16,
+            "child_stats": [],
+            "prior": 0.10731021
+          },
+          {
+            "action": 17,
+            "child_stats": [],
+            "prior": 0.014232378
+          }
+        ],
+        "evaluation_index": 1,
+        "prior": 0.20932071,
+        "raw_value_view": 0.60014725,
+        "reward": -0.76285625,
+        "value_view": -0.52361155,
+        "visit": 2
+      },
+      {
+        "action": 8,
+        "child_stats": [
+          {
+            "action": 0,
+            "child_stats": [],
+            "prior": 0.096722789
+          },
+          {
+            "action": 1,
+            "child_stats": [],
+            "prior": 0.026446197
+          },
+          {
+            "action": 2,
+            "child_stats": [],
+            "prior": 0.014656446
+          },
+          {
+            "action": 3,
+            "child_stats": [],
+            "prior": 0.0662295
+          },
+          {
+            "action": 4,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.03135578
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.049078811
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.022045111
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.024052249
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.099757463
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.081844606
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.010049063
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.021633582
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.13054456
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.011374197
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.048233006
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.083359554
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.037806943
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.047965724
+              },
+              {
+                "action": 14,
+                "child_stats": [],
+                "prior": 0.11415869
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.061806049
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.0080653904
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.11686917
+              }
+            ],
+            "evaluation_index": 10,
+            "prior": 0.18844177,
+            "raw_value_view": -0.93110609,
+            "reward": -0.30527091,
+            "value_view": -0.93110609,
+            "visit": 1
+          },
+          {
+            "action": 5,
+            "child_stats": [],
+            "prior": 0.037979607
+          },
+          {
+            "action": 6,
+            "child_stats": [],
+            "prior": 0.048384365
+          },
+          {
+            "action": 7,
+            "child_stats": [],
+            "prior": 0.011746007
+          },
+          {
+            "action": 8,
+            "child_stats": [],
+            "prior": 0.047028873
+          },
+          {
+            "action": 9,
+            "child_stats": [],
+            "prior": 0.078404546
+          },
+          {
+            "action": 10,
+            "child_stats": [],
+            "prior": 0.050837528
+          },
+          {
+            "action": 11,
+            "child_stats": [],
+            "prior": 0.015964486
+          },
+          {
+            "action": 12,
+            "child_stats": [],
+            "prior": 0.046701092
+          },
+          {
+            "action": 13,
+            "child_stats": [],
+            "prior": 0.049059302
+          },
+          {
+            "action": 14,
+            "child_stats": [],
+            "prior": 0.062229808
+          },
+          {
+            "action": 15,
+            "child_stats": [],
+            "prior": 0.023877461
+          },
+          {
+            "action": 16,
+            "child_stats": [],
+            "prior": 0.090605006
+          },
+          {
+            "action": 17,
+            "child_stats": [],
+            "prior": 0.044685226
+          }
+        ],
+        "evaluation_index": 6,
+        "prior": 0.071543604,
+        "raw_value_view": 0.8534739,
+        "reward": -0.13878894,
+        "value_view": -0.19005489,
+        "visit": 2
+      },
+      {
+        "action": 9,
+        "child_stats": [],
+        "prior": 0.023244474
+      },
+      {
+        "action": 10,
+        "child_stats": [
+          {
+            "action": 0,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.022665169
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.013917843
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.038392317
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.032964285
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.077411145
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.0090613235
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.0110658
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.01283126
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.15648581
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.11530225
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.017006021
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.11276639
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.035605647
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.021244826
+              },
+              {
+                "action": 14,
+                "child_stats": [],
+                "prior": 0.10968191
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.030209308
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.16121979
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.02216881
+              }
+            ],
+            "evaluation_index": 22,
+            "prior": 0.12306257,
+            "raw_value_view": -0.41676974,
+            "reward": 0.76136065,
+            "value_view": -0.41676974,
+            "visit": 1
+          },
+          {
+            "action": 1,
+            "child_stats": [],
+            "prior": 0.023587553
+          },
+          {
+            "action": 2,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.012771314
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.040674772
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.52061051
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.0079772975
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.047087587
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.068893999
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.0084776497
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.020110063
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.03994415
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.014973298
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.0057385708
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.037150122
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.0013243593
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.0059821061
+              },
+              {
+                "action": 14,
+                "child_stats": [],
+                "prior": 0.053213987
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.034898844
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.052625559
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.027545789
+              }
+            ],
+            "evaluation_index": 37,
+            "prior": 0.085847355,
+            "raw_value_view": -0.03773737,
+            "reward": -0.51986384,
+            "value_view": -0.03773737,
+            "visit": 1
+          },
+          {
+            "action": 3,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.10272179
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.011411595
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.034407418
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.036934834
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.088533819
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.037147742
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.030621933
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.040695641
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.011954945
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.029905196
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.06113968
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.073000193
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.024683408
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.26232073
+              },
+              {
+                "action": 14,
+                "child_stats": [],
+                "prior": 0.073582239
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.028251236
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.032684583
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.020002954
+              }
+            ],
+            "evaluation_index": 12,
+            "prior": 0.14629832,
+            "raw_value_view": -0.12344956,
+            "reward": 0.54732752,
+            "value_view": -0.12344956,
+            "visit": 1
+          },
+          {
+            "action": 4,
+            "child_stats": [],
+            "prior": 0.051455017
+          },
+          {
+            "action": 5,
+            "child_stats": [],
+            "prior": 0.030278737
+          },
+          {
+            "action": 6,
+            "child_stats": [],
+            "prior": 0.050132781
+          },
+          {
+            "action": 7,
+            "child_stats": [],
+            "prior": 0.05150998
+          },
+          {
+            "action": 8,
+            "child_stats": [],
+            "prior": 0.047165241
+          },
+          {
+            "action": 9,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [
+                  {
+                    "action": 0,
+                    "child_stats": [],
+                    "prior": 0.071494475
+                  },
+                  {
+                    "action": 1,
+                    "child_stats": [],
+                    "prior": 0.046966534
+                  },
+                  {
+                    "action": 2,
+                    "child_stats": [],
+                    "prior": 0.037822552
+                  },
+                  {
+                    "action": 3,
+                    "child_stats": [],
+                    "prior": 0.048295118
+                  },
+                  {
+                    "action": 4,
+                    "child_stats": [],
+                    "prior": 0.057569165
+                  },
+                  {
+                    "action": 5,
+                    "child_stats": [],
+                    "prior": 0.017696105
+                  },
+                  {
+                    "action": 6,
+                    "child_stats": [],
+                    "prior": 0.0086869346
+                  },
+                  {
+                    "action": 7,
+                    "child_stats": [],
+                    "prior": 0.019713838
+                  },
+                  {
+                    "action": 8,
+                    "child_stats": [],
+                    "prior": 0.087391675
+                  },
+                  {
+                    "action": 9,
+                    "child_stats": [],
+                    "prior": 0.012545245
+                  },
+                  {
+                    "action": 10,
+                    "child_stats": [],
+                    "prior": 0.041541982
+                  },
+                  {
+                    "action": 11,
+                    "child_stats": [],
+                    "prior": 0.13962032
+                  },
+                  {
+                    "action": 12,
+                    "child_stats": [],
+                    "prior": 0.015275604
+                  },
+                  {
+                    "action": 13,
+                    "child_stats": [],
+                    "prior": 0.022058893
+                  },
+                  {
+                    "action": 14,
+                    "child_stats": [],
+                    "prior": 0.12353435
+                  },
+                  {
+                    "action": 15,
+                    "child_stats": [],
+                    "prior": 0.20365782
+                  },
+                  {
+                    "action": 16,
+                    "child_stats": [],
+                    "prior": 0.026045542
+                  },
+                  {
+                    "action": 17,
+                    "child_stats": [],
+                    "prior": 0.020083947
+                  }
+                ],
+                "evaluation_index": 42,
+                "prior": 0.097323723,
+                "raw_value_view": 0.19386697,
+                "reward": 0.40855956,
+                "value_view": 0.19386697,
+                "visit": 1
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.041884612
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.01988039
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.048683677
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.081881933
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.077668332
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.032290068
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.061481558
+              },
+              {
+                "action": 8,
+                "child_stats": [
+                  {
+                    "action": 0,
+                    "child_stats": [],
+                    "prior": 0.041765772
+                  },
+                  {
+                    "action": 1,
+                    "child_stats": [],
+                    "prior": 0.026716806
+                  },
+                  {
+                    "action": 2,
+                    "child_stats": [],
+                    "prior": 0.014899485
+                  },
+                  {
+                    "action": 3,
+                    "child_stats": [],
+                    "prior": 0.11997819
+                  },
+                  {
+                    "action": 4,
+                    "child_stats": [],
+                    "prior": 0.069323637
+                  },
+                  {
+                    "action": 5,
+                    "child_stats": [],
+                    "prior": 0.014613007
+                  },
+                  {
+                    "action": 6,
+                    "child_stats": [],
+                    "prior": 0.0072476631
+                  },
+                  {
+                    "action": 7,
+                    "child_stats": [],
+                    "prior": 0.010433654
+                  },
+                  {
+                    "action": 8,
+                    "child_stats": [],
+                    "prior": 0.0085220048
+                  },
+                  {
+                    "action": 9,
+                    "child_stats": [],
+                    "prior": 0.061925471
+                  },
+                  {
+                    "action": 10,
+                    "child_stats": [],
+                    "prior": 0.026229706
+                  },
+                  {
+                    "action": 11,
+                    "child_stats": [],
+                    "prior": 0.12497283
+                  },
+                  {
+                    "action": 12,
+                    "child_stats": [],
+                    "prior": 0.014164117
+                  },
+                  {
+                    "action": 13,
+                    "child_stats": [],
+                    "prior": 0.014499031
+                  },
+                  {
+                    "action": 14,
+                    "child_stats": [],
+                    "prior": 0.17459612
+                  },
+                  {
+                    "action": 15,
+                    "child_stats": [],
+                    "prior": 0.13209657
+                  },
+                  {
+                    "action": 16,
+                    "child_stats": [],
+                    "prior": 0.047436092
+                  },
+                  {
+                    "action": 17,
+                    "child_stats": [],
+                    "prior": 0.090579838
+                  }
+                ],
+                "evaluation_index": 50,
+                "prior": 0.084792845,
+                "raw_value_view": 0.12841558,
+                "reward": 0.24149847,
+                "value_view": 0.12841558,
+                "visit": 1
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.012255925
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.035251196
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.029075639
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.041833606
+              },
+              {
+                "action": 13,
+                "child_stats": [
+                  {
+                    "action": 0,
+                    "child_stats": [],
+                    "prior": 0.040999472
+                  },
+                  {
+                    "action": 1,
+                    "child_stats": [],
+                    "prior": 0.017123114
+                  },
+                  {
+                    "action": 2,
+                    "child_stats": [],
+                    "prior": 0.026997516
+                  },
+                  {
+                    "action": 3,
+                    "child_stats": [],
+                    "prior": 0.02927641
+                  },
+                  {
+                    "action": 4,
+                    "child_stats": [],
+                    "prior": 0.017119983
+                  },
+                  {
+                    "action": 5,
+                    "child_stats": [],
+                    "prior": 0.0048011593
+                  },
+                  {
+                    "action": 6,
+                    "child_stats": [],
+                    "prior": 0.009534982
+                  },
+                  {
+                    "action": 7,
+                    "child_stats": [],
+                    "prior": 0.1642935
+                  },
+                  {
+                    "action": 8,
+                    "child_stats": [],
+                    "prior": 0.29906443
+                  },
+                  {
+                    "action": 9,
+                    "child_stats": [],
+                    "prior": 0.03280637
+                  },
+                  {
+                    "action": 10,
+                    "child_stats": [],
+                    "prior": 0.028036032
+                  },
+                  {
+                    "action": 11,
+                    "child_stats": [],
+                    "prior": 0.071237653
+                  },
+                  {
+                    "action": 12,
+                    "child_stats": [],
+                    "prior": 0.028270377
+                  },
+                  {
+                    "action": 13,
+                    "child_stats": [],
+                    "prior": 0.12772731
+                  },
+                  {
+                    "action": 14,
+                    "child_stats": [],
+                    "prior": 0.014619809
+                  },
+                  {
+                    "action": 15,
+                    "child_stats": [],
+                    "prior": 0.023544911
+                  },
+                  {
+                    "action": 16,
+                    "child_stats": [],
+                    "prior": 0.043662809
+                  },
+                  {
+                    "action": 17,
+                    "child_stats": [],
+                    "prior": 0.020884143
+                  }
+                ],
+                "evaluation_index": 46,
+                "prior": 0.08932697,
+                "raw_value_view": 0.26059628,
+                "reward": 0.83518767,
+                "value_view": 0.26059628,
+                "visit": 1
+              },
+              {
+                "action": 14,
+                "child_stats": [
+                  {
+                    "action": 0,
+                    "child_stats": [],
+                    "prior": 0.0179461
+                  },
+                  {
+                    "action": 1,
+                    "child_stats": [],
+                    "prior": 0.045395911
+                  },
+                  {
+                    "action": 2,
+                    "child_stats": [],
+                    "prior": 0.0077395211
+                  },
+                  {
+                    "action": 3,
+                    "child_stats": [],
+                    "prior": 0.050390072
+                  },
+                  {
+                    "action": 4,
+                    "child_stats": [],
+                    "prior": 0.013016868
+                  },
+                  {
+                    "action": 5,
+                    "child_stats": [],
+                    "prior": 0.017361872
+                  },
+                  {
+                    "action": 6,
+                    "child_stats": [],
+                    "prior": 0.024066946
+                  },
+                  {
+                    "action": 7,
+                    "child_stats": [],
+                    "prior": 0.089725405
+                  },
+                  {
+                    "action": 8,
+                    "child_stats": [],
+                    "prior": 0.018244784
+                  },
+                  {
+                    "action": 9,
+                    "child_stats": [
+                      {
+                        "action": 0,
+                        "child_stats": [],
+                        "prior": 0.17585185
+                      },
+                      {
+                        "action": 1,
+                        "child_stats": [],
+                        "prior": 0.029516973
+                      },
+                      {
+                        "action": 2,
+                        "child_stats": [],
+                        "prior": 0.034587003
+                      },
+                      {
+                        "action": 3,
+                        "child_stats": [],
+                        "prior": 0.056040972
+                      },
+                      {
+                        "action": 4,
+                        "child_stats": [],
+                        "prior": 0.069720082
+                      },
+                      {
+                        "action": 5,
+                        "child_stats": [],
+                        "prior": 0.042486057
+                      },
+                      {
+                        "action": 6,
+                        "child_stats": [],
+                        "prior": 0.019081593
+                      },
+                      {
+                        "action": 7,
+                        "child_stats": [],
+                        "prior": 0.028109295
+                      },
+                      {
+                        "action": 8,
+                        "child_stats": [],
+                        "prior": 0.15403984
+                      },
+                      {
+                        "action": 9,
+                        "child_stats": [],
+                        "prior": 0.063514225
+                      },
+                      {
+                        "action": 10,
+                        "child_stats": [],
+                        "prior": 0.0066519859
+                      },
+                      {
+                        "action": 11,
+                        "child_stats": [],
+                        "prior": 0.13753721
+                      },
+                      {
+                        "action": 12,
+                        "child_stats": [],
+                        "prior": 0.019957991
+                      },
+                      {
+                        "action": 13,
+                        "child_stats": [],
+                        "prior": 0.064519517
+                      },
+                      {
+                        "action": 14,
+                        "child_stats": [],
+                        "prior": 0.030861031
+                      },
+                      {
+                        "action": 15,
+                        "child_stats": [],
+                        "prior": 0.016484378
+                      },
+                      {
+                        "action": 16,
+                        "child_stats": [],
+                        "prior": 0.032678023
+                      },
+                      {
+                        "action": 17,
+                        "child_stats": [],
+                        "prior": 0.018362055
+                      }
+                    ],
+                    "evaluation_index": 48,
+                    "prior": 0.14175197,
+                    "raw_value_view": 0.39240789,
+                    "reward": -0.19645143,
+                    "value_view": 0.39240789,
+                    "visit": 1
+                  },
+                  {
+                    "action": 10,
+                    "child_stats": [],
+                    "prior": 0.0033141794
+                  },
+                  {
+                    "action": 11,
+                    "child_stats": [],
+                    "prior": 0.059964627
+                  },
+                  {
+                    "action": 12,
+                    "child_stats": [],
+                    "prior": 0.080242537
+                  },
+                  {
+                    "action": 13,
+                    "child_stats": [],
+                    "prior": 0.077171966
+                  },
+                  {
+                    "action": 14,
+                    "child_stats": [],
+                    "prior": 0.025782054
+                  },
+                  {
+                    "action": 15,
+                    "child_stats": [
+                      {
+                        "action": 0,
+                        "child_stats": [],
+                        "prior": 0.01622422
+                      },
+                      {
+                        "action": 1,
+                        "child_stats": [],
+                        "prior": 0.065507464
+                      },
+                      {
+                        "action": 2,
+                        "child_stats": [],
+                        "prior": 0.026617503
+                      },
+                      {
+                        "action": 3,
+                        "child_stats": [],
+                        "prior": 0.016904877
+                      },
+                      {
+                        "action": 4,
+                        "child_stats": [],
+                        "prior": 0.029313445
+                      },
+                      {
+                        "action": 5,
+                        "child_stats": [],
+                        "prior": 0.037077885
+                      },
+                      {
+                        "action": 6,
+                        "child_stats": [],
+                        "prior": 0.093634106
+                      },
+                      {
+                        "action": 7,
+                        "child_stats": [],
+                        "prior": 0.12005783
+                      },
+                      {
+                        "action": 8,
+                        "child_stats": [],
+                        "prior": 0.15209784
+                      },
+                      {
+                        "action": 9,
+                        "child_stats": [],
+                        "prior": 0.048265178
+                      },
+                      {
+                        "action": 10,
+                        "child_stats": [],
+                        "prior": 0.051055018
+                      },
+                      {
+                        "action": 11,
+                        "child_stats": [],
+                        "prior": 0.094544373
+                      },
+                      {
+                        "action": 12,
+                        "child_stats": [],
+                        "prior": 0.078527555
+                      },
+                      {
+                        "action": 13,
+                        "child_stats": [],
+                        "prior": 0.018581515
+                      },
+                      {
+                        "action": 14,
+                        "child_stats": [],
+                        "prior": 0.0012785442
+                      },
+                      {
+                        "action": 15,
+                        "child_stats": [],
+                        "prior": 0.040215161
+                      },
+                      {
+                        "action": 16,
+                        "child_stats": [],
+                        "prior": 0.024069045
+                      },
+                      {
+                        "action": 17,
+                        "child_stats": [],
+                        "prior": 0.086028501
+                      }
+                    ],
+                    "evaluation_index": 44,
+                    "prior": 0.21700974,
+                    "raw_value_view": 0.30081105,
+                    "reward": 0.72840214,
+                    "value_view": 0.30081105,
+                    "visit": 1
+                  },
+                  {
+                    "action": 16,
+                    "child_stats": [],
+                    "prior": 0.08670152
+                  },
+                  {
+                    "action": 17,
+                    "child_stats": [],
+                    "prior": 0.024174003
+                  }
+                ],
+                "evaluation_index": 40,
+                "prior": 0.14001605,
+                "raw_value_view": 0.87263465,
+                "reward": 0.81619501,
+                "value_view": 0.6985749,
+                "visit": 3
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.011972358
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.079214454
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.015166631
+              }
+            ],
+            "evaluation_index": 19,
+            "prior": 0.12601689,
+            "raw_value_view": 0.16029382,
+            "reward": 0.63065267,
+            "value_view": 0.96638465,
+            "visit": 7
+          },
+          {
+            "action": 10,
+            "child_stats": [],
+            "prior": 0.0075366311
+          },
+          {
+            "action": 11,
+            "child_stats": [],
+            "prior": 0.011886887
+          },
+          {
+            "action": 12,
+            "child_stats": [],
+            "prior": 0.028917266
+          },
+          {
+            "action": 13,
+            "child_stats": [],
+            "prior": 0.081723094
+          },
+          {
+            "action": 14,
+            "child_stats": [],
+            "prior": 0.01121462
+          },
+          {
+            "action": 15,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.0063764532
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.013418808
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.042046491
+              },
+              {
+                "action": 3,
+                "child_stats": [
+                  {
+                    "action": 0,
+                    "child_stats": [],
+                    "prior": 0.041459031
+                  },
+                  {
+                    "action": 1,
+                    "child_stats": [],
+                    "prior": 0.057197969
+                  },
+                  {
+                    "action": 2,
+                    "child_stats": [],
+                    "prior": 0.011996369
+                  },
+                  {
+                    "action": 3,
+                    "child_stats": [],
+                    "prior": 0.039544642
+                  },
+                  {
+                    "action": 4,
+                    "child_stats": [],
+                    "prior": 0.05056534
+                  },
+                  {
+                    "action": 5,
+                    "child_stats": [],
+                    "prior": 0.25266287
+                  },
+                  {
+                    "action": 6,
+                    "child_stats": [],
+                    "prior": 0.041445766
+                  },
+                  {
+                    "action": 7,
+                    "child_stats": [],
+                    "prior": 0.086014971
+                  },
+                  {
+                    "action": 8,
+                    "child_stats": [],
+                    "prior": 0.044651248
+                  },
+                  {
+                    "action": 9,
+                    "child_stats": [],
+                    "prior": 0.020645084
+                  },
+                  {
+                    "action": 10,
+                    "child_stats": [],
+                    "prior": 0.040504567
+                  },
+                  {
+                    "action": 11,
+                    "child_stats": [],
+                    "prior": 0.010125794
+                  },
+                  {
+                    "action": 12,
+                    "child_stats": [],
+                    "prior": 0.042876773
+                  },
+                  {
+                    "action": 13,
+                    "child_stats": [],
+                    "prior": 0.019559195
+                  },
+                  {
+                    "action": 14,
+                    "child_stats": [],
+                    "prior": 0.13837017
+                  },
+                  {
+                    "action": 15,
+                    "child_stats": [],
+                    "prior": 0.010956647
+                  },
+                  {
+                    "action": 16,
+                    "child_stats": [],
+                    "prior": 0.050293818
+                  },
+                  {
+                    "action": 17,
+                    "child_stats": [],
+                    "prior": 0.041129827
+                  }
+                ],
+                "evaluation_index": 35,
+                "prior": 0.12661816,
+                "raw_value_view": -0.99201369,
+                "reward": -0.77184415,
+                "value_view": -0.99201369,
+                "visit": 1
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.051388867
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.012035673
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.013759512
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.040800121
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.0333151
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.01269922
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.027885428
+              },
+              {
+                "action": 11,
+                "child_stats": [
+                  {
+                    "action": 0,
+                    "child_stats": [],
+                    "prior": 0.022784011
+                  },
+                  {
+                    "action": 1,
+                    "child_stats": [],
+                    "prior": 0.034994829
+                  },
+                  {
+                    "action": 2,
+                    "child_stats": [],
+                    "prior": 0.011756626
+                  },
+                  {
+                    "action": 3,
+                    "child_stats": [],
+                    "prior": 0.033690799
+                  },
+                  {
+                    "action": 4,
+                    "child_stats": [],
+                    "prior": 0.010573892
+                  },
+                  {
+                    "action": 5,
+                    "child_stats": [],
+                    "prior": 0.041581415
+                  },
+                  {
+                    "action": 6,
+                    "child_stats": [],
+                    "prior": 0.0034338355
+                  },
+                  {
+                    "action": 7,
+                    "child_stats": [],
+                    "prior": 0.11878244
+                  },
+                  {
+                    "action": 8,
+                    "child_stats": [],
+                    "prior": 0.12949447
+                  },
+                  {
+                    "action": 9,
+                    "child_stats": [],
+                    "prior": 0.0071891458
+                  },
+                  {
+                    "action": 10,
+                    "child_stats": [],
+                    "prior": 0.053047393
+                  },
+                  {
+                    "action": 11,
+                    "child_stats": [],
+                    "prior": 0.064406916
+                  },
+                  {
+                    "action": 12,
+                    "child_stats": [],
+                    "prior": 0.016733168
+                  },
+                  {
+                    "action": 13,
+                    "child_stats": [],
+                    "prior": 0.30301672
+                  },
+                  {
+                    "action": 14,
+                    "child_stats": [],
+                    "prior": 0.079488881
+                  },
+                  {
+                    "action": 15,
+                    "child_stats": [],
+                    "prior": 0.0082058348
+                  },
+                  {
+                    "action": 16,
+                    "child_stats": [],
+                    "prior": 0.033872776
+                  },
+                  {
+                    "action": 17,
+                    "child_stats": [],
+                    "prior": 0.026946858
+                  }
+                ],
+                "evaluation_index": 30,
+                "prior": 0.25594702,
+                "raw_value_view": 0.3312099,
+                "reward": 0.92232108,
+                "value_view": 0.3312099,
+                "visit": 1
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.031980626
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.057536405
+              },
+              {
+                "action": 14,
+                "child_stats": [
+                  {
+                    "action": 0,
+                    "child_stats": [],
+                    "prior": 0.058805019
+                  },
+                  {
+                    "action": 1,
+                    "child_stats": [],
+                    "prior": 0.0277154
+                  },
+                  {
+                    "action": 2,
+                    "child_stats": [],
+                    "prior": 0.012193805
+                  },
+                  {
+                    "action": 3,
+                    "child_stats": [],
+                    "prior": 0.05143398
+                  },
+                  {
+                    "action": 4,
+                    "child_stats": [],
+                    "prior": 0.035262484
+                  },
+                  {
+                    "action": 5,
+                    "child_stats": [],
+                    "prior": 0.1935169
+                  },
+                  {
+                    "action": 6,
+                    "child_stats": [],
+                    "prior": 0.16508582
+                  },
+                  {
+                    "action": 7,
+                    "child_stats": [],
+                    "prior": 0.022022052
+                  },
+                  {
+                    "action": 8,
+                    "child_stats": [],
+                    "prior": 0.063678466
+                  },
+                  {
+                    "action": 9,
+                    "child_stats": [],
+                    "prior": 0.028073879
+                  },
+                  {
+                    "action": 10,
+                    "child_stats": [],
+                    "prior": 0.039113902
+                  },
+                  {
+                    "action": 11,
+                    "child_stats": [],
+                    "prior": 0.062919497
+                  },
+                  {
+                    "action": 12,
+                    "child_stats": [],
+                    "prior": 0.044827189
+                  },
+                  {
+                    "action": 13,
+                    "child_stats": [],
+                    "prior": 0.045556009
+                  },
+                  {
+                    "action": 14,
+                    "child_stats": [],
+                    "prior": 0.036605716
+                  },
+                  {
+                    "action": 15,
+                    "child_stats": [],
+                    "prior": 0.007073578
+                  },
+                  {
+                    "action": 16,
+                    "child_stats": [],
+                    "prior": 0.059124611
+                  },
+                  {
+                    "action": 17,
+                    "child_stats": [],
+                    "prior": 0.046991765
+                  }
+                ],
+                "evaluation_index": 33,
+                "prior": 0.12999335,
+                "raw_value_view": 0.26286054,
+                "reward": 0.64641142,
+                "value_view": 0.26286054,
+                "visit": 1
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.069920868
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.042130481
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.032147389
+              }
+            ],
+            "evaluation_index": 27,
+            "prior": 0.087593764,
+            "raw_value_view": 0.81680632,
+            "reward": 0.91096497,
+            "value_view": 0.30423632,
+            "visit": 4
+          },
+          {
+            "action": 16,
+            "child_stats": [],
+            "prior": 0.022449475
+          },
+          {
+            "action": 17,
+            "child_stats": [],
+            "prior": 0.013323907
+          }
+        ],
+        "evaluation_index": 3,
+        "prior": 0.095543049,
+        "raw_value_view": 0.29389358,
+        "reward": -0.18152809,
+        "value_view": 1.1015078,
+        "visit": 15
+      },
+      {
+        "action": 11,
+        "child_stats": [],
+        "prior": 0.021820975
+      },
+      {
+        "action": 12,
+        "child_stats": [
+          {
+            "action": 0,
+            "child_stats": [],
+            "prior": 0.02430135
+          },
+          {
+            "action": 1,
+            "child_stats": [],
+            "prior": 0.079075448
+          },
+          {
+            "action": 2,
+            "child_stats": [],
+            "prior": 0.020898229
+          },
+          {
+            "action": 3,
+            "child_stats": [],
+            "prior": 0.16138294
+          },
+          {
+            "action": 4,
+            "child_stats": [],
+            "prior": 0.038911149
+          },
+          {
+            "action": 5,
+            "child_stats": [],
+            "prior": 0.031667434
+          },
+          {
+            "action": 6,
+            "child_stats": [],
+            "prior": 0.087909549
+          },
+          {
+            "action": 7,
+            "child_stats": [],
+            "prior": 0.016952222
+          },
+          {
+            "action": 8,
+            "child_stats": [],
+            "prior": 0.031836364
+          },
+          {
+            "action": 9,
+            "child_stats": [],
+            "prior": 0.068572611
+          },
+          {
+            "action": 10,
+            "child_stats": [],
+            "prior": 0.0079746032
+          },
+          {
+            "action": 11,
+            "child_stats": [],
+            "prior": 0.026664738
+          },
+          {
+            "action": 12,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.0096158935
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.12396772
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.024236714
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.071851112
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.027741877
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.029040579
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.18063086
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.0090510687
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.031519178
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.14601816
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.0045846128
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.0098101823
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.03214952
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.015598866
+              },
+              {
+                "action": 14,
+                "child_stats": [],
+                "prior": 0.066330045
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.030591357
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.043693103
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.1435691
+              }
+            ],
+            "evaluation_index": 15,
+            "prior": 0.21526399,
+            "raw_value_view": 0.53749251,
+            "reward": 0.085326195,
+            "value_view": 0.53749251,
+            "visit": 1
+          },
+          {
+            "action": 13,
+            "child_stats": [],
+            "prior": 0.024624126
+          },
+          {
+            "action": 14,
+            "child_stats": [],
+            "prior": 0.049142797
+          },
+          {
+            "action": 15,
+            "child_stats": [],
+            "prior": 0.038265914
+          },
+          {
+            "action": 16,
+            "child_stats": [],
+            "prior": 0.052890219
+          },
+          {
+            "action": 17,
+            "child_stats": [],
+            "prior": 0.023666272
+          }
+        ],
+        "evaluation_index": 8,
+        "prior": 0.051323574,
+        "raw_value_view": -0.57623315,
+        "reward": 0.0835917,
+        "value_view": 0.022486538,
+        "visit": 2
+      },
+      {
+        "action": 13,
+        "child_stats": [],
+        "prior": 0.014735672
+      },
+      {
+        "action": 14,
+        "child_stats": [
+          {
+            "action": 0,
+            "child_stats": [],
+            "prior": 0.010102989
+          },
+          {
+            "action": 1,
+            "child_stats": [],
+            "prior": 0.055533923
+          },
+          {
+            "action": 2,
+            "child_stats": [],
+            "prior": 0.064860411
+          },
+          {
+            "action": 3,
+            "child_stats": [],
+            "prior": 0.060301162
+          },
+          {
+            "action": 4,
+            "child_stats": [],
+            "prior": 0.022950651
+          },
+          {
+            "action": 5,
+            "child_stats": [],
+            "prior": 0.21142994
+          },
+          {
+            "action": 6,
+            "child_stats": [],
+            "prior": 0.084530257
+          },
+          {
+            "action": 7,
+            "child_stats": [],
+            "prior": 0.013084219
+          },
+          {
+            "action": 8,
+            "child_stats": [],
+            "prior": 0.017266991
+          },
+          {
+            "action": 9,
+            "child_stats": [],
+            "prior": 0.0082024122
+          },
+          {
+            "action": 10,
+            "child_stats": [],
+            "prior": 0.0086687263
+          },
+          {
+            "action": 11,
+            "child_stats": [],
+            "prior": 0.019488174
+          },
+          {
+            "action": 12,
+            "child_stats": [],
+            "prior": 0.05669231
+          },
+          {
+            "action": 13,
+            "child_stats": [],
+            "prior": 0.010924294
+          },
+          {
+            "action": 14,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.022064818
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.050641738
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.080834441
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.11893918
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.057861175
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.021650514
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.0094448701
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.021935716
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.013250387
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.17843699
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.048373368
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.04872746
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.040583085
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.093002215
+              },
+              {
+                "action": 14,
+                "child_stats": [],
+                "prior": 0.074306041
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.034204822
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.015703594
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.0700396
+              }
+            ],
+            "evaluation_index": 16,
+            "prior": 0.27762625,
+            "raw_value_view": 0.51367617,
+            "reward": -0.16438866,
+            "value_view": 0.51367617,
+            "visit": 1
+          },
+          {
+            "action": 15,
+            "child_stats": [],
+            "prior": 0.033956762
+          },
+          {
+            "action": 16,
+            "child_stats": [],
+            "prior": 0.039922975
+          },
+          {
+            "action": 17,
+            "child_stats": [],
+            "prior": 0.0044574854
+          }
+        ],
+        "evaluation_index": 2,
+        "prior": 0.1116844,
+        "raw_value_view": -0.97839522,
+        "reward": 0.11306548,
+        "value_view": -0.31532437,
+        "visit": 2
+      },
+      {
+        "action": 15,
+        "child_stats": [],
+        "prior": 0.027273074
+      },
+      {
+        "action": 16,
+        "child_stats": [],
+        "prior": 0.0327482
+      },
+      {
+        "action": 17,
+        "child_stats": [
+          {
+            "action": 0,
+            "child_stats": [],
+            "prior": 0.032815233
+          },
+          {
+            "action": 1,
+            "child_stats": [],
+            "prior": 0.068576969
+          },
+          {
+            "action": 2,
+            "child_stats": [],
+            "prior": 0.016133163
+          },
+          {
+            "action": 3,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.0063816519
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.014152353
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.062494058
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.035307441
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.041036915
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.050569493
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.032252781
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.1522685
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.047095239
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.014606827
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.10525356
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.15253504
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.022030378
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.10972904
+              },
+              {
+                "action": 14,
+                "child_stats": [],
+                "prior": 0.069445625
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.057888206
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.0064710793
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.020481806
+              }
+            ],
+            "evaluation_index": 20,
+            "prior": 0.11995652,
+            "raw_value_view": 0.50271082,
+            "reward": 0.23660874,
+            "value_view": 0.50271082,
+            "visit": 1
+          },
+          {
+            "action": 4,
+            "child_stats": [],
+            "prior": 0.020150872
+          },
+          {
+            "action": 5,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.047975577
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.033473656
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.033277985
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.088490061
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.026792018
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.016743749
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.019138839
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.013434922
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.21123414
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.023582824
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.076018885
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.087054305
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.0485879
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.011325286
+              },
+              {
+                "action": 14,
+                "child_stats": [],
+                "prior": 0.012177853
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.028943885
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.077932663
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.14381544
+              }
+            ],
+            "evaluation_index": 24,
+            "prior": 0.11071733,
+            "raw_value_view": 0.57641602,
+            "reward": -0.55191517,
+            "value_view": 0.57641602,
+            "visit": 1
+          },
+          {
+            "action": 6,
+            "child_stats": [],
+            "prior": 0.045009825
+          },
+          {
+            "action": 7,
+            "child_stats": [],
+            "prior": 0.0078675933
+          },
+          {
+            "action": 8,
+            "child_stats": [],
+            "prior": 0.038286813
+          },
+          {
+            "action": 9,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.061893303
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.086480916
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.10907012
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.0083069671
+              },
+              {
+                "action": 4,
+                "child_stats": [
+                  {
+                    "action": 0,
+                    "child_stats": [],
+                    "prior": 0.055889022
+                  },
+                  {
+                    "action": 1,
+                    "child_stats": [],
+                    "prior": 0.17366086
+                  },
+                  {
+                    "action": 2,
+                    "child_stats": [],
+                    "prior": 0.014894087
+                  },
+                  {
+                    "action": 3,
+                    "child_stats": [],
+                    "prior": 0.01210086
+                  },
+                  {
+                    "action": 4,
+                    "child_stats": [],
+                    "prior": 0.028588576
+                  },
+                  {
+                    "action": 5,
+                    "child_stats": [],
+                    "prior": 0.041119568
+                  },
+                  {
+                    "action": 6,
+                    "child_stats": [],
+                    "prior": 0.0060544414
+                  },
+                  {
+                    "action": 7,
+                    "child_stats": [],
+                    "prior": 0.021616653
+                  },
+                  {
+                    "action": 8,
+                    "child_stats": [],
+                    "prior": 0.071313366
+                  },
+                  {
+                    "action": 9,
+                    "child_stats": [],
+                    "prior": 0.021935288
+                  },
+                  {
+                    "action": 10,
+                    "child_stats": [],
+                    "prior": 0.14386232
+                  },
+                  {
+                    "action": 11,
+                    "child_stats": [],
+                    "prior": 0.0044817268
+                  },
+                  {
+                    "action": 12,
+                    "child_stats": [],
+                    "prior": 0.058358762
+                  },
+                  {
+                    "action": 13,
+                    "child_stats": [],
+                    "prior": 0.039636839
+                  },
+                  {
+                    "action": 14,
+                    "child_stats": [],
+                    "prior": 0.0055485363
+                  },
+                  {
+                    "action": 15,
+                    "child_stats": [],
+                    "prior": 0.15898894
+                  },
+                  {
+                    "action": 16,
+                    "child_stats": [],
+                    "prior": 0.13949104
+                  },
+                  {
+                    "action": 17,
+                    "child_stats": [],
+                    "prior": 0.0024591384
+                  }
+                ],
+                "evaluation_index": 32,
+                "prior": 0.14926973,
+                "raw_value_view": -0.067738295,
+                "reward": 0.65708613,
+                "value_view": -0.067738295,
+                "visit": 1
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.093272693
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.01207387
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.024590267
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.02388813
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.045994714
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.024275785
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.041274343
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.019021742
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.051841751
+              },
+              {
+                "action": 14,
+                "child_stats": [],
+                "prior": 0.05486476
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.04612216
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.07656233
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.07119634
+              }
+            ],
+            "evaluation_index": 14,
+            "prior": 0.14043343,
+            "raw_value_view": 0.53610444,
+            "reward": 0.51482177,
+            "value_view": 0.56282771,
+            "visit": 2
+          },
+          {
+            "action": 10,
+            "child_stats": [],
+            "prior": 0.051281568
+          },
+          {
+            "action": 11,
+            "child_stats": [],
+            "prior": 0.026778657
+          },
+          {
+            "action": 12,
+            "child_stats": [],
+            "prior": 0.052111458
+          },
+          {
+            "action": 13,
+            "child_stats": [],
+            "prior": 0.068521544
+          },
+          {
+            "action": 14,
+            "child_stats": [],
+            "prior": 0.0061140372
+          },
+          {
+            "action": 15,
+            "child_stats": [],
+            "prior": 0.07539136
+          },
+          {
+            "action": 16,
+            "child_stats": [],
+            "prior": 0.01380886
+          },
+          {
+            "action": 17,
+            "child_stats": [
+              {
+                "action": 0,
+                "child_stats": [],
+                "prior": 0.039185904
+              },
+              {
+                "action": 1,
+                "child_stats": [],
+                "prior": 0.015507758
+              },
+              {
+                "action": 2,
+                "child_stats": [],
+                "prior": 0.0066862693
+              },
+              {
+                "action": 3,
+                "child_stats": [],
+                "prior": 0.021377129
+              },
+              {
+                "action": 4,
+                "child_stats": [],
+                "prior": 0.0080716712
+              },
+              {
+                "action": 5,
+                "child_stats": [],
+                "prior": 0.014237196
+              },
+              {
+                "action": 6,
+                "child_stats": [],
+                "prior": 0.031265914
+              },
+              {
+                "action": 7,
+                "child_stats": [],
+                "prior": 0.0057907999
+              },
+              {
+                "action": 8,
+                "child_stats": [],
+                "prior": 0.012715851
+              },
+              {
+                "action": 9,
+                "child_stats": [],
+                "prior": 0.032621406
+              },
+              {
+                "action": 10,
+                "child_stats": [],
+                "prior": 0.062416993
+              },
+              {
+                "action": 11,
+                "child_stats": [],
+                "prior": 0.071306422
+              },
+              {
+                "action": 12,
+                "child_stats": [],
+                "prior": 0.2948069
+              },
+              {
+                "action": 13,
+                "child_stats": [],
+                "prior": 0.083588324
+              },
+              {
+                "action": 14,
+                "child_stats": [],
+                "prior": 0.25557137
+              },
+              {
+                "action": 15,
+                "child_stats": [],
+                "prior": 0.023385458
+              },
+              {
+                "action": 16,
+                "child_stats": [],
+                "prior": 0.0145564
+              },
+              {
+                "action": 17,
+                "child_stats": [],
+                "prior": 0.0069082612
+              }
+            ],
+            "evaluation_index": 28,
+            "prior": 0.10604477,
+            "raw_value_view": 0.42714119,
+            "reward": -0.59413099,
+            "value_view": 0.42714119,
+            "visit": 1
+          }
+        ],
+        "evaluation_index": 5,
+        "prior": 0.088696897,
+        "raw_value_view": 0.51383734,
+        "reward": -0.70918512,
+        "value_view": 0.54301184,
+        "visit": 6
+      }
+    ],
+    "evaluation_index": 0,
+    "prior": 1.0,
+    "raw_value_view": 0.43683624,
+    "value_view": 0.63751233,
+    "visit": 51
+  }
+}
