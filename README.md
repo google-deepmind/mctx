@@ -89,7 +89,7 @@ new_embedding)` with a `RecurrentFnOutput` and the embedding of the next state.
 The `RecurrentFnOutput` contains the `reward` and `discount` for the transition,
 and `prior_logits` and `value` for the new state.
 
-In [examples/visualization_demo.py](https://github.com/deepmind/mctx/blob/master/examples/visualization_demo.py)
+In [examples/visualization_demo.py](https://github.com/deepmind/mctx/blob/main/examples/visualization_demo.py)
 you can see calls to a policy:
 
 ```python
@@ -106,7 +106,7 @@ We recommend to use the `gumbel_muzero_policy`.
 [Gumbel MuZero](https://openreview.net/forum?id=bERaNdoegnO) guarantees a policy
 improvement if the action values are correctly evaluated. The policy improvement
 is demonstrated in
-[examples/policy_improvement_demo.py](https://github.com/deepmind/mctx/blob/master/examples/policy_improvement_demo.py).
+[examples/policy_improvement_demo.py](https://github.com/deepmind/mctx/blob/main/examples/policy_improvement_demo.py).
 
 ## Citing Mctx
 
