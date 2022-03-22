@@ -123,7 +123,7 @@ def _run_demo(rng_key: chex.PRNGKey):
   num_states = rewards.shape[0]
   # The discount for each (s, a) pair.
   discounts = jnp.where(transition_matrix > 0, 1.0, 0.0)
-  # Using an optimistic initial values to encourage exploration.
+  # Using optimistic initial values to encourage exploration.
   values = jnp.full([num_states], 15.0)
   # The prior policies for each state.
   all_prior_logits = jnp.zeros_like(rewards)
