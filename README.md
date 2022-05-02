@@ -14,7 +14,7 @@ with large learned environment models parameterized by deep neural networks.
 
 Mctx can be installed with `pip` directly from github, with the following command:
 
-`pip install git+git://github.com/deepmind/mctx.git`
+`pip install git+https://github.com/deepmind/mctx.git`
 
 or from PyPI:
 
