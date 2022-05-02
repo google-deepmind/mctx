@@ -96,7 +96,7 @@ class GumbelMuZeroExtraData:
   root_gumbel: chex.Array
 
 
-GumbelMuZeroExtraDataType = TypeVar(
+GumbelMuZeroExtraDataType = TypeVar(  # pylint: disable=invalid-name
     "GumbelMuZeroExtraDataType", bound=GumbelMuZeroExtraData)
 
 
