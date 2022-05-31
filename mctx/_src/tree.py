@@ -34,6 +34,7 @@ class Tree(Generic[T]):
   the number of nodes in the tree, and `num_actions` is the number of discrete
   actions.
 
+  root_index: `[B]` the indices of the current root nodes.
   node_visits: `[B, N]` the visit counts for each node.
   raw_values: `[B, N]` the raw value for each node.
   node_values: `[B, N]` the cumulative search value for each node.
@@ -56,6 +57,7 @@ class Tree(Generic[T]):
     root. In the mask, invalid actions have ones, and valid actions have zeros.
   extra_data: `[B, ...]` extra data passed to the search.
   """
+  root_index: chex.Array  # [B]
   node_visits: chex.Array  # [B, N]
   raw_values: chex.Array  # [B, N]
   node_values: chex.Array  # [B, N]
@@ -73,7 +75,7 @@ class Tree(Generic[T]):
 
   # The following attributes are class variables (and should not be set on
   # Tree instances).
-  ROOT_INDEX: ClassVar[int] = 0
+  INITIAL_ROOT_INDEX: ClassVar[int] = 0
   NO_PARENT: ClassVar[int] = -1
   UNVISITED: ClassVar[int] = -1
 
@@ -96,12 +98,11 @@ class Tree(Generic[T]):
     """Extract summary statistics for the root node."""
     # Get state and action values for the root nodes.
     chex.assert_rank(self.node_values, 2)
-    value = self.node_values[:, Tree.ROOT_INDEX]
-    batch_size, = value.shape
-    root_indices = jnp.full((batch_size,), Tree.ROOT_INDEX)
+    value = self.node_values.take(self.root_index)
+    root_indices = self.root_index
     qvalues = self.qvalues(root_indices)
     # Extract visit counts and induced probabilities for the root nodes.
-    visit_counts = self.children_visits[:, Tree.ROOT_INDEX].astype(value.dtype)
+    visit_counts = self.children_visits.take(self.root_index, axis=1)[:, 0, :].astype(value.dtype)
     total_counts = jnp.sum(visit_counts, axis=-1, keepdims=True)
     visit_probs = visit_counts / jnp.maximum(total_counts, 1)
     visit_probs = jnp.where(total_counts > 0, visit_probs, 1 / self.num_actions)

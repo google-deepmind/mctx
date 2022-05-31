@@ -166,12 +166,14 @@ def simulate(
         depth=depth,
         is_continuing=is_continuing)
 
-  node_index = jnp.array(Tree.ROOT_INDEX, dtype=jnp.int32)
+  node_index = jnp.array(Tree.INITIAL_ROOT_INDEX, dtype=jnp.int32)
+  # node_index = tree.root_index
   depth = jnp.zeros((), dtype=tree.children_prior_logits.dtype)
   initial_state = _SimulationState(
       rng_key=rng_key,
       node_index=tree.NO_PARENT,
       action=tree.NO_PARENT,
+      # action=jnp.full(node_index.shape, tree.NO_PARENT, dtype=jnp.int32),
       next_node_index=node_index,
       depth=depth,
       is_continuing=jnp.array(True))
@@ -255,7 +257,7 @@ def backward(
 
   def cond_fun(loop_state):
     _, _, index = loop_state
-    return index != Tree.ROOT_INDEX
+    return index != tree.root_index
 
   def body_fun(loop_state):
     # Here we update the value of our parent, so we start by reversing.
@@ -348,6 +350,7 @@ def instantiate_tree_from_root(
   chex.assert_shape(root.value, [batch_size])
   num_nodes = num_simulations + 1
   data_dtype = root.value.dtype
+  batch = (batch_size,)
   batch_node = (batch_size, num_nodes)
   batch_node_action = (batch_size, num_nodes, num_actions)
 
@@ -356,6 +359,7 @@ def instantiate_tree_from_root(
 
   # Create a new empty tree state and fill its root.
   tree = Tree(
+      root_index=jnp.full(batch, Tree.INITIAL_ROOT_INDEX, dtype=jnp.int32),
       node_visits=jnp.zeros(batch_node, dtype=jnp.int32),
       raw_values=jnp.zeros(batch_node, dtype=data_dtype),
       node_values=jnp.zeros(batch_node, dtype=data_dtype),
@@ -374,7 +378,6 @@ def instantiate_tree_from_root(
       root_invalid_actions=root_invalid_actions,
       extra_data=extra_data)
 
-  root_index = jnp.full([batch_size], Tree.ROOT_INDEX)
   tree = update_tree_node(
-      tree, root_index, root.prior_logits, root.value, root.embedding)
+      tree, tree.root_index, root.prior_logits, root.value, root.embedding)
   return tree

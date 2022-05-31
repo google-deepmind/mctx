@@ -153,13 +153,13 @@ class TreeTest(parameterized.TestCase):
   # pylint: disable=line-too-long
   @parameterized.named_parameters(
       ("muzero_norescale",
-       "../mctx/_src/tests/test_data/muzero_tree.json"),
+       "test_data/muzero_tree.json"),
       ("muzero_qtransform",
-       "../mctx/_src/tests/test_data/muzero_qtransform_tree.json"),
+       "test_data/muzero_qtransform_tree.json"),
       ("gumbel_muzero_norescale",
-       "../mctx/_src/tests/test_data/gumbel_muzero_tree.json"),
+       "test_data/gumbel_muzero_tree.json"),
       ("gumbel_muzero_reward",
-       "../mctx/_src/tests/test_data/gumbel_muzero_reward_tree.json"))
+       "test_data/gumbel_muzero_reward_tree.json"))
   # pylint: enable=line-too-long
   def test_tree(self, tree_data_path):
     with open(tree_data_path, "rb") as fd:

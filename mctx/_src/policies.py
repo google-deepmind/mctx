@@ -207,7 +207,7 @@ def gumbel_muzero_policy(
   considered_visit = jnp.max(summary.visit_counts, axis=-1, keepdims=True)
   # The completed_qvalues include imputed values for unvisited actions.
   completed_qvalues = jax.vmap(qtransform, in_axes=[0, None])(
-      search_tree, search_tree.ROOT_INDEX)
+      search_tree, search_tree.INITIAL_ROOT_INDEX)
   to_argmax = seq_halving.score_considered(
       considered_visit, gumbel, root.prior_logits, completed_qvalues,
       summary.visit_counts)
