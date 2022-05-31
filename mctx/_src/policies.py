@@ -14,7 +14,7 @@
 # ==============================================================================
 """Search policies."""
 import functools
-from typing import Optional
+from typing import Optional, Any
 
 import chex
 import jax
@@ -117,6 +117,164 @@ def muzero_policy(
       action_weights=action_weights,
       search_tree=search_tree)
 
+
+def muzero_policy_for_action_sequence(
+    params: base.Params,
+    rng_key: chex.PRNGKey,
+    root: base.RootFnOutput,
+    recurrent_fn: base.RecurrentFn,
+    num_simulations: int,
+    invalid_actions: Optional[chex.Array] = None,
+    max_depth: Optional[int] = None,
+    *,
+    qtransform: base.QTransform = qtransforms.qtransform_by_parent_and_siblings,
+    dirichlet_fraction: chex.Numeric = 0.25,
+    dirichlet_alpha: chex.Numeric = 0.3,
+    pb_c_init: chex.Numeric = 1.25,
+    pb_c_base: chex.Numeric = 19652,
+    temperature: chex.Numeric = 1.0,
+    extra_data: Any = None,
+    num_actions_to_generate: int = 1,
+) -> base.PolicyOutput[None]:
+  """Runs MuZero search to generate a sequence of actions and returns the
+  `PolicyOutput`. For comparison, `muzero_policy` returns only the prediction
+  for one action, not a sequence.
+
+  In the shape descriptions, `B` denotes the batch dimension.
+
+  Args:
+    params: params to be forwarded to root and recurrent functions.
+    rng_key: random number generator state, the key is consumed.
+    root: a `(prior_logits, value, embedding)` `RootFnOutput`. The
+      `prior_logits` are from a policy network. The shapes are
+      `([B, num_actions], [B], [B, ...])`, respectively.
+    recurrent_fn: a callable to be called on the leaf nodes and unvisited
+      actions retrieved by the simulation step, which takes as args
+      `(params, rng_key, action, embedding)` and returns a `RecurrentFnOutput`
+      and the new state embedding. The `rng_key` argument is consumed.
+    num_simulations: the number of simulations per generated action
+    invalid_actions: a mask with invalid actions. Invalid actions
+      have ones, valid actions have zeros in the mask. Shape `[B, num_actions]`.
+    max_depth: maximum search tree depth allowed during simulation.
+    qtransform: function to obtain completed Q-values for a node.
+    dirichlet_fraction: float from 0 to 1 interpolating between using only the
+      prior policy or just the Dirichlet noise.
+    dirichlet_alpha: concentration parameter to parametrize the Dirichlet
+      distribution.
+    pb_c_init: constant c_1 in the PUCT formula.
+    pb_c_base: constant c_2 in the PUCT formula.
+    temperature: temperature for acting proportionally to
+      `visit_counts**(1 / temperature)`.
+    extra_data: extra data passed to `tree.extra_data`. Shape `[B, ...]`.
+    num_actions_to_generate: Number of actions to generate. For each action,
+      `num_simulations` simulations are performed and the most visited child
+      action is taken. Further simulations are recursively performed
+      on the subtree, until all `num_action_to_generate` are generated.
+
+  Returns:
+    `PolicyOutput` containing the proposed action, action_weights and the used
+    search tree.
+  """
+
+  from mctx import Tree
+  from mctx._src.search import simulate, expand, backward, instantiate_tree_from_root
+
+  rng_key, dirichlet_rng_key, search_rng_key = jax.random.split(rng_key, 3)
+
+  # Adding Dirichlet noise.
+  noisy_logits = _get_logits_from_probs(
+      _add_dirichlet_noise(
+          dirichlet_rng_key,
+          jax.nn.softmax(root.prior_logits),
+          dirichlet_fraction=dirichlet_fraction,
+          dirichlet_alpha=dirichlet_alpha))
+  root = root.replace(
+      prior_logits=_mask_invalid_actions(noisy_logits, invalid_actions))
+
+  # Running the search.
+  interior_action_selection_fn = functools.partial(
+      action_selection.muzero_action_selection,
+      pb_c_base=pb_c_base,
+      pb_c_init=pb_c_init,
+      qtransform=qtransform)
+  root_action_selection_fn = functools.partial(
+      interior_action_selection_fn,
+      depth=0)
+
+  # ~~~ mctx.search ~~~ #
+  action_selection_fn = action_selection.switching_action_selection_wrapper(
+      root_action_selection_fn=root_action_selection_fn,
+      interior_action_selection_fn=interior_action_selection_fn
+  )
+
+  # Do simulation, expansion, and backward steps.
+  batch_size = root.value.shape[0]
+  batch_range = jnp.arange(batch_size)
+  if max_depth is None:
+    max_depth = num_simulations
+  if invalid_actions is None:
+    invalid_actions = jnp.zeros_like(root.prior_logits)
+
+  def next_action_fun(sim, loop_state):
+    rng_key, tree, max_depth = loop_state
+    rng_key, simulate_key, expand_key = jax.random.split(rng_key, 3)
+    # simulate is vmapped and expects batched rng keys.
+    simulate_keys = jax.random.split(simulate_key, batch_size)
+    parent_index, action = simulate(
+        simulate_keys, tree, action_selection_fn, max_depth)
+    # A node first expanded on simulation `i`, will have node index `i`.
+    # Node 0 does not need to correspond to the root node,
+    # because the root changes as actions get performed.
+    next_node_index = tree.children_index[batch_range, parent_index, action]
+    next_node_index = jnp.where(next_node_index == Tree.UNVISITED,
+                                sim + 1, next_node_index)
+    tree = expand(
+        params, expand_key, tree, recurrent_fn, parent_index,
+        action, next_node_index)
+    tree = backward(tree, next_node_index)
+    loop_state = rng_key, tree, max_depth
+    return loop_state
+
+  def body_fun(generated_action, loop_state):
+    rng_key, tree, max_depth, performed_actions = loop_state
+
+    _, tree, _ = jax.lax.fori_loop(
+      generated_action * num_simulations,
+      (generated_action + 1) * num_simulations,
+      next_action_fun, (rng_key, tree, max_depth))
+
+    # Sampling the action to be performed proportionally to the visit counts.
+    summary = tree.summary()
+    action_weights = summary.visit_probs
+    action_logits = _apply_temperature(
+        _get_logits_from_probs(action_weights), temperature)
+    action = jax.random.categorical(rng_key, action_logits)
+
+    def update_new_root_index(batch_idx, new_root_index):
+      return new_root_index.at[batch_idx].set(
+        tree.children_index[batch_idx, tree.root_index[batch_idx], action[batch_idx]])
+    new_root_index = jax.lax.fori_loop(0, batch_size, update_new_root_index,
+                                       jnp.full_like(tree.root_index, -1))
+    tree = tree.replace(root_index=tree.root_index.at[:].set(new_root_index))
+    performed_actions = performed_actions.at[:, generated_action].set(action)
+    max_depth -= 1
+
+    loop_state = rng_key, tree, max_depth, performed_actions
+    return loop_state
+
+  # Allocate all necessary storage.
+  tree = instantiate_tree_from_root(
+    root, num_actions_to_generate * num_simulations,
+    root_invalid_actions=invalid_actions, extra_data=extra_data)
+
+  performed_actions = jnp.full((batch_size, num_actions_to_generate), -1, dtype=jnp.int32)
+  _, tree, _, performed_actions = jax.lax.fori_loop(
+      0, num_actions_to_generate, body_fun, (rng_key, tree, max_depth, performed_actions))
+
+  return base.PolicyOutput(
+      action=performed_actions,
+      action_weights=jnp.empty((0,)),
+      search_tree=tree)
 
 def gumbel_muzero_policy(
     params: base.Params,

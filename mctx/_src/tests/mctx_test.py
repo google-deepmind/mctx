@@ -24,6 +24,7 @@ class MctxTest(absltest.TestCase):
   def test_import(self):
     self.assertTrue(hasattr(mctx, "gumbel_muzero_policy"))
     self.assertTrue(hasattr(mctx, "muzero_policy"))
+    self.assertTrue(hasattr(mctx, "muzero_policy_for_action_sequence"))
     self.assertTrue(hasattr(mctx, "qtransform_by_min_max"))
     self.assertTrue(hasattr(mctx, "qtransform_by_parent_and_siblings"))
     self.assertTrue(hasattr(mctx, "qtransform_completed_by_mix_value"))
