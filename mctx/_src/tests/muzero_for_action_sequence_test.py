@@ -12,7 +12,7 @@ import numpy as np
 from mctx._src.tests.tree_test import _prepare_root, _prepare_recurrent_fn
 
 
-class TreeTest(parameterized.TestCase):
+class MuzeroForActionSequenceTest(parameterized.TestCase):
   def test_tree(self, draw_graph=False):
     with open("test_data/muzero_for_action_sequence_qtransform_tree.json", "rb") as fd:
       tree = json.load(fd)
@@ -27,12 +27,6 @@ class TreeTest(parameterized.TestCase):
         **tree["algorithm_config"].pop("qtransform_kwargs", {}))
 
     batch_size = 3
-    # To test the independence of the batch computation, we use different
-    # invalid actions for the other elements of the batch. The different batch
-    # elements will then have different search tree depths.
-    invalid_actions = np.zeros([batch_size, num_actions])
-    invalid_actions[1, 1:] = 1
-    invalid_actions[2, 2:] = 1
 
     def run_policy():
       return mctx.muzero_policy_for_action_sequence(
@@ -42,7 +36,6 @@ class TreeTest(parameterized.TestCase):
         recurrent_fn=_prepare_recurrent_fn(num_actions, **env_config),
         num_simulations=num_simulations,
         qtransform=qtransform,
-        invalid_actions=invalid_actions,
         **tree["algorithm_config"],
         num_actions_to_generate=3,
       )

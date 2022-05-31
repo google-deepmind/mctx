@@ -175,6 +175,15 @@ def muzero_policy_for_action_sequence(
     `PolicyOutput` containing the proposed action, action_weights and the used
     search tree.
   """
+  if invalid_actions is not None:
+    raise NotImplementedError(
+      "`invalid_actions` are not supported as the root position in the tree"
+      " changes, but `mctx._src.search.simulate` starts always at depth zero,"
+      " taking into account the old invalid_actions of the initial root."
+      " To support this, a redesign is needed: 1. Are invalid actions different"
+      " for different nodes in the tree, or does only the root have invalid"
+      " actions? 2. Where to fetch invalid_actions of non-root nodes during"
+      " the search?")
 
   from mctx import Tree
   from mctx._src.search import simulate, expand, backward, instantiate_tree_from_root

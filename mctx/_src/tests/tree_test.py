@@ -195,6 +195,9 @@ class TreeTest(parameterized.TestCase):
     invalid_actions = np.zeros([batch_size, num_actions])
     invalid_actions[1, 1:] = 1
     invalid_actions[2, 2:] = 1
+    if tree["algorithm"] == "muzero_for_action_sequence":
+      invalid_actions = None  # muzero_for_action_sequence does not support invalid_actions
+
 
     def run_policy():
       return policy_fn(
