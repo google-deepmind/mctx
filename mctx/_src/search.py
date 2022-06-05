@@ -130,7 +130,7 @@ def simulate(
   """Traverses the tree until reaching an unvisited action or `max_depth`.
 
   Each simulation starts from the root and keeps selecting actions traversing
-  the tree until a leaf or `max_depth` is reached.
+  the tree until an unvisited action or `max_depth` is reached.
 
   Args:
     rng_key: random number generator state, the key is consumed.
