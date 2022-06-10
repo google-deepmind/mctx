@@ -35,6 +35,7 @@ def muzero_policy(
     num_simulations: int,
     invalid_actions: Optional[chex.Array] = None,
     max_depth: Optional[int] = None,
+    loop_fn: base.LoopFn = jax.lax.fori_loop,
     *,
     qtransform: base.QTransform = qtransforms.qtransform_by_parent_and_siblings,
     dirichlet_fraction: chex.Numeric = 0.25,
@@ -60,6 +61,8 @@ def muzero_policy(
     invalid_actions: a mask with invalid actions. Invalid actions
       have ones, valid actions have zeros in the mask. Shape `[B, num_actions]`.
     max_depth: maximum search tree depth allowed during simulation.
+    loop_fn: Function used to run the simulations. It may be required to pass
+      hk.fori_loop if using this function inside a Haiku module.
     qtransform: function to obtain completed Q-values for a node.
     dirichlet_fraction: float from 0 to 1 interpolating between using only the
       prior policy or just the Dirichlet noise.
@@ -104,7 +107,8 @@ def muzero_policy(
       interior_action_selection_fn=interior_action_selection_fn,
       num_simulations=num_simulations,
       max_depth=max_depth,
-      invalid_actions=invalid_actions)
+      invalid_actions=invalid_actions,
+      loop_fn=loop_fn)
 
   # Sampling the proposed action proportionally to the visit counts.
   summary = search_tree.summary()
@@ -126,6 +130,7 @@ def gumbel_muzero_policy(
     num_simulations: int,
     invalid_actions: Optional[chex.Array] = None,
     max_depth: Optional[int] = None,
+    loop_fn: base.LoopFn = jax.lax.fori_loop,
     *,
     qtransform: base.QTransform = qtransforms.qtransform_completed_by_mix_value,
     max_num_considered_actions: int = 16,
@@ -157,6 +162,8 @@ def gumbel_muzero_policy(
     invalid_actions: a mask with invalid actions. Invalid actions
       have ones, valid actions have zeros in the mask. Shape `[B, num_actions]`.
     max_depth: maximum search tree depth allowed during simulation.
+    loop_fn: Function used to run the simulations. It may be required to pass
+      hk.fori_loop if using this function inside a Haiku module.
     qtransform: function to obtain completed Q-values for a node.
     max_num_considered_actions: the maximum number of actions expanded at the
       root node. A smaller number of actions will be expanded if the number of
@@ -197,7 +204,8 @@ def gumbel_muzero_policy(
       num_simulations=num_simulations,
       max_depth=max_depth,
       invalid_actions=invalid_actions,
-      extra_data=extra_data)
+      extra_data=extra_data,
+      loop_fn=loop_fn)
   summary = search_tree.summary()
 
   # Acting with the best action from the most visited actions.

@@ -19,6 +19,7 @@ from mctx._src.action_selection import gumbel_muzero_root_action_selection
 from mctx._src.action_selection import GumbelMuZeroExtraData
 from mctx._src.action_selection import muzero_action_selection
 from mctx._src.base import InteriorActionSelectionFn
+from mctx._src.base import LoopFn
 from mctx._src.base import PolicyOutput
 from mctx._src.base import RecurrentFnOutput
 from mctx._src.base import RootActionSelectionFn

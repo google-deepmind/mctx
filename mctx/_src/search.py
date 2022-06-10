@@ -39,7 +39,8 @@ def search(
     num_simulations: int,
     max_depth: Optional[int] = None,
     invalid_actions: Optional[chex.Array] = None,
-    extra_data: Any = None) -> Tree:
+    extra_data: Any = None,
+    loop_fn: base.LoopFn = jax.lax.fori_loop) -> Tree:
   """Performs a full search and returns sampled actions.
 
   In the shape descriptions, `B` denotes the batch dimension.
@@ -64,6 +65,8 @@ def search(
       mask, invalid actions have ones, and valid actions have zeros.
       Shape `[B, num_actions]`.
     extra_data: extra data passed to `tree.extra_data`. Shape `[B, ...]`.
+    loop_fn: Function used to run the simulations. It may be required to pass
+      hk.fori_loop if using this function inside a Haiku module.
 
   Returns:
     `SearchResults` containing outcomes of the search, e.g. `visit_counts`
@@ -105,7 +108,7 @@ def search(
   tree = instantiate_tree_from_root(root, num_simulations,
                                     root_invalid_actions=invalid_actions,
                                     extra_data=extra_data)
-  _, tree = jax.lax.fori_loop(
+  _, tree = loop_fn(
       0, num_simulations, body_fun, (rng_key, tree))
 
   return tree

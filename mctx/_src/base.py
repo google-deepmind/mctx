@@ -81,6 +81,10 @@ InteriorActionSelectionFn = Callable[
     [chex.PRNGKey, tree.Tree, NodeIndices, Depth],
     chex.Array]
 QTransform = Callable[[tree.Tree, chex.Array], chex.Array]
+# LoopFn has the same interface as jax.lax.fori_loop.
+LoopFn = Callable[
+    [int, int, Callable[[Any, Any], Any], Tuple[chex.PRNGKey, tree.Tree]],
+    Tuple[chex.PRNGKey, tree.Tree]]
 
 T = TypeVar("T")
 
