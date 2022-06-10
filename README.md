@@ -108,6 +108,13 @@ improvement if the action values are correctly evaluated. The policy improvement
 is demonstrated in
 [examples/policy_improvement_demo.py](https://github.com/deepmind/mctx/blob/main/examples/policy_improvement_demo.py).
 
+### Example projects
+The following projects demonstrate the Mctx usage:
+
+- [Basic Learning Demo with Mctx](https://github.com/kenjyoung/mctx_learning_demo)
+
+Tell us about your project.
+
 ## Citing Mctx
 
 This is not an officially supported Google product. Mctx is part of the
