@@ -112,6 +112,8 @@ is demonstrated in
 The following projects demonstrate the Mctx usage:
 
 - [Basic Learning Demo with Mctx](https://github.com/kenjyoung/mctx_learning_demo)
+... AlphaZero on random mazes.
+- [a0-jax](https://github.com/NTT123/a0-jax) ... AlphaZero on Connect Four.
 
 Tell us about your project.
 
