@@ -53,8 +53,6 @@ RecurrentFn = Callable[
     Tuple[RecurrentFnOutput, RecurrentState]]
 
 
-# The search takes as input an initial set of predictions made directly
-# from the raw data. These predictions are made by a `RootFn` with signature:
 @chex.dataclass(frozen=True)
 class RootFnOutput:
   """The output of a representation network.
@@ -66,10 +64,6 @@ class RootFnOutput:
   prior_logits: chex.Array
   value: chex.Array
   embedding: RecurrentState
-
-
-RawData = Any
-RootFn = Callable[[Params, chex.PRNGKey, RawData], RootFnOutput]
 
 
 # Action selection functions specify how to pick nodes to expand in the tree.

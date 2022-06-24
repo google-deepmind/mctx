@@ -21,6 +21,7 @@ from mctx._src.action_selection import muzero_action_selection
 from mctx._src.base import InteriorActionSelectionFn
 from mctx._src.base import LoopFn
 from mctx._src.base import PolicyOutput
+from mctx._src.base import RecurrentFn
 from mctx._src.base import RecurrentFnOutput
 from mctx._src.base import RootActionSelectionFn
 from mctx._src.base import RootFnOutput
@@ -37,7 +38,9 @@ __version__ = "0.0.1"
 __all__ = (
     "GumbelMuZeroExtraData",
     "InteriorActionSelectionFn",
+    "LoopFn",
     "PolicyOutput",
+    "RecurrentFn",
     "RecurrentFnOutput",
     "RootActionSelectionFn",
     "RootFnOutput",
