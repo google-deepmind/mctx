@@ -1,5 +1,7 @@
 # Mctx: MCTS-in-JAX
 
+![pypi](https://img.shields.io/pypi/v/mctx)
+
 Mctx is a library with a [JAX](https://github.com/google/jax)-native
 implementation of Monte Carlo tree search (MCTS) algorithms such as
 [AlphaZero](https://deepmind.com/blog/article/alphazero-shedding-new-light-grand-games-chess-shogi-and-go),
@@ -12,14 +14,17 @@ with large learned environment models parameterized by deep neural networks.
 
 ## Installation
 
-Mctx can be installed with `pip` directly from github, with the following command:
+You can install the latest released version of Mctx from PyPI via:
 
-`pip install git+https://github.com/deepmind/mctx.git`
+```sh
+pip install mctx
+```
 
-or from PyPI:
+or you can install the latest development version from GitHub:
 
-`pip install mctx`
-
+```sh
+pip install git+https://github.com/deepmind/mctx.git
+```
 
 ## Motivation
 
