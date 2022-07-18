@@ -188,6 +188,6 @@ def _compute_mixed_value(raw_value, qvalues, visit_counts, prior_probs):
                       axis=-1)
   weighted_q = jnp.sum(jnp.where(
       visit_counts > 0,
-      prior_probs * qvalues / sum_probs,
+      prior_probs * qvalues / jnp.where(visit_counts > 0, sum_probs, 1.0),
       0.0), axis=-1)
   return (raw_value + sum_visit_counts * weighted_q) / (sum_visit_counts + 1)

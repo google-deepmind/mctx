@@ -38,6 +38,19 @@ class QtransformsTest(absltest.TestCase):
         (probs[1] * qvalues[1] + probs[2] * qvalues[2]))
     np.testing.assert_allclose(expected_mix_value, mix_value)
 
+  def test_mix_value_with_zero_visits(self):
+    """Tests that zero visit counts do not divide by zero."""
+    raw_value = jnp.array(-0.8)
+    prior_logits = jnp.array([-jnp.inf, -1.0, 2.0, -jnp.inf])
+    probs = jax.nn.softmax(prior_logits)
+    visit_counts = jnp.array([0, 0, 0, 0])
+    qvalues = jnp.zeros_like(probs)
+    with jax.debug_nans():
+      mix_value = qtransforms._compute_mixed_value(
+          raw_value, qvalues, visit_counts, probs)
+
+    np.testing.assert_allclose(raw_value, mix_value)
+
 
 if __name__ == "__main__":
   absltest.main()
