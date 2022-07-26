@@ -117,7 +117,7 @@ def infer_batch_size(tree: Tree) -> int:
   """Recovers batch size from `Tree` data structure."""
   if tree.node_values.ndim != 2:
     raise ValueError("Input tree is not batched.")
-  chex.assert_equal_shape_prefix(jax.tree_leaves(tree), 1)
+  chex.assert_equal_shape_prefix(jax.tree_util.tree_leaves(tree), 1)
   return tree.node_values.shape[0]
 
 
