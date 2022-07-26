@@ -1,7 +1,5 @@
 # Mctx: MCTS-in-JAX
 
-![pypi](https://img.shields.io/pypi/v/mctx)
-
 Mctx is a library with a [JAX](https://github.com/google/jax)-native
 implementation of Monte Carlo tree search (MCTS) algorithms such as
 [AlphaZero](https://deepmind.com/blog/article/alphazero-shedding-new-light-grand-games-chess-shogi-and-go),
@@ -118,7 +116,8 @@ The following projects demonstrate the Mctx usage:
 
 - [Basic Learning Demo with Mctx](https://github.com/kenjyoung/mctx_learning_demo)
 ... AlphaZero on random mazes.
-- [a0-jax](https://github.com/NTT123/a0-jax) ... AlphaZero on Connect Four.
+- [a0-jax](https://github.com/NTT123/a0-jax) ... AlphaZero on Connect Four,
+Gomoku, and Go.
 
 Tell us about your project.
 
