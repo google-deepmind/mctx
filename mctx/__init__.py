@@ -23,6 +23,7 @@ from mctx._src.base import LoopFn
 from mctx._src.base import PolicyOutput
 from mctx._src.base import RecurrentFn
 from mctx._src.base import RecurrentFnOutput
+from mctx._src.base import RecurrentState
 from mctx._src.base import RootActionSelectionFn
 from mctx._src.base import RootFnOutput
 from mctx._src.policies import gumbel_muzero_policy
@@ -42,6 +43,7 @@ __all__ = (
     "PolicyOutput",
     "RecurrentFn",
     "RecurrentFnOutput",
+    "RecurrentState",
     "RootActionSelectionFn",
     "RootFnOutput",
     "Tree",
