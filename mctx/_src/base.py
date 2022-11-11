@@ -97,3 +97,74 @@ class PolicyOutput(Generic[T]):
   action: chex.Array
   action_weights: chex.Array
   search_tree: tree.Tree[T]
+
+
+@chex.dataclass(frozen=True)
+class DecisionRecurrentFnOutput:
+  """Output of the function for expanding decision nodes.
+
+  Expanding a decision node takes an action and a state embedding and produces
+  an afterstate, which represents the state of the environment after an action
+  is taken but before the environment has updated its state. Accordingly, there
+  is no discount factor or reward for transitioning from state `s` to afterstate
+  `sa`.
+
+  Attributes:
+    chance_logits: `[B, C]` logits of `C` chance outcomes at the afterstate.
+    afterstate_value: `[B]` values of the afterstates `v(sa)`.
+  """
+  chance_logits: chex.Array  # [B, C]
+  afterstate_value: chex.Array  # [B]
+
+
+@chex.dataclass(frozen=True)
+class ChanceRecurrentFnOutput:
+  """Output of the function for expanding chance nodes.
+
+  Expanding a chance node takes a chance outcome and an afterstate embedding
+  and produces a state, which captures a potentially stochastic environment
+  transition. When this transition occurs reward and discounts are produced as
+  in a normal transition.
+
+  Attributes:
+    action_logits: `[B, A]` logits of different actions from the state.
+    value: `[B]` values of the states `v(s)`.
+    reward: `[B]` rewards at the states.
+    discount: `[B]` discounts at the states.
+  """
+  action_logits: chex.Array  # [B, A]
+  value: chex.Array  # [B]
+  reward: chex.Array  # [B]
+  discount: chex.Array  # [B]
+
+
+@chex.dataclass(frozen=True)
+class StochasticRecurrentState:
+  """Wrapper that enables different treatment of decision and chance nodes.
+
+  In Stochastic MuZero tree nodes can either be decision or chance nodes, these
+  nodes are treated differently during expansion, search and backup, and a user
+  could also pass differently structured embeddings for each type of node. This
+  wrapper enables treating chance and decision nodes differently and supports
+  potential differences between chance and decision node structures.
+
+  Attributes:
+    state_embedding: `[B ...]` an optionally meaningful state embedding.
+    afterstate_embedding: `[B ...]` an optionally meaningful afterstate
+      embedding.
+    is_decision_node: `[B]` whether the node is a decision or chance node. If it
+      is a decision node, `afterstate_embedding` is a dummy value. If it is a
+      chance node, `state_embedding` is a dummy value.
+  """
+  state_embedding: chex.ArrayTree  # [B, ...]
+  afterstate_embedding: chex.ArrayTree  # [B, ...]
+  is_decision_node: chex.Array  # [B]
+
+
+RecurrentState = chex.ArrayTree
+
+DecisionRecurrentFn = Callable[[Params, chex.PRNGKey, Action, RecurrentState],
+                               Tuple[DecisionRecurrentFnOutput, RecurrentState]]
+
+ChanceRecurrentFn = Callable[[Params, chex.PRNGKey, Action, RecurrentState],
+                             Tuple[ChanceRecurrentFnOutput, RecurrentState]]

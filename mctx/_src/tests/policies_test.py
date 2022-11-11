@@ -23,7 +23,7 @@ from mctx._src import policies
 import numpy as np
 
 
-def _make_bandit_recurrent_fn(rewards):
+def _make_bandit_recurrent_fn(rewards, dummy_embedding=()):
   """Returns a recurrent_fn with discount=0."""
 
   def recurrent_fn(params, rng_key, action, embedding):
@@ -34,9 +34,36 @@ def _make_bandit_recurrent_fn(rewards):
         discount=jnp.zeros_like(reward),
         prior_logits=jnp.zeros_like(rewards),
         value=jnp.zeros_like(reward),
-    ), ()
+    ), dummy_embedding
 
   return recurrent_fn
+
+
+def _make_bandit_decision_and_chance_fns(rewards, num_chance_outcomes):
+
+  def decision_recurrent_fn(params, rng_key, action, embedding):
+    del params, rng_key, embedding
+    batch_size = action.shape[0]
+    reward = rewards[jnp.arange(batch_size), action]
+    dummy_chance_logits = jnp.full([batch_size, num_chance_outcomes],
+                                   -jnp.inf).at[:, 0].set(1.0)
+    return mctx.DecisionRecurrentFnOutput(
+        chance_logits=dummy_chance_logits,
+        afterstate_value=jnp.zeros_like(reward)), (action)
+
+  def chance_recurrent_fn(params, rng_key, chance_outcome, embedding):
+    del params, rng_key, chance_outcome
+    afterstate_action = embedding
+    batch_size = afterstate_action.shape[0]
+
+    reward = rewards[jnp.arange(batch_size), afterstate_action]
+    return mctx.ChanceRecurrentFnOutput(
+        action_logits=jnp.zeros_like(rewards),
+        value=jnp.zeros_like(reward),
+        discount=jnp.zeros_like(reward),
+        reward=reward), jnp.zeros([1, 4])
+
+  return decision_recurrent_fn, chance_recurrent_fn
 
 
 def _get_deepest_leaf(tree, node_index):
@@ -276,6 +303,56 @@ class PoliciesTest(absltest.TestCase):
     expected_visit_counts = jnp.array(
         [[6, 2, 2, 7]])
     np.testing.assert_array_equal(expected_visit_counts, summary.visit_counts)
+
+  def test_stochastic_muzero_policy(self):
+    """Tests that SMZ is equivalent to MZ with a dummy chance function."""
+    root = mctx.RootFnOutput(
+        prior_logits=jnp.array([
+            [-1.0, 0.0, 2.0, 3.0],
+        ]),
+        value=jnp.array([0.0]),
+        embedding=jnp.zeros([1, 4]),
+    )
+    rewards = jnp.zeros_like(root.prior_logits)
+    invalid_actions = jnp.array([
+        [0.0, 0.0, 0.0, 1.0],
+    ])
+
+    num_simulations = 10
+
+    policy_output = mctx.muzero_policy(
+        params=(),
+        rng_key=jax.random.PRNGKey(0),
+        root=root,
+        recurrent_fn=_make_bandit_recurrent_fn(
+            rewards,
+            dummy_embedding=jnp.zeros([1, 4])),
+        num_simulations=num_simulations,
+        invalid_actions=invalid_actions,
+        dirichlet_fraction=0.0)
+
+    num_chance_outcomes = 5
+
+    decision_rec_fn, chance_rec_fn = _make_bandit_decision_and_chance_fns(
+        rewards, num_chance_outcomes)
+
+    stochastic_policy_output = mctx.stochastic_muzero_policy(
+        params=(),
+        rng_key=jax.random.PRNGKey(0),
+        root=root,
+        decision_recurrent_fn=decision_rec_fn,
+        chance_recurrent_fn=chance_rec_fn,
+        num_simulations=2 * num_simulations,
+        num_actions=4,
+        num_chance_outcomes=num_chance_outcomes,
+        invalid_actions=invalid_actions,
+        dirichlet_fraction=0.0)
+
+    np.testing.assert_array_equal(stochastic_policy_output.action,
+                                  policy_output.action)
+
+    np.testing.assert_allclose(stochastic_policy_output.action_weights,
+                               policy_output.action_weights)
 
 
 if __name__ == "__main__":
