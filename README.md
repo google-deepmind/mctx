@@ -27,11 +27,12 @@ pip install git+https://github.com/deepmind/mctx.git
 ## Motivation
 
 Learning and search have been important topics since the early days of AI
-research. In the words of Rich Sutton: *One thing that should be learned [...]
-is the great power of general purpose methods, of methods that continue to scale
-with increased computation even as the available computation becomes very great.
-The two methods that seem to scale arbitrarily in this way are search and
-learning.*
+research. In the [words of Rich Sutton](http://www.incompleteideas.net/IncIdeas/BitterLesson.html):
+
+> One thing that should be learned [...] is the great power of general purpose
+> methods, of methods that continue to scale with increased computation even as
+> the available computation becomes very great. The two methods that seem to
+> scale arbitrarily in this way are *search* and *learning*.
 
 Recently, search algorithms have been successfully combined with learned models
 parameterized by deep neural networks, resulting in some of the most powerful
@@ -39,7 +40,7 @@ and general reinforcement learning algorithms to date (e.g. MuZero).
 However, using search algorithms in combination with deep neural networks
 requires efficient implementations, typically written in fast compiled
 languages; this can come at the expense of usability and hackability,
-especially for researchers that are not familiar with C++. In turn this limits
+especially for researchers that are not familiar with C++. In turn, this limits
 adoption and further research on this critical topic.
 
 Through this library, we hope to help researchers everywhere to contribute to
@@ -92,8 +93,8 @@ new_embedding)` with a `RecurrentFnOutput` and the embedding of the next state.
 The `RecurrentFnOutput` contains the `reward` and `discount` for the transition,
 and `prior_logits` and `value` for the new state.
 
-In [examples/visualization_demo.py](https://github.com/deepmind/mctx/blob/main/examples/visualization_demo.py)
-you can see calls to a policy:
+In [`examples/visualization_demo.py`](https://github.com/deepmind/mctx/blob/main/examples/visualization_demo.py), you can
+see calls to a policy:
 
 ```python
 policy_output = mctx.gumbel_muzero_policy(params, rng_key, root, recurrent_fn,
@@ -109,22 +110,22 @@ We recommend to use the `gumbel_muzero_policy`.
 [Gumbel MuZero](https://openreview.net/forum?id=bERaNdoegnO) guarantees a policy
 improvement if the action values are correctly evaluated. The policy improvement
 is demonstrated in
-[examples/policy_improvement_demo.py](https://github.com/deepmind/mctx/blob/main/examples/policy_improvement_demo.py).
+[`examples/policy_improvement_demo.py`](https://github.com/deepmind/mctx/blob/main/examples/policy_improvement_demo.py).
 
 ### Example projects
 The following projects demonstrate the Mctx usage:
 
-- [Basic Learning Demo with Mctx](https://github.com/kenjyoung/mctx_learning_demo)
-... AlphaZero on random mazes.
-- [a0-jax](https://github.com/NTT123/a0-jax) ... AlphaZero on Connect Four,
-Gomoku, and Go.
+- [Basic Learning Demo with Mctx](https://github.com/kenjyoung/mctx_learning_demo) —
+  AlphaZero on random mazes.
+- [a0-jax](https://github.com/NTT123/a0-jax) — AlphaZero on Connect Four,
+  Gomoku, and Go.
 
 Tell us about your project.
 
 ## Citing Mctx
 
 This is not an officially supported Google product. Mctx is part of the
-[DeepMind JAX Ecosystem], to cite Mctx please use the [DeepMind JAX Ecosystem
+[DeepMind JAX Ecosystem]; to cite Mctx, please use the [DeepMind JAX Ecosystem
 citation].
 
 [DeepMind JAX Ecosystem]: https://deepmind.com/blog/article/using-jax-to-accelerate-our-research "DeepMind JAX Ecosystem"
