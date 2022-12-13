@@ -15,6 +15,7 @@
 """A demonstration of the policy improvement by planning with Gumbel."""
 
 import functools
+from typing import Tuple
 
 from absl import app
 from absl import flags
@@ -41,7 +42,7 @@ class DemoOutput:
   action_weights_policy_value: chex.Array
 
 
-def _run_demo(rng_key):
+def _run_demo(rng_key: chex.PRNGKey) -> Tuple[chex.PRNGKey, DemoOutput]:
   """Runs a search algorithm on random data."""
   batch_size = FLAGS.batch_size
   rng_key, logits_rng, q_rng, search_rng = jax.random.split(rng_key, 4)
@@ -138,9 +139,9 @@ def main(_):
         output.selected_action_value - output.prior_policy_action_value)
     weights_value_improvement = (
         output.action_weights_policy_value - output.prior_policy_value)
-    print("action value improvement:       %.3f (min=%.3f)" %
+    print("action value improvement:         %.3f (min=%.3f)" %
           (action_value_improvement.mean(), action_value_improvement.min()))
-    print("action_weights value improvent: %.3f (min=%.3f)" %
+    print("action_weights value improvement: %.3f (min=%.3f)" %
           (weights_value_improvement.mean(), weights_value_improvement.min()))
 
 
