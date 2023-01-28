@@ -265,11 +265,11 @@ def stochastic_muzero_policy(
     decision_recurrent_fn: a callable to be called on the leaf decision nodes
       and unvisited actions retrieved by the simulation step, which takes as
       args `(params, rng_key, action, state_embedding)` and returns a
-      `DecisionRecurrentFnOutput`.
+      `(DecisionRecurrentFnOutput, afterstate_embedding)`.
     chance_recurrent_fn:  a callable to be called on the leaf chance nodes and
       unvisited actions retrieved by the simulation step, which takes as args
       `(params, rng_key, action, afterstate_embedding)` and returns a
-      `ChanceRecurrentFnOutput`.
+      `(ChanceRecurrentFnOutput, state_embedding)`.
     num_simulations: the number of simulations.
     num_actions: number of environment actions.
     num_chance_outcomes: number of chance outcomes following an afterstate.
@@ -471,7 +471,7 @@ def _make_stochastic_recurrent_fn(
         is_decision_node=jnp.logical_not(state.is_decision_node))
 
     def _broadcast_where(decision_leaf, chance_leaf):
-      extra_dims = [1] * (len(decision_leaf) - 1)
+      extra_dims = [1] * (len(decision_leaf.shape) - 1)
       expanded_is_decision = jnp.reshape(state.is_decision_node,
                                          [-1] + extra_dims)
       return jnp.where(

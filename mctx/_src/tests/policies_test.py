@@ -42,18 +42,20 @@ def _make_bandit_recurrent_fn(rewards, dummy_embedding=()):
 def _make_bandit_decision_and_chance_fns(rewards, num_chance_outcomes):
 
   def decision_recurrent_fn(params, rng_key, action, embedding):
-    del params, rng_key, embedding
+    del params, rng_key
     batch_size = action.shape[0]
     reward = rewards[jnp.arange(batch_size), action]
     dummy_chance_logits = jnp.full([batch_size, num_chance_outcomes],
                                    -jnp.inf).at[:, 0].set(1.0)
+    afterstate_embedding = (action, embedding)
     return mctx.DecisionRecurrentFnOutput(
         chance_logits=dummy_chance_logits,
-        afterstate_value=jnp.zeros_like(reward)), (action)
+        afterstate_value=jnp.zeros_like(reward)), afterstate_embedding
 
-  def chance_recurrent_fn(params, rng_key, chance_outcome, embedding):
+  def chance_recurrent_fn(params, rng_key, chance_outcome,
+                          afterstate_embedding):
     del params, rng_key, chance_outcome
-    afterstate_action = embedding
+    afterstate_action, embedding = afterstate_embedding
     batch_size = afterstate_action.shape[0]
 
     reward = rewards[jnp.arange(batch_size), afterstate_action]
@@ -61,7 +63,7 @@ def _make_bandit_decision_and_chance_fns(rewards, num_chance_outcomes):
         action_logits=jnp.zeros_like(rewards),
         value=jnp.zeros_like(reward),
         discount=jnp.zeros_like(reward),
-        reward=reward), jnp.zeros([1, 4])
+        reward=reward), embedding
 
   return decision_recurrent_fn, chance_recurrent_fn
 
@@ -309,13 +311,15 @@ class PoliciesTest(absltest.TestCase):
     root = mctx.RootFnOutput(
         prior_logits=jnp.array([
             [-1.0, 0.0, 2.0, 3.0],
+            [0.0, 2.0, 5.0, -4.0],
         ]),
-        value=jnp.array([0.0]),
-        embedding=jnp.zeros([1, 4]),
+        value=jnp.array([1.0, 0.0]),
+        embedding=jnp.zeros([2, 4])
     )
     rewards = jnp.zeros_like(root.prior_logits)
     invalid_actions = jnp.array([
         [0.0, 0.0, 0.0, 1.0],
+        [1.0, 0.0, 1.0, 0.0],
     ])
 
     num_simulations = 10
@@ -326,7 +330,7 @@ class PoliciesTest(absltest.TestCase):
         root=root,
         recurrent_fn=_make_bandit_recurrent_fn(
             rewards,
-            dummy_embedding=jnp.zeros([1, 4])),
+            dummy_embedding=jnp.zeros_like(root.embedding)),
         num_simulations=num_simulations,
         invalid_actions=invalid_actions,
         dirichlet_fraction=0.0)
