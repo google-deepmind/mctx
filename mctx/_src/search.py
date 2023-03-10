@@ -324,7 +324,7 @@ def update_tree_node(
 
   # When using max_depth, a leaf can be expanded multiple times.
   new_visit = tree.node_visits[batch_range, node_index] + 1
-  updates = dict(
+  updates = dict(  # pylint: disable=use-dict-literal
       children_prior_logits=batch_update(
           tree.children_prior_logits, prior_logits, node_index),
       raw_values=batch_update(
