@@ -70,7 +70,7 @@ def convert_tree_to_graph(
     node_index = jnp.full([batch_size], node_i)
     probs = jax.nn.softmax(tree.children_prior_logits[batch_index, node_i])
     return (f"{action_labels[a_i]}\n"
-            f"Q: {tree.qvalues(node_index)[batch_index, a_i]:.2f}\n"
+            f"Q: {tree.qvalues(node_index)[batch_index, a_i]:.2f}\n"  # pytype: disable=unsupported-operands  # always-use-return-annotations
             f"p: {probs[a_i]:.2f}\n")
 
   graph = pygraphviz.AGraph(directed=True)
