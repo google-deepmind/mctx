@@ -13,6 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 """A unit test comparing the search tree to an expected search tree."""
+# pylint: disable=use-dict-literal
 import functools
 import json
 

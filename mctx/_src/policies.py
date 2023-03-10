@@ -307,7 +307,7 @@ def stochastic_muzero_policy(
       prior_logits=_mask_invalid_actions(noisy_logits, invalid_actions))
 
   # construct a dummy afterstate embedding
-  batch_size = jax.tree_leaves(root.embedding)[0].shape[0]
+  batch_size = jax.tree_util.tree_leaves(root.embedding)[0].shape[0]
   dummy_action = jnp.zeros([batch_size], dtype=jnp.int32)
   _, dummy_afterstate_embedding = decision_recurrent_fn(params, rng_key,
                                                         dummy_action,
@@ -428,7 +428,7 @@ def _make_stochastic_recurrent_fn(
       action_or_chance: base.Action,  # [B]
       state: base.StochasticRecurrentState
   ) -> Tuple[base.RecurrentFnOutput, base.StochasticRecurrentState]:
-    batch_size = jax.tree_leaves(state.state_embedding)[0].shape[0]
+    batch_size = jax.tree_util.tree_leaves(state.state_embedding)[0].shape[0]
     # Internally we assume that there are `A' = A + C` "actions";
     # action_or_chance can take on values in `{0, 1, ..., A' - 1}`,.
     # To interpret it as an action we can leave it as is:
@@ -509,7 +509,7 @@ def _mask_tree(tree: search.Tree, num_actions: int, mode: str) -> search.Tree:
     elif mode == 'chance':
       return x[..., num_actions:]
     else:
-      raise Exception(f'Unknown mode: {mode}.')
+      raise ValueError(f'Unknown mode: {mode}.')
 
   return tree.replace(
       children_index=_take_slice(tree.children_index),
