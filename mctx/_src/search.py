@@ -161,7 +161,7 @@ def simulate(
     is_before_depth_cutoff = depth < max_depth
     is_visited = next_node_index != Tree.UNVISITED
     is_continuing = jnp.logical_and(is_visited, is_before_depth_cutoff)
-    return _SimulationState(
+    return _SimulationState(  # pytype: disable=wrong-arg-types  # jax-types
         rng_key=rng_key,
         node_index=node_index,
         action=action,
