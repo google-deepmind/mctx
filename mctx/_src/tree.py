@@ -106,7 +106,7 @@ class Tree(Generic[T]):
     visit_probs = visit_counts / jnp.maximum(total_counts, 1)
     visit_probs = jnp.where(total_counts > 0, visit_probs, 1 / self.num_actions)
     # Return relevant stats.
-    return SearchSummary(
+    return SearchSummary(  # pytype: disable=wrong-arg-types  # numpy-scalars
         visit_counts=visit_counts,
         visit_probs=visit_probs,
         value=value,
@@ -134,6 +134,7 @@ class SearchSummary:
 
 def _unbatched_qvalues(tree: Tree, index: int) -> int:
   chex.assert_rank(tree.children_discounts, 2)
-  return (tree.children_rewards[index] +
-          tree.children_discounts[index] * tree.children_values[index])
-
+  return (  # pytype: disable=bad-return-type  # numpy-scalars
+      tree.children_rewards[index]
+      + tree.children_discounts[index] * tree.children_values[index]
+  )
