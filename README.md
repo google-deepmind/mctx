@@ -119,6 +119,8 @@ The following projects demonstrate the Mctx usage:
   AlphaZero on random mazes.
 - [a0-jax](https://github.com/NTT123/a0-jax) — AlphaZero on Connect Four,
   Gomoku, and Go.
+- [muax](https://github.com/bwfbowen/muax) — MuZero on gym-style environments
+(CartPole, LunarLander).
 
 Tell us about your project.
 
