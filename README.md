@@ -121,6 +121,7 @@ The following projects demonstrate the Mctx usage:
   Gomoku, and Go.
 - [muax](https://github.com/bwfbowen/muax) — MuZero on gym-style environments
 (CartPole, LunarLander).
+- [Classic MCTS](https://github.com/Carbon225/mctx-classic) — A simple example on Connect Four.
 
 Tell us about your project.
 
