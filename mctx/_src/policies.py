@@ -268,7 +268,7 @@ def stochastic_muzero_policy(
       `(DecisionRecurrentFnOutput, afterstate_embedding)`.
     chance_recurrent_fn:  a callable to be called on the leaf chance nodes and
       unvisited actions retrieved by the simulation step, which takes as args
-      `(params, rng_key, action, afterstate_embedding)` and returns a
+      `(params, rng_key, chance_outcome, afterstate_embedding)` and returns a
       `(ChanceRecurrentFnOutput, state_embedding)`.
     num_simulations: the number of simulations.
     num_actions: number of environment actions.
