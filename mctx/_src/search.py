@@ -171,6 +171,7 @@ def simulate(
 
   node_index = jnp.array(Tree.ROOT_INDEX, dtype=jnp.int32)
   depth = jnp.zeros((), dtype=tree.children_prior_logits.dtype)
+  # pytype: disable=wrong-arg-types  # jnp-type
   initial_state = _SimulationState(
       rng_key=rng_key,
       node_index=tree.NO_PARENT,
@@ -178,6 +179,7 @@ def simulate(
       next_node_index=node_index,
       depth=depth,
       is_continuing=jnp.array(True))
+  # pytype: enable=wrong-arg-types
   end_state = jax.lax.while_loop(cond_fun, body_fun, initial_state)
 
   # Returning a node with a selected action.
