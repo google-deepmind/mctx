@@ -115,6 +115,9 @@ is demonstrated in
 ### Example projects
 The following projects demonstrate the Mctx usage:
 
+- [Pgx](https://github.com/sotetsuk/pgx) — A collection of 20+ vectorized
+  JAX environments, including backgammon, chess, shogi, Go, and an AlphaZero
+  example.
 - [Basic Learning Demo with Mctx](https://github.com/kenjyoung/mctx_learning_demo) —
   AlphaZero on random mazes.
 - [a0-jax](https://github.com/NTT123/a0-jax) — AlphaZero on Connect Four,
