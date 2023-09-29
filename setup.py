@@ -44,7 +44,7 @@ def _parse_requirements(path):
 setup(
     name='mctx',
     version=_get_version(),
-    url='https://github.com/deepmind/mctx',
+    url='https://github.com/google-deepmind/mctx',
     license='Apache 2.0',
     author='DeepMind',
     description=('Monte Carlo tree search in JAX.'),
