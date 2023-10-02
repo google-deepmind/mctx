@@ -192,7 +192,7 @@ def gumbel_muzero_interior_action_selection(
       visit_counts=visit_counts)
 
   chex.assert_rank(to_argmax, 1)
-  return jnp.argmax(to_argmax, axis=-1)
+  return jnp.argmax(to_argmax, axis=-1).astype(jnp.int32)
 
 
 def masked_argmax(
@@ -205,7 +205,7 @@ def masked_argmax(
     # Do not use -inf inside softmax, logsoftmax or cross-entropy.
     to_argmax = jnp.where(invalid_actions, -jnp.inf, to_argmax)
   # If all actions are invalid, the argmax returns action 0.
-  return jnp.argmax(to_argmax, axis=-1)
+  return jnp.argmax(to_argmax, axis=-1).astype(jnp.int32)
 
 
 def _prepare_argmax_input(probs, visit_counts):

@@ -536,7 +536,9 @@ def _make_stochastic_action_selection_fn(
     num_chance = tree.children_visits[node_index]
     chance_logits = tree.children_prior_logits[node_index]
     prob_chance = jax.nn.softmax(chance_logits)
-    argmax_chance = jnp.argmax(prob_chance / (num_chance + 1), axis=-1)
+    argmax_chance = jnp.argmax(prob_chance / (num_chance + 1), axis=-1).astype(
+        jnp.int32
+    )
     return argmax_chance
 
   def _action_selection_fn(key: chex.PRNGKey, tree: search.Tree,
@@ -552,4 +554,3 @@ def _make_stochastic_action_selection_fn(
                         lambda: chance_selection)
 
   return _action_selection_fn
-
