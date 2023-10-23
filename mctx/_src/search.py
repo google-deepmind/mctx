@@ -386,7 +386,7 @@ def instantiate_tree_from_root(
   data_dtype = root.value.dtype
   batch_node = (batch_size, num_nodes)
   batch_node_action = (batch_size, num_nodes, num_actions)
-  child_actions = (batch_size, num_nodes, 7)
+  child_actions = (batch_size, num_nodes, 20)
   batch_node_action2 = (batch_size, num_nodes, 16)#num_actions)#num_actions/2)
   batch_node_action3 = (batch_size, num_nodes, num_actions*2)
 
