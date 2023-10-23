@@ -192,20 +192,21 @@ def gumbel_muzero_interior_action_selection(
       visit_counts=visit_counts)
 
   chex.assert_rank(to_argmax, 1)
-  return jnp.argmax(to_argmax, axis=-1).astype(jnp.int32)
+  return jnp.argmax(to_argmax, axis=-1)
 
 
 def masked_argmax(
     to_argmax: chex.Array,
     invalid_actions: Optional[chex.Array]) -> chex.Array:
   """Returns a valid action with the highest `to_argmax`."""
-  if invalid_actions is not None:
-    chex.assert_equal_shape([to_argmax, invalid_actions])
+  #TODO: CHANGE THIS BACK!!!!
+  #if invalid_actions is not None:
+    #chex.assert_equal_shape([to_argmax, invalid_actions])
     # The usage of the -inf inside the argmax does not lead to NaN.
     # Do not use -inf inside softmax, logsoftmax or cross-entropy.
-    to_argmax = jnp.where(invalid_actions, -jnp.inf, to_argmax)
+    #to_argmax = jnp.where(invalid_actions, -jnp.inf, to_argmax)
   # If all actions are invalid, the argmax returns action 0.
-  return jnp.argmax(to_argmax, axis=-1).astype(jnp.int32)
+  return jnp.argmax(to_argmax, axis=-1)
 
 
 def _prepare_argmax_input(probs, visit_counts):

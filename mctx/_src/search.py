@@ -19,6 +19,7 @@ from typing import Any, NamedTuple, Optional, Tuple, TypeVar
 import chex
 import jax
 import jax.numpy as jnp
+from brax.training.distribution import NormalTanhDistribution
 
 from mctx._src import action_selection
 from mctx._src import base
@@ -90,13 +91,19 @@ def search(
     rng_key, simulate_key, expand_key = jax.random.split(rng_key, 3)
     # simulate is vmapped and expects batched rng keys.
     simulate_keys = jax.random.split(simulate_key, batch_size)
+    
+    #print(tree)
     parent_index, action = simulate(
         simulate_keys, tree, action_selection_fn, max_depth)
+    #print(action)
+    #exit()
     # A node first expanded on simulation `i`, will have node index `i`.
     # Node 0 corresponds to the root node.
     next_node_index = tree.children_index[batch_range, parent_index, action]
     next_node_index = jnp.where(next_node_index == Tree.UNVISITED,
                                 sim + 1, next_node_index)
+    #print("EXPAND")
+    #print(action)
     tree = expand(
         params, expand_key, tree, recurrent_fn, parent_index,
         action, next_node_index)
@@ -108,6 +115,8 @@ def search(
   tree = instantiate_tree_from_root(root, num_simulations,
                                     root_invalid_actions=invalid_actions,
                                     extra_data=extra_data)
+  
+  #all_actions = jnp.arange(17, dtype=jnp.int32)
   _, tree = loop_fn(
       0, num_simulations, body_fun, (rng_key, tree))
 
@@ -129,7 +138,7 @@ def simulate(
     rng_key: chex.PRNGKey,
     tree: Tree,
     action_selection_fn: base.InteriorActionSelectionFn,
-    max_depth: int) -> Tuple[chex.Array, chex.Array]:
+    max_depth: int,) -> Tuple[chex.Array, chex.Array]:
   """Traverses the tree until reaching an unvisited action or `max_depth`.
 
   Each simulation starts from the root and keeps selecting actions traversing
@@ -155,6 +164,9 @@ def simulate(
     rng_key, action_selection_key = jax.random.split(state.rng_key)
     action = action_selection_fn(action_selection_key, tree, node_index,
                                  state.depth)
+    #print("ACTION SELECTED")
+    #print(action)
+    #exit()
     next_node_index = tree.children_index[node_index, action]
     # The returned action will be visited.
     depth = state.depth + 1
@@ -171,7 +183,6 @@ def simulate(
 
   node_index = jnp.array(Tree.ROOT_INDEX, dtype=jnp.int32)
   depth = jnp.zeros((), dtype=tree.children_prior_logits.dtype)
-  # pytype: disable=wrong-arg-types  # jnp-type
   initial_state = _SimulationState(
       rng_key=rng_key,
       node_index=tree.NO_PARENT,
@@ -179,7 +190,6 @@ def simulate(
       next_node_index=node_index,
       depth=depth,
       is_continuing=jnp.array(True))
-  # pytype: enable=wrong-arg-types
   end_state = jax.lax.while_loop(cond_fun, body_fun, initial_state)
 
   # Returning a node with a selected action.
@@ -222,12 +232,25 @@ def expand(
   embedding = jax.tree_util.tree_map(
       lambda x: x[batch_range, parent_index], tree.embeddings)
 
-  # Evaluate and create a new node.
-  step, embedding = recurrent_fn(params, rng_key, action, embedding)
-  chex.assert_shape(step.prior_logits, [batch_size, tree.num_actions])
+  mvn_dist = NormalTanhDistribution(8)
+ 
+  prior_logits = tree.children_prior_logits[jnp.arange(batch_size),parent_index,:]
+
+  action_keys = jax.random.split(rng_key, batch_size)
+  action2 = jax.vmap(mvn_dist.sample, in_axes=(0, 0))(
+            prior_logits,
+            action_keys,
+        )
+
+  step, embedding = recurrent_fn(params, rng_key, action2, embedding)
+
+  #print(step.prior_logits.shape)
+  #exit()
+  #chex.assert_shape(step.prior_logits, [batch_size, tree.num_actions])
   chex.assert_shape(step.reward, [batch_size])
   chex.assert_shape(step.discount, [batch_size])
   chex.assert_shape(step.value, [batch_size])
+ 
   tree = update_tree_node(
       tree, next_node_index, step.prior_logits, step.value, embedding)
 
@@ -274,7 +297,7 @@ def backward(
         tree.node_values[parent] * count + leaf_value) / (count + 1.0)
     children_values = tree.node_values[index]
     children_counts = tree.children_visits[parent, action] + 1
-
+  
     tree = tree.replace(
         node_values=update(tree.node_values, parent_value, parent),
         node_visits=update(tree.node_visits, count + 1, parent),
@@ -295,6 +318,9 @@ def backward(
 # Utility function to set the values of certain indices to prescribed values.
 # This is vmapped to operate seamlessly on batches.
 def update(x, vals, *indices):
+  #print(x)
+  #print(vals)
+  #exit()
   return x.at[indices].set(vals)
 
 
@@ -322,10 +348,15 @@ def update_tree_node(
   """
   batch_size = tree_lib.infer_batch_size(tree)
   batch_range = jnp.arange(batch_size)
-  chex.assert_shape(prior_logits, (batch_size, tree.num_actions))
+  #chex.assert_shape(prior_logits, (batch_size, tree.num_actions))
 
   # When using max_depth, a leaf can be expanded multiple times.
+  #print(prior_logits)
+  #exit()
   new_visit = tree.node_visits[batch_range, node_index] + 1
+  #print(prior_logits.shape)
+  #print(tree.children_prior_logits.shape)
+  #exit()
   updates = dict(  # pylint: disable=use-dict-literal
       children_prior_logits=batch_update(
           tree.children_prior_logits, prior_logits, node_index),
@@ -355,6 +386,9 @@ def instantiate_tree_from_root(
   data_dtype = root.value.dtype
   batch_node = (batch_size, num_nodes)
   batch_node_action = (batch_size, num_nodes, num_actions)
+  child_actions = (batch_size, num_nodes, 7)
+  batch_node_action2 = (batch_size, num_nodes, 16)#num_actions)#num_actions/2)
+  batch_node_action3 = (batch_size, num_nodes, num_actions*2)
 
   def _zeros(x):
     return jnp.zeros(batch_node + x.shape[1:], dtype=x.dtype)
@@ -368,16 +402,19 @@ def instantiate_tree_from_root(
       action_from_parent=jnp.full(
           batch_node, Tree.NO_PARENT, dtype=jnp.int32),
       children_index=jnp.full(
-          batch_node_action, Tree.UNVISITED, dtype=jnp.int32),
+          child_actions, Tree.UNVISITED, dtype=jnp.int32),
       children_prior_logits=jnp.zeros(
-          batch_node_action, dtype=root.prior_logits.dtype),
-      children_values=jnp.zeros(batch_node_action, dtype=data_dtype),
-      children_visits=jnp.zeros(batch_node_action, dtype=jnp.int32),
-      children_rewards=jnp.zeros(batch_node_action, dtype=data_dtype),
-      children_discounts=jnp.zeros(batch_node_action, dtype=data_dtype),
+          batch_node_action2, dtype=root.prior_logits.dtype), #needs to be of size action_space*2 for continuous
+      #children_prior_logits_c = jnp.zeros(
+      #    batch_node_action, dtype=root.prior_logits.dtype),
+      children_values=jnp.zeros(child_actions, dtype=data_dtype),
+      children_visits=jnp.zeros(child_actions, dtype=jnp.int32),
+      children_rewards=jnp.zeros(child_actions, dtype=data_dtype),
+      children_discounts=jnp.zeros(child_actions, dtype=data_dtype),
       embeddings=jax.tree_util.tree_map(_zeros, root.embedding),
       root_invalid_actions=root_invalid_actions,
-      extra_data=extra_data)
+      extra_data=extra_data,
+      )
 
   root_index = jnp.full([batch_size], Tree.ROOT_INDEX)
   tree = update_tree_node(

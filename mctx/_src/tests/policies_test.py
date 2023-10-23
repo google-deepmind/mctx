@@ -347,6 +347,8 @@ class PoliciesTest(absltest.TestCase):
         decision_recurrent_fn=decision_rec_fn,
         chance_recurrent_fn=chance_rec_fn,
         num_simulations=2 * num_simulations,
+        num_actions=4,
+        num_chance_outcomes=num_chance_outcomes,
         invalid_actions=invalid_actions,
         dirichlet_fraction=0.0)
 

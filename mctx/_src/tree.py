@@ -42,7 +42,7 @@ class Tree(Generic[T]):
     node.
   children_index: `[B, N, num_actions]` the node index of the children for each
     action.
-  children_prior_logits: `[B, N, Anum_actions` the action prior logits of each
+  children_prior_logits: `[B, N, num_actions` the action prior logits of each
     node.
   children_visits: `[B, N, num_actions]` the visit counts for children for
     each action.
@@ -87,12 +87,10 @@ class Tree(Generic[T]):
 
   def qvalues(self, indices):
     """Compute q-values for any node indices in the tree."""
-    # pytype: disable=wrong-arg-types  # jnp-type
     if jnp.asarray(indices).shape:
       return jax.vmap(_unbatched_qvalues)(self, indices)
     else:
       return _unbatched_qvalues(self, indices)
-    # pytype: enable=wrong-arg-types
 
   def summary(self) -> SearchSummary:
     """Extract summary statistics for the root node."""
