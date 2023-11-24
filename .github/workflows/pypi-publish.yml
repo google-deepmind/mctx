@@ -8,11 +8,15 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v4
       with:
         python-version: '3.x'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install setuptools wheel twine
     - name: Check consistency between the package version and release tag
       run: |
         RELEASE_VER=${GITHUB_REF#refs/*/}
@@ -21,10 +25,6 @@ jobs:
         then
           echo "package ver. ($PACKAGE_VER) != release ver. ($RELEASE_VER)"; exit 1
         fi
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install setuptools wheel twine
     - name: Build and publish
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
