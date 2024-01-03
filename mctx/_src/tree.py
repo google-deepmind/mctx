@@ -175,7 +175,7 @@ def get_subtree(tree: Tree, child_index: jnp.ndarray, new_invalid_actions: jnp.n
       nodes_to_retain * (cumsum-1),
       -1
   )
-  erase = (slots_aranged >= new_next_node_index)
+  erase = slots_aranged >= new_next_node_index
 
   def translate(x, null_value=0):
     return jnp.where(
@@ -184,7 +184,7 @@ def get_subtree(tree: Tree, child_index: jnp.ndarray, new_invalid_actions: jnp.n
         x.at[translation].set(x[old_subtree_idxs]),
     )
 
-  def translate_idx(x, null_value=0):
+  def translate_idx(x, null_value=-1):
     return jnp.where(
         erase.reshape((-1,) + (1,) * (x.ndim - 1)),
         null_value,
@@ -195,7 +195,7 @@ def get_subtree(tree: Tree, child_index: jnp.ndarray, new_invalid_actions: jnp.n
       node_visits = translate(tree.node_visits),
       raw_values = translate(tree.raw_values),
       node_values = translate(tree.node_values),
-      parents = translate(tree.parents),
+      parents = translate_idx(tree.parents),
       action_from_parent = translate(tree.action_from_parent),
       children_index = translate_idx(tree.children_index),
       children_prior_logits = translate(tree.children_prior_logits),
