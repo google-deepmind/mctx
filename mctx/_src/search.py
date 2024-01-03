@@ -99,7 +99,7 @@ def search(
                                 tree.next_node_index, next_node_index)
     # if next_node_index goes out of bounds, expand its (in-bounds) parent,
     # similar to max_depth case
-    out_of_bounds = next_node_index >= num_simulations
+    out_of_bounds = next_node_index > num_simulations
     next_node_index = jnp.where(out_of_bounds,
                                 parent_index,
                                 next_node_index)

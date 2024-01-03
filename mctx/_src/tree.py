@@ -15,6 +15,7 @@
 """A data structure used to hold / inspect search data for a batch of inputs."""
 
 from __future__ import annotations
+import functools
 from typing import Any, ClassVar, Generic, TypeVar
 
 import chex
@@ -140,4 +141,69 @@ def _unbatched_qvalues(tree: Tree, index: int) -> int:
   return (  # pytype: disable=bad-return-type  # numpy-scalars
       tree.children_rewards[index]
       + tree.children_discounts[index] * tree.children_values[index]
+  )
+
+@jax.vmap
+def get_subtree(tree: Tree, child_index: jnp.ndarray, new_invalid_actions: jnp.ndarray) -> Tree:
+  """Extracts a subtree rooted at one of the child nodes of the current root node."""
+  subtrees = jnp.arange(tree.num_simulations+1)
+  
+
+  def propagate_fun(_, subtrees):
+    parents_subtrees = jnp.where(
+        tree.parents != tree.NO_PARENT,
+        subtrees[tree.parents],
+        0
+    )
+    return jnp.where(
+        jnp.greater(parents_subtrees, 0),
+        parents_subtrees,
+        subtrees
+    )
+  
+  subtrees = jax.lax.fori_loop(0, tree.num_simulations, propagate_fun, subtrees)
+  slots_aranged = jnp.arange(tree.num_simulations+1)
+  subtree_master_idx = tree.children_index[tree.ROOT_INDEX, child_index]
+  populated = subtree_master_idx != tree.UNVISITED
+  nodes_to_retain = subtrees == subtree_master_idx
+  old_subtree_idxs = nodes_to_retain * slots_aranged
+  cumsum = jnp.cumsum(nodes_to_retain)
+  new_next_node_index = cumsum[-1]
+  
+  translation = jnp.where(
+      nodes_to_retain,
+      nodes_to_retain * (cumsum-1),
+      -1
+  )
+  erase = (slots_aranged >= new_next_node_index)
+
+  def translate(x, null_value=0):
+    return jnp.where(
+        erase.reshape((-1,) + (1,) * (x.ndim - 1)),
+        null_value,
+        x.at[translation].set(x[old_subtree_idxs]),
+    )
+
+  def translate_idx(x, null_value=0):
+    return jnp.where(
+        erase.reshape((-1,) + (1,) * (x.ndim - 1)),
+        null_value,
+        x.at[translation].set(translation[x]),
+    )
+
+  return tree.replace(
+      node_visits = translate(tree.node_visits),
+      raw_values = translate(tree.raw_values),
+      node_values = translate(tree.node_values),
+      parents = translate(tree.parents),
+      action_from_parent = translate(tree.action_from_parent),
+      children_index = translate_idx(tree.children_index),
+      children_prior_logits = translate(tree.children_prior_logits),
+      children_visits = translate(tree.children_visits),
+      children_discounts = translate(tree.children_discounts),
+      children_values = translate(tree.children_values),
+      next_node_index = new_next_node_index,
+      embeddings = translate(tree.embeddings),
+      root_invalid_actions = new_invalid_actions,
+      extra_data = tree.extra_data
   )
