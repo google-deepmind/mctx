@@ -67,6 +67,7 @@ class Tree(Generic[T]):
   children_rewards: chex.Array  # [B, N, num_actions]
   children_discounts: chex.Array  # [B, N, num_actions]
   children_values: chex.Array  # [B, N, num_actions]
+  next_node_index: chex.Array  # [B]
   embeddings: Any  # [B, N, ...]
   root_invalid_actions: chex.Array  # [B, num_actions]
   extra_data: T  # [B, ...]

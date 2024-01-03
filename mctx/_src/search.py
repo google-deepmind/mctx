@@ -37,6 +37,7 @@ def search(
     root_action_selection_fn: base.RootActionSelectionFn,
     interior_action_selection_fn: base.InteriorActionSelectionFn,
     num_simulations: int,
+    tree: Optional[Tree] = None,
     max_depth: Optional[int] = None,
     invalid_actions: Optional[chex.Array] = None,
     extra_data: Any = None,
@@ -85,29 +86,45 @@ def search(
   if invalid_actions is None:
     invalid_actions = jnp.zeros_like(root.prior_logits)
 
-  def body_fun(sim, loop_state):
+  def body_fun(_, loop_state):
     rng_key, tree = loop_state
     rng_key, simulate_key, expand_key = jax.random.split(rng_key, 3)
     # simulate is vmapped and expects batched rng keys.
     simulate_keys = jax.random.split(simulate_key, batch_size)
     parent_index, action = simulate(
         simulate_keys, tree, action_selection_fn, max_depth)
-    # A node first expanded on simulation `i`, will have node index `i`.
-    # Node 0 corresponds to the root node.
     next_node_index = tree.children_index[batch_range, parent_index, action]
-    next_node_index = jnp.where(next_node_index == Tree.UNVISITED,
-                                sim + 1, next_node_index)
+    unvisited = next_node_index == Tree.UNVISITED
+    next_node_index = jnp.where(unvisited,
+                                tree.next_node_index, next_node_index)
+    # if next_node_index goes out of bounds, expand its (in-bounds) parent,
+    # similar to max_depth case
+    out_of_bounds = next_node_index >= num_simulations
+    next_node_index = jnp.where(out_of_bounds,
+                                parent_index,
+                                next_node_index)
+    parent_index = jnp.where(out_of_bounds,
+                             tree.parents[batch_range, parent_index],
+                             parent_index)
+    action = jnp.where(out_of_bounds,
+                       tree.action_from_parent[batch_range, parent_index],
+                       action)
     tree = expand(
         params, expand_key, tree, recurrent_fn, parent_index,
         action, next_node_index)
     tree = backward(tree, next_node_index)
+    tree = tree.replace(
+        next_node_index=jnp.where(unvisited,
+                                    tree.next_node_index + 1,
+                                    tree.next_node_index))
     loop_state = rng_key, tree
     return loop_state
 
   # Allocate all necessary storage.
-  tree = instantiate_tree_from_root(root, num_simulations,
-                                    root_invalid_actions=invalid_actions,
-                                    extra_data=extra_data)
+  if tree is None:
+    tree = instantiate_tree_from_root(root, num_simulations,
+                                      root_invalid_actions=invalid_actions,
+                                      extra_data=extra_data)
   _, tree = loop_fn(
       0, num_simulations, body_fun, (rng_key, tree))
 
@@ -375,6 +392,7 @@ def instantiate_tree_from_root(
       children_visits=jnp.zeros(batch_node_action, dtype=jnp.int32),
       children_rewards=jnp.zeros(batch_node_action, dtype=data_dtype),
       children_discounts=jnp.zeros(batch_node_action, dtype=data_dtype),
+      next_node_index=jnp.ones((batch_size,), dtype=jnp.int32),
       embeddings=jax.tree_util.tree_map(_zeros, root.embedding),
       root_invalid_actions=root_invalid_actions,
       extra_data=extra_data)
