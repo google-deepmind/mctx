@@ -33,6 +33,7 @@ def muzero_policy(
     root: base.RootFnOutput,
     recurrent_fn: base.RecurrentFn,
     num_simulations: int,
+    tree: Optional[search.Tree] = None,
     invalid_actions: Optional[chex.Array] = None,
     max_depth: Optional[int] = None,
     loop_fn: base.LoopFn = jax.lax.fori_loop,
@@ -108,7 +109,8 @@ def muzero_policy(
       num_simulations=num_simulations,
       max_depth=max_depth,
       invalid_actions=invalid_actions,
-      loop_fn=loop_fn)
+      loop_fn=loop_fn,
+      tree=tree)
 
   # Sampling the proposed action proportionally to the visit counts.
   summary = search_tree.summary()
@@ -128,6 +130,7 @@ def gumbel_muzero_policy(
     root: base.RootFnOutput,
     recurrent_fn: base.RecurrentFn,
     num_simulations: int,
+    tree: Optional[search.Tree] = None,
     invalid_actions: Optional[chex.Array] = None,
     max_depth: Optional[int] = None,
     loop_fn: base.LoopFn = jax.lax.fori_loop,
@@ -205,7 +208,8 @@ def gumbel_muzero_policy(
       max_depth=max_depth,
       invalid_actions=invalid_actions,
       extra_data=extra_data,
-      loop_fn=loop_fn)
+      loop_fn=loop_fn,
+      tree=tree)
   summary = search_tree.summary()
 
   # Acting with the best action from the most visited actions.
