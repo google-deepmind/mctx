@@ -188,7 +188,7 @@ def get_subtree(
 
   old_subtree_idxs, translation, erase_idxs = _get_translation(
                                               tree, child_index)
-  new_next_node_index = translation.max() + 1
+  new_next_node_index = translation.max(axis=-1) + 1
 
   def translate(x):
     return jnp.where(
@@ -201,7 +201,10 @@ def get_subtree(
     return jnp.where(
         erase_idxs.reshape((-1,) + (1,) * (x.ndim - 1)),
         tree.UNVISITED,
-        x.at[translation].set(translation[x]),
+          x.at[translation].set(jnp.where(
+            x == tree.UNVISITED,
+            tree.UNVISITED,
+            translation[x]))
     )
 
   return tree.replace(

@@ -82,10 +82,12 @@ def search(
   # Do simulation, expansion, and backward steps.
   batch_size = root.value.shape[0]
   batch_range = jnp.arange(batch_size)
+  if tree is not None:
+    max_nodes = tree.children_visits.shape[1]
   if max_nodes is None:
     max_nodes = num_simulations + 1
   if max_depth is None:
-    max_depth = num_simulations
+    max_depth = max_nodes - 1
   if invalid_actions is None:
     invalid_actions = jnp.zeros_like(root.prior_logits)
 
@@ -102,7 +104,7 @@ def search(
                                 tree.next_node_index, next_node_index)
     # if next_node_index goes out of bounds, expand its (in-bounds) parent,
     # similar to max_depth case
-    out_of_bounds = next_node_index > num_simulations
+    out_of_bounds = next_node_index >= max_nodes
     next_node_index = jnp.where(out_of_bounds,
                                 parent_index,
                                 next_node_index)
@@ -132,7 +134,7 @@ def search(
     tree = update_tree_with_root(tree, root,
                                  root_invalid_actions=invalid_actions,
                                  extra_data=extra_data)
-
+ 
   _, tree = loop_fn(
       0, num_simulations, body_fun, (rng_key, tree))
 
@@ -376,6 +378,7 @@ def instantiate_tree_from_root(
   chex.assert_rank(root.prior_logits, 2)
   batch_size, num_actions = root.prior_logits.shape
   chex.assert_shape(root.value, [batch_size])
+
   data_dtype = root.value.dtype
   batch_node = (batch_size, num_nodes)
   batch_node_action = (batch_size, num_nodes, num_actions)
@@ -419,31 +422,24 @@ def update_tree_with_root(
   root_initialized = tree.node_visits[:, Tree.ROOT_INDEX] > 0
   batch_size = tree_lib.infer_batch_size(tree)
   root_index = jnp.full([batch_size], Tree.ROOT_INDEX)
+  ones = jnp.full([batch_size], 1)
   updates = dict(   # pylint: disable=use-dict-literal
-      children_prior_logits=batch_update(
-          tree.children_prior_logits,
-          jax.where(root_initialized,
-                    tree.children_prior_logits,
-                    root.prior_logits),
-          tree.ROOT_INDEX),
-      raw_values=batch_update(
-          tree.raw_values,
-          jax.where(root_initialized,
-                    tree.raw_values,
-                    root.value),
-          tree.ROOT_INDEX),
-      node_values=batch_update(
-          tree.node_values,
-          jax.where(root_initialized,
-                    tree.node_values,
-                    root.value),
-          tree.ROOT_INDEX),
-      node_visits=batch_update(
-          tree.node_visits,
-          jax.where(root_initialized,
-                    tree.node_visits,
-                    1),
-          tree.ROOT_INDEX),
+      children_prior_logits=jnp.where(
+        root_initialized[..., None, None], 
+        batch_update(tree.children_prior_logits, root.prior_logits, root_index), 
+        tree.children_prior_logits),
+      raw_values=jnp.where(
+        root_initialized[..., None],
+        batch_update(tree.raw_values, root.value, root_index),
+        tree.raw_values),
+      node_values=jnp.where(
+        root_initialized[..., None],
+        batch_update(tree.node_values, root.value, root_index),
+        tree.node_values),
+      node_visits=jnp.where(
+        root_initialized[..., None],
+        batch_update(tree.node_visits, ones, root_index),
+        tree.node_visits),
       embeddings=jax.tree_util.tree_map(
           lambda t, s: batch_update(t, s, root_index),
           tree.embeddings, root.embedding),
