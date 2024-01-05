@@ -37,6 +37,7 @@ def search(
     root_action_selection_fn: base.RootActionSelectionFn,
     interior_action_selection_fn: base.InteriorActionSelectionFn,
     num_simulations: int,
+    max_nodes: Optional[int] = None,
     tree: Optional[Tree] = None,
     max_depth: Optional[int] = None,
     invalid_actions: Optional[chex.Array] = None,
@@ -81,6 +82,8 @@ def search(
   # Do simulation, expansion, and backward steps.
   batch_size = root.value.shape[0]
   batch_range = jnp.arange(batch_size)
+  if max_nodes is None:
+    max_nodes = num_simulations + 1
   if max_depth is None:
     max_depth = num_simulations
   if invalid_actions is None:
@@ -122,9 +125,14 @@ def search(
 
   # Allocate all necessary storage.
   if tree is None:
-    tree = instantiate_tree_from_root(root, num_simulations,
+    tree = instantiate_tree_from_root(root, max_nodes,
                                       root_invalid_actions=invalid_actions,
                                       extra_data=extra_data)
+  else:
+    tree = update_tree_with_root(tree, root,
+                                 root_invalid_actions=invalid_actions,
+                                 extra_data=extra_data)
+
   _, tree = loop_fn(
       0, num_simulations, body_fun, (rng_key, tree))
 
@@ -361,14 +369,13 @@ def update_tree_node(
 
 def instantiate_tree_from_root(
     root: base.RootFnOutput,
-    num_simulations: int,
+    num_nodes: int,
     root_invalid_actions: chex.Array,
     extra_data: Any) -> Tree:
   """Initializes tree state at search root."""
   chex.assert_rank(root.prior_logits, 2)
   batch_size, num_actions = root.prior_logits.shape
   chex.assert_shape(root.value, [batch_size])
-  num_nodes = num_simulations + 1
   data_dtype = root.value.dtype
   batch_node = (batch_size, num_nodes)
   batch_node_action = (batch_size, num_nodes, num_actions)
@@ -401,3 +408,46 @@ def instantiate_tree_from_root(
   tree = update_tree_node(
       tree, root_index, root.prior_logits, root.value, root.embedding)
   return tree
+
+def update_tree_with_root(
+    tree: Tree,
+    root: base.RootFnOutput,
+    root_invalid_actions: chex.Array,
+    extra_data: Any) -> Tree:
+  """Handles edge case where an action corresponding to 
+  an unexpanded node is selected at the root."""
+  root_initialized = tree.node_visits[:, Tree.ROOT_INDEX] > 0
+  batch_size = tree_lib.infer_batch_size(tree)
+  root_index = jnp.full([batch_size], Tree.ROOT_INDEX)
+  updates = dict(   # pylint: disable=use-dict-literal
+      children_prior_logits=batch_update(
+          tree.children_prior_logits,
+          jax.where(root_initialized,
+                    tree.children_prior_logits,
+                    root.prior_logits),
+          tree.ROOT_INDEX),
+      raw_values=batch_update(
+          tree.raw_values,
+          jax.where(root_initialized,
+                    tree.raw_values,
+                    root.value),
+          tree.ROOT_INDEX),
+      node_values=batch_update(
+          tree.node_values,
+          jax.where(root_initialized,
+                    tree.node_values,
+                    root.value),
+          tree.ROOT_INDEX),
+      node_visits=batch_update(
+          tree.node_visits,
+          jax.where(root_initialized,
+                    tree.node_visits,
+                    1),
+          tree.ROOT_INDEX),
+      embeddings=jax.tree_util.tree_map(
+          lambda t, s: batch_update(t, s, root_index),
+          tree.embeddings, root.embedding),
+      root_invalid_actions=root_invalid_actions,
+      extra_data=extra_data)
+
+  return tree.replace(**updates)

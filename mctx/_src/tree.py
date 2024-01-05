@@ -15,7 +15,7 @@
 """A data structure used to hold / inspect search data for a batch of inputs."""
 
 from __future__ import annotations
-from typing import Any, ClassVar, Generic, TypeVar
+from typing import Any, ClassVar, Generic, Tuple, TypeVar
 
 import chex
 import jax
@@ -142,11 +142,10 @@ def _unbatched_qvalues(tree: Tree, index: int) -> int:
       + tree.children_discounts[index] * tree.children_values[index]
   )
 
-@jax.vmap
-def get_subtree(
+def _get_translation(
     tree: Tree,
-    child_index: jnp.ndarray,
-    new_invalid_actions: jnp.ndarray) -> Tree:
+    child_index: jnp.ndarray
+) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
   """Extracts a subtree rooted at one of the child nodes 
   of the current root node."""
   subtrees = jnp.arange(tree.num_simulations+1)
@@ -174,21 +173,34 @@ def get_subtree(
   translation = jnp.where(
       nodes_to_retain,
       nodes_to_retain * (cumsum-1),
-      -1
+      tree.UNVISITED
   )
-  erase = slots_aranged >= new_next_node_index
+  erase_idxs = slots_aranged >= new_next_node_index
 
-  def translate(x, null_value=0):
+  return old_subtree_idxs, translation, erase_idxs
+
+
+@jax.vmap
+def get_subtree(
+  tree: Tree,
+  child_index: jnp.ndarray
+) -> Tree:
+
+  old_subtree_idxs, translation, erase_idxs = _get_translation(
+                                              tree, child_index)
+  new_next_node_index = translation.max() + 1
+
+  def translate(x):
     return jnp.where(
-        erase.reshape((-1,) + (1,) * (x.ndim - 1)),
-        null_value,
+        erase_idxs.reshape((-1,) + (1,) * (x.ndim - 1)),
+        0,
         x.at[translation].set(x[old_subtree_idxs]),
     )
 
-  def translate_idx(x, null_value=-1):
+  def translate_idx(x):
     return jnp.where(
-        erase.reshape((-1,) + (1,) * (x.ndim - 1)),
-        null_value,
+        erase_idxs.reshape((-1,) + (1,) * (x.ndim - 1)),
+        tree.UNVISITED,
         x.at[translation].set(translation[x]),
     )
 
@@ -204,7 +216,6 @@ def get_subtree(
       children_discounts=translate(tree.children_discounts),
       children_values=translate(tree.children_values),
       next_node_index=new_next_node_index,
-      embeddings=translate(tree.embeddings),
-      root_invalid_actions=new_invalid_actions,
-      extra_data=tree.extra_data
+      root_invalid_actions=jnp.zeros_like(tree.root_invalid_actions),
+      embeddings=translate(tree.embeddings)
   )
