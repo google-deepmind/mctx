@@ -164,13 +164,13 @@ class TreeTest(parameterized.TestCase):
   # the number of parameter configurations passed to test_tree.
   # pylint: disable=line-too-long
   TREES = [("muzero_norescale",
-          "./mctx/_src/tests/test_data/muzero_tree.json"),
+          "../mctx/_src/tests/test_data/muzero_tree.json"),
           ("muzero_qtransform",
-          "./mctx/_src/tests/test_data/muzero_qtransform_tree.json"),
+          "../mctx/_src/tests/test_data/muzero_qtransform_tree.json"),
           ("gumbel_muzero_norescale",
-          "./mctx/_src/tests/test_data/gumbel_muzero_tree.json"),
+          "../mctx/_src/tests/test_data/gumbel_muzero_tree.json"),
           ("gumbel_muzero_reward",
-          "./mctx/_src/tests/test_data/gumbel_muzero_reward_tree.json")]
+          "../mctx/_src/tests/test_data/gumbel_muzero_reward_tree.json")]
   # pylint: enable=line-too-long
 
   @parameterized.named_parameters(*TREES)
