@@ -104,10 +104,10 @@ def tree_to_pytree(tree: mctx.Tree, batch_i: int = 0):
       tree, batch_i, 0, prior=1.0, action=None, reward=None)
   children_prior_probs = jax.nn.softmax(tree.children_prior_logits, axis=-1)
   for node_i in range(tree.num_simulations + 1):
-    # Ignore unvisited nodes
+    # Return early if we reach an unvisited node
     visits = tree.node_visits[batch_i, node_i]
     if visits == 0:
-      continue
+      return nodes[0]
     for a_i in range(tree.num_actions):
       prior = children_prior_probs[batch_i, node_i, a_i]
       # Index of children, or -1 if not expanded
