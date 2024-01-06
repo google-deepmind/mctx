@@ -51,6 +51,7 @@ class Tree(Generic[T]):
     `children_rewards` and the `children_values`.
   children_values: `[B, N, num_actions]` the value of the next node after the
     action.
+  next_node_index: `[B]` the next free index where a new node can be inserted.
   embeddings: `[B, N, ...]` the state embeddings of each node.
   root_invalid_actions: `[B, num_actions]` a mask with invalid actions at the
     root. In the mask, invalid actions have ones, and valid actions have zeros.
@@ -142,10 +143,11 @@ def _unbatched_qvalues(tree: Tree, index: int) -> int:
       + tree.children_discounts[index] * tree.children_values[index]
   )
 
+
 def _get_translation(
     tree: Tree,
-    child_index: jnp.ndarray
-) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
+    child_index: chex.Array
+) -> Tuple[chex.Array, chex.Array, chex.Array]:
   subtrees = jnp.arange(tree.num_simulations+1)
 
   def propagate_fun(_, subtrees):
@@ -181,7 +183,7 @@ def _get_translation(
 @jax.vmap
 def get_subtree(
   tree: Tree,
-  child_index: jnp.ndarray
+  child_index: chex.Array
 ) -> Tree:
   """Extracts subtrees rooted at child indices of the root node, 
   across a batch of trees. Converts node index mappings and collapses
@@ -247,9 +249,10 @@ def get_subtree(
       embeddings=translate_pytree(tree.embeddings)
   )
 
+
 def reset_search_tree(
     tree: Tree,
-    select_batch: Optional[jnp.ndarray] = None) -> Tree:
+    select_batch: Optional[chex.Array] = None) -> Tree:
   """Fills search tree with default values for selected batches.
 
   Useful for resetting the search tree after a terminated episode.

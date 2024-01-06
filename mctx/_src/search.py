@@ -416,6 +416,7 @@ def instantiate_tree_from_root(
       tree, root_index, root.prior_logits, root.value, root.embedding)
   return tree
 
+
 def update_tree_with_root(
     tree: Tree,
     root: base.RootFnOutput,

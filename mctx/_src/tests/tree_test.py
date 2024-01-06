@@ -149,11 +149,13 @@ def _create_bare_pynode(prior, action):
       action=action,
   )
 
+
 def _create_bare_root(prior):
   return dict(
       prior=_round_float(prior),
       child_stats=[],
   )
+
 
 def _round_float(value, ndigits=10):
   return round(float(value), ndigits)
@@ -179,6 +181,7 @@ class TreeTest(parameterized.TestCase):
       tree = json.load(fd)
     reproduced, _ = self._reproduce_tree(tree)
     chex.assert_trees_all_close(tree["tree"], reproduced, atol=1e-3)
+
 
   @parameterized.named_parameters(*TREES)
   def test_subtree(self, tree_data_path):
@@ -210,6 +213,7 @@ class TreeTest(parameterized.TestCase):
       rm_evaluation_index(reproduced_subtree)
 
       chex.assert_trees_all_close(reproduced_subtree, child_tree, atol=1e-3)
+
 
   def _reproduce_tree(self, tree):
     """Reproduces the given JSON tree by running a search."""
