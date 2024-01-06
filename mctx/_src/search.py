@@ -63,6 +63,11 @@ def search(
     num_simulations: the number of simulations.
     max_depth: maximum search tree depth allowed during simulation, defined as
       the number of edges from the root to a leaf node.
+    max_nodes: maximum number of nodes allowed in the search tree (incl. root) 
+      If `None`, max_nodes == num_simulations. This only applies when `tree` is 
+      `None` (i.e. when a new tree is initialized).
+    tree: the MCTS tree state to continue search from. If `None`, a new tree 
+      will be initialized.
     invalid_actions: a mask with invalid actions at the root. In the
       mask, invalid actions have ones, and valid actions have zeros.
       Shape `[B, num_actions]`.

@@ -183,11 +183,19 @@ def get_subtree(
   tree: Tree,
   child_index: jnp.ndarray
 ) -> Tree:
-  """
-  Extracts subtrees rooted at child indices of the root node, 
-  across a batch of trees.
-  """
+  """Extracts subtrees rooted at child indices of the root node, 
+  across a batch of trees. Converts node index mappings and collapses
+  node data so that populated nodes are contiguous and start at index 0.
 
+  Assumes `tree` elements and `child_index` have a batch dimension.
+
+  Args:
+    tree: the tree to extract subtrees from
+    child_index: `[B]` the index of the child (from the root) to extract each
+      subtree from
+  """
+  # get mapping from old node indices to new node indices
+  # and a mask of which nodes indices to erase
   old_subtree_idxs, translation, erase_idxs = _get_translation(
                                               tree, child_index)
   new_next_node_index = translation.max(axis=-1) + 1
@@ -242,8 +250,14 @@ def get_subtree(
 def reset_search_tree(
     tree: Tree,
     select_batch: Optional[jnp.ndarray] = None) -> Tree:
-  """
-  Fills search tree with default values for selected batches
+  """Fills search tree with default values for selected batches.
+
+  Useful for resetting the search tree after a terminated episode.
+
+  Args:
+    tree: the tree to reset
+    select_batch: `[B]` a boolean mask to select which batch elements to reset.
+      If `None`, all batch elements are reset.
   """
   if select_batch is None:
     select_batch = jnp.ones(tree.node_visits.shape[0], dtype=bool)

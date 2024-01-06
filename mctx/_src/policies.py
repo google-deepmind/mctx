@@ -60,9 +60,14 @@ def muzero_policy(
       `(params, rng_key, action, embedding)` and returns a `RecurrentFnOutput`
       and the new state embedding. The `rng_key` argument is consumed.
     num_simulations: the number of simulations.
+    tree: a pre-initialized search tree. If given, search will continue to 
+    expand the tree. If not given, a new tree will be initialized.
     invalid_actions: a mask with invalid actions. Invalid actions
       have ones, valid actions have zeros in the mask. Shape `[B, num_actions]`.
     max_depth: maximum search tree depth allowed during simulation.
+    max_nodes: maximum number of nodes allowed in the search tree. If `None`,
+      max_nodes == num_simulations. This only applies when `tree` is `None` 
+      (i.e. when a new tree is initialized).
     loop_fn: Function used to run the simulations. It may be required to pass
       hk.fori_loop if using this function inside a Haiku module.
     qtransform: function to obtain completed Q-values for a node.
@@ -108,11 +113,11 @@ def muzero_policy(
       root_action_selection_fn=root_action_selection_fn,
       interior_action_selection_fn=interior_action_selection_fn,
       num_simulations=num_simulations,
-      max_depth=max_depth,
       max_nodes=max_nodes,
+      tree=tree,
+      max_depth=max_depth,
       invalid_actions=invalid_actions,
-      loop_fn=loop_fn,
-      tree=tree)
+      loop_fn=loop_fn)
 
   # Sampling the proposed action proportionally to the visit counts.
   summary = search_tree.summary()
@@ -165,9 +170,14 @@ def gumbel_muzero_policy(
       `(params, rng_key, action, embedding)` and returns a `RecurrentFnOutput`
       and the new state embedding. The `rng_key` argument is consumed.
     num_simulations: the number of simulations.
+    tree: a pre-initialized search tree. If given, search will continue to 
+    expand the tree. If not given, a new tree will be initialized.
     invalid_actions: a mask with invalid actions. Invalid actions
       have ones, valid actions have zeros in the mask. Shape `[B, num_actions]`.
     max_depth: maximum search tree depth allowed during simulation.
+    max_nodes: maximum number of nodes allowed in the search tree. If `None`,
+      max_nodes == num_simulations. This only applies when `tree` is `None` 
+      (i.e. when a new tree is initialized).
     loop_fn: Function used to run the simulations. It may be required to pass
       hk.fori_loop if using this function inside a Haiku module.
     qtransform: function to obtain completed Q-values for a node.
