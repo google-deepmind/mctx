@@ -220,10 +220,10 @@ def gumbel_muzero_policy(
       num_simulations=num_simulations,
       max_depth=max_depth,
       max_nodes=max_nodes,
+      tree=tree,
       invalid_actions=invalid_actions,
       extra_data=extra_data,
-      loop_fn=loop_fn,
-      tree=tree)
+      loop_fn=loop_fn)
   summary = search_tree.summary()
 
   # Acting with the best action from the most visited actions.
