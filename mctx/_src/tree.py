@@ -190,20 +190,28 @@ def get_subtree(
                                               tree, child_index)
   new_next_node_index = translation.max(axis=-1) + 1
 
-  def translate(x):
+  def translate(x, null_value=0):
     return jnp.where(
         erase_idxs.reshape((-1,) + (1,) * (x.ndim - 1)),
-        0,
+        null_value,
+        # cases where translation == -1 will set last index
+        # but since we are at least removing the root node
+        # (and making one of its children the new root)
+        # the last index will always be freed
+        # and overwritten with zeros
         x.at[translation].set(x[old_subtree_idxs]),
     )
 
-  def translate_idx(x):
+  def translate_idx(x, null_value=tree.UNVISITED):
     return jnp.where(
         erase_idxs.reshape((-1,) + (1,) * (x.ndim - 1)),
-        tree.UNVISITED,
-          x.at[translation].set(jnp.where(
-            x == tree.UNVISITED,
-            tree.UNVISITED,
+        null_value,
+        # in this case we need to explicitly check for index
+        # mappings to UNVISITED, since otherwise thsese will
+        # map to the value of the last index of the translation
+        x.at[translation].set(jnp.where(
+            x == null_value,
+            null_value,
             translation[x]))
     )
 
@@ -212,7 +220,9 @@ def get_subtree(
       raw_values=translate(tree.raw_values),
       node_values=translate(tree.node_values),
       parents=translate_idx(tree.parents),
-      action_from_parent=translate(tree.action_from_parent),
+      action_from_parent=translate(
+        tree.action_from_parent, 
+        null_value=tree.NO_PARENT).at[tree.ROOT_INDEX].set(tree.NO_PARENT),
       children_index=translate_idx(tree.children_index),
       children_prior_logits=translate(tree.children_prior_logits),
       children_visits=translate(tree.children_visits),

@@ -102,26 +102,18 @@ def search(
     unvisited = next_node_index == Tree.UNVISITED
     next_node_index = jnp.where(unvisited,
                                 tree.next_node_index, next_node_index)
-    # if next_node_index goes out of bounds, expand its (in-bounds) parent,
-    # similar to max_depth case
-    out_of_bounds = next_node_index >= max_nodes
-    next_node_index = jnp.where(out_of_bounds,
-                                parent_index,
-                                next_node_index)
-    parent_index = jnp.where(out_of_bounds,
-                             tree.parents[batch_range, parent_index],
-                             parent_index)
-    action = jnp.where(out_of_bounds,
-                       tree.action_from_parent[batch_range, parent_index],
-                       action)
+    
     tree = expand(
         params, expand_key, tree, recurrent_fn, parent_index,
         action, next_node_index)
+    # if next_node_index goes out of bounds, backward its (in-bounds) parent
+    out_of_bounds = next_node_index >= max_nodes
+    
+    next_node_index = jnp.where(out_of_bounds,
+                                parent_index,
+                                next_node_index)
     tree = backward(tree, next_node_index)
-    tree = tree.replace(
-        next_node_index=jnp.where(unvisited,
-                                    tree.next_node_index + 1,
-                                    tree.next_node_index))
+    tree = tree.replace(next_node_index=tree.next_node_index + (~out_of_bounds))
     loop_state = rng_key, tree
     return loop_state
 
@@ -134,7 +126,7 @@ def search(
     tree = update_tree_with_root(tree, root,
                                  root_invalid_actions=invalid_actions,
                                  extra_data=extra_data)
- 
+
   _, tree = loop_fn(
       0, num_simulations, body_fun, (rng_key, tree))
 
@@ -257,11 +249,14 @@ def expand(
   chex.assert_shape(step.value, [batch_size])
   tree = update_tree_node(
       tree, next_node_index, step.prior_logits, step.value, embedding)
-
+  
+  next_node_index_check_oob = jnp.where(next_node_index >= tree.num_simulations,
+                              tree.UNVISITED,
+                              next_node_index)
   # Return updated tree topology.
   return tree.replace(
       children_index=batch_update(
-          tree.children_index, next_node_index, parent_index, action),
+          tree.children_index, next_node_index_check_oob, parent_index, action),
       children_rewards=batch_update(
           tree.children_rewards, step.reward, parent_index, action),
       children_discounts=batch_update(
@@ -315,7 +310,6 @@ def backward(
   leaf_index = jnp.asarray(leaf_index, dtype=jnp.int32)
   loop_state = (tree, tree.node_values[leaf_index], leaf_index)
   tree, _, _ = jax.lax.while_loop(cond_fun, body_fun, loop_state)
-
   return tree
 
 
@@ -422,11 +416,10 @@ def update_tree_with_root(
   root_initialized = tree.node_visits[:, Tree.ROOT_INDEX] > 0
   batch_size = tree_lib.infer_batch_size(tree)
   root_index = jnp.full([batch_size], Tree.ROOT_INDEX)
-  ones = jnp.full([batch_size], 1)
   updates = dict(   # pylint: disable=use-dict-literal
       children_prior_logits=jnp.where(
-        root_initialized[..., None, None], 
-        batch_update(tree.children_prior_logits, root.prior_logits, root_index), 
+        root_initialized[..., None, None],
+        batch_update(tree.children_prior_logits, root.prior_logits, root_index),
         tree.children_prior_logits),
       raw_values=jnp.where(
         root_initialized[..., None],
@@ -436,10 +429,8 @@ def update_tree_with_root(
         root_initialized[..., None],
         batch_update(tree.node_values, root.value, root_index),
         tree.node_values),
-      node_visits=jnp.where(
-        root_initialized[..., None],
-        batch_update(tree.node_visits, ones, root_index),
-        tree.node_visits),
+      node_visits=tree.node_visits.at[:, Tree.ROOT_INDEX].set(
+        jnp.clip(tree.node_visits[:, Tree.ROOT_INDEX], a_min=1)),
       embeddings=jax.tree_util.tree_map(
           lambda t, s: batch_update(t, s, root_index),
           tree.embeddings, root.embedding),
