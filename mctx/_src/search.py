@@ -102,13 +102,13 @@ def search(
     unvisited = next_node_index == Tree.UNVISITED
     next_node_index = jnp.where(unvisited,
                                 tree.next_node_index, next_node_index)
-    
+
     tree = expand(
         params, expand_key, tree, recurrent_fn, parent_index,
         action, next_node_index)
     # if next_node_index goes out of bounds, backward its (in-bounds) parent
     out_of_bounds = next_node_index >= max_nodes
-    
+
     next_node_index = jnp.where(out_of_bounds,
                                 parent_index,
                                 next_node_index)
@@ -249,8 +249,8 @@ def expand(
   chex.assert_shape(step.value, [batch_size])
   tree = update_tree_node(
       tree, next_node_index, step.prior_logits, step.value, embedding)
-  
-  next_node_index_check_oob = jnp.where(next_node_index >= tree.num_simulations,
+
+  next_node_index_check_oob = jnp.where(next_node_index > tree.num_simulations,
                               tree.UNVISITED,
                               next_node_index)
   # Return updated tree topology.
@@ -411,26 +411,25 @@ def update_tree_with_root(
     root: base.RootFnOutput,
     root_invalid_actions: chex.Array,
     extra_data: Any) -> Tree:
-  """Handles edge case where an action corresponding to 
-  an unexpanded node is selected at the root."""
-  root_initialized = tree.node_visits[:, Tree.ROOT_INDEX] > 0
+  """Given a tree, updates its root with the given root output 
+  if it's not already populated."""
+  root_uninitialized = tree.node_visits[:, Tree.ROOT_INDEX] == 0
   batch_size = tree_lib.infer_batch_size(tree)
   root_index = jnp.full([batch_size], Tree.ROOT_INDEX)
+  ones = jnp.ones([batch_size], dtype=jnp.int32)
   updates = dict(   # pylint: disable=use-dict-literal
-      children_prior_logits=jnp.where(
-        root_initialized[..., None, None],
-        batch_update(tree.children_prior_logits, root.prior_logits, root_index),
-        tree.children_prior_logits),
-      raw_values=jnp.where(
-        root_initialized[..., None],
-        batch_update(tree.raw_values, root.value, root_index),
-        tree.raw_values),
+      children_prior_logits=batch_update(
+        tree.children_prior_logits, root.prior_logits, root_index),
+      raw_values=batch_update(
+        tree.raw_values, root.value, root_index),
       node_values=jnp.where(
-        root_initialized[..., None],
+        root_uninitialized[..., None],
         batch_update(tree.node_values, root.value, root_index),
         tree.node_values),
-      node_visits=tree.node_visits.at[:, Tree.ROOT_INDEX].set(
-        jnp.clip(tree.node_visits[:, Tree.ROOT_INDEX], a_min=1)),
+      node_visits=jnp.where(
+        root_uninitialized[..., None],
+        batch_update(tree.node_visits, ones, root_index),
+        tree.node_visits),
       embeddings=jax.tree_util.tree_map(
           lambda t, s: batch_update(t, s, root_index),
           tree.embeddings, root.embedding),

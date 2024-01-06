@@ -221,7 +221,7 @@ def get_subtree(
       node_values=translate(tree.node_values),
       parents=translate_idx(tree.parents),
       action_from_parent=translate(
-        tree.action_from_parent, 
+        tree.action_from_parent,
         null_value=tree.NO_PARENT).at[tree.ROOT_INDEX].set(tree.NO_PARENT),
       children_index=translate_idx(tree.children_index),
       children_prior_logits=translate(tree.children_prior_logits),
