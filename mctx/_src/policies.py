@@ -66,7 +66,7 @@ def muzero_policy(
       have ones, valid actions have zeros in the mask. Shape `[B, num_actions]`.
     max_depth: maximum search tree depth allowed during simulation.
     max_nodes: maximum number of nodes allowed in the search tree. If `None`,
-      max_nodes == num_simulations. This only applies when `tree` is `None` 
+      max_nodes == num_simulations + 1. This only applies when `tree` is `None` 
       (i.e. when a new tree is initialized).
     loop_fn: Function used to run the simulations. It may be required to pass
       hk.fori_loop if using this function inside a Haiku module.
@@ -176,7 +176,7 @@ def gumbel_muzero_policy(
       have ones, valid actions have zeros in the mask. Shape `[B, num_actions]`.
     max_depth: maximum search tree depth allowed during simulation.
     max_nodes: maximum number of nodes allowed in the search tree. If `None`,
-      max_nodes == num_simulations. This only applies when `tree` is `None` 
+      max_nodes == num_simulations + 1. This only applies when `tree` is `None` 
       (i.e. when a new tree is initialized).
     loop_fn: Function used to run the simulations. It may be required to pass
       hk.fori_loop if using this function inside a Haiku module.

@@ -64,8 +64,8 @@ def search(
     max_depth: maximum search tree depth allowed during simulation, defined as
       the number of edges from the root to a leaf node.
     max_nodes: maximum number of nodes allowed in the search tree (incl. root) 
-      If `None`, max_nodes == num_simulations. This only applies when `tree` is 
-      `None` (i.e. when a new tree is initialized).
+      If `None`, max_nodes == num_simulations + 1. This only applies when `tree` 
+      is `None` (i.e. when a new tree is initialized).
     tree: the MCTS tree state to continue search from. If `None`, a new tree 
       will be initialized.
     invalid_actions: a mask with invalid actions at the root. In the
@@ -105,20 +105,23 @@ def search(
         simulate_keys, tree, action_selection_fn, max_depth)
     next_node_index = tree.children_index[batch_range, parent_index, action]
     unvisited = next_node_index == Tree.UNVISITED
+
     next_node_index = jnp.where(unvisited,
                                 tree.next_node_index, next_node_index)
-
     tree = expand(
         params, expand_key, tree, recurrent_fn, parent_index,
         action, next_node_index)
-    # if next_node_index goes out of bounds, backward its (in-bounds) parent
+    # if next_node_index goes out of bounds (i.e. no room left for new nodes)
+    # backward its (in-bounds) parent
     out_of_bounds = next_node_index >= max_nodes
-
     next_node_index = jnp.where(out_of_bounds,
                                 parent_index,
                                 next_node_index)
+
     tree = backward(tree, next_node_index)
-    tree = tree.replace(next_node_index=tree.next_node_index + (~out_of_bounds))
+    # increment next_node_index if leaf was expanded
+    tree = tree.replace(next_node_index=tree.next_node_index + \
+                        jnp.logical_and(unvisited, (~out_of_bounds)))
     loop_state = rng_key, tree
     return loop_state
 
@@ -255,6 +258,8 @@ def expand(
   tree = update_tree_node(
       tree, next_node_index, step.prior_logits, step.value, embedding)
 
+  # handle out-of-bounds next_node_index,
+  # (parent should still point to UNVISITED)
   next_node_index_check_oob = jnp.where(next_node_index > tree.num_simulations,
                               tree.UNVISITED,
                               next_node_index)
