@@ -15,7 +15,7 @@
 """A data structure used to hold / inspect search data for a batch of inputs."""
 
 from __future__ import annotations
-from typing import Any, ClassVar, Generic, Tuple, TypeVar
+from typing import Any, ClassVar, Generic, Optional, Tuple, TypeVar
 
 import chex
 import jax
@@ -212,8 +212,11 @@ def get_subtree(
         x.at[translation].set(jnp.where(
             x == null_value,
             null_value,
-            translation[x]))
-    )
+            translation[x])))
+
+  def translate_pytree(x, null_value=0):
+    return jax.tree_map(
+        lambda t: translate(t, null_value=null_value), x)
 
   return tree.replace(
       node_visits=translate(tree.node_visits),
@@ -230,5 +233,35 @@ def get_subtree(
       children_values=translate(tree.children_values),
       next_node_index=new_next_node_index,
       root_invalid_actions=jnp.zeros_like(tree.root_invalid_actions),
-      embeddings=translate(tree.embeddings)
+      embeddings=translate_pytree(tree.embeddings)
+  )
+
+def reset_search_tree(
+    tree: Tree,
+    select_batch: Optional[jnp.ndarray] = None) -> Tree:
+  """
+  Fills search tree with default values for selected batches
+  """
+  if select_batch is None:
+    select_batch = jnp.ones(tree.node_visits.shape[0], dtype=bool)
+
+  return tree.replace(
+      node_visits=tree.node_visits.at[select_batch].set(0),
+      raw_values=tree.raw_values.at[select_batch].set(0),
+      node_values=tree.node_values.at[select_batch].set(0),
+      parents=tree.parents.at[select_batch].set(tree.NO_PARENT),
+      action_from_parent=tree.action_from_parent.at[select_batch].set(
+        tree.NO_PARENT),
+      children_index=tree.children_index.at[select_batch].set(tree.UNVISITED),
+      children_prior_logits=tree.children_prior_logits.at[select_batch].set(0),
+      children_values=tree.children_values.at[select_batch].set(0),
+      children_visits=tree.children_visits.at[select_batch].set(0),
+      children_rewards=tree.children_rewards.at[select_batch].set(0),
+      children_discounts=tree.children_discounts.at[select_batch].set(0),
+      next_node_index=tree.next_node_index.at[select_batch].set(1),
+      embeddings=jax.tree_util.tree_map(
+          lambda t: t.at[select_batch].set(0),
+          tree.embeddings),
+      root_invalid_actions=tree.root_invalid_actions.at[select_batch].set(0)
+      # extra_data is always overwritten by a call to search()
   )
