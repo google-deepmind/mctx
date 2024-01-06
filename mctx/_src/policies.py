@@ -523,7 +523,8 @@ def _mask_tree(tree: search.Tree, num_actions: int, mode: str) -> search.Tree:
       children_visits=_take_slice(tree.children_visits),
       children_rewards=_take_slice(tree.children_rewards),
       children_discounts=_take_slice(tree.children_discounts),
-      children_values=_take_slice(tree.children_values))
+      children_values=_take_slice(tree.children_values),
+      root_invalid_actions=_take_slice(tree.root_invalid_actions))
 
 
 def _make_stochastic_action_selection_fn(
