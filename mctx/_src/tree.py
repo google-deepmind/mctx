@@ -146,8 +146,6 @@ def _get_translation(
     tree: Tree,
     child_index: jnp.ndarray
 ) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
-  """Extracts a subtree rooted at one of the child nodes 
-  of the current root node."""
   subtrees = jnp.arange(tree.num_simulations+1)
 
   def propagate_fun(_, subtrees):
@@ -185,6 +183,10 @@ def get_subtree(
   tree: Tree,
   child_index: jnp.ndarray
 ) -> Tree:
+  """
+  Extracts subtrees rooted at child indices of the root node, 
+  across a batch of trees.
+  """
 
   old_subtree_idxs, translation, erase_idxs = _get_translation(
                                               tree, child_index)
@@ -229,6 +231,7 @@ def get_subtree(
       children_index=translate_idx(tree.children_index),
       children_prior_logits=translate(tree.children_prior_logits),
       children_visits=translate(tree.children_visits),
+      children_rewards=translate(tree.children_rewards),
       children_discounts=translate(tree.children_discounts),
       children_values=translate(tree.children_values),
       next_node_index=new_next_node_index,

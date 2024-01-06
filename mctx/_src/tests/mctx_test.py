@@ -30,7 +30,8 @@ class MctxTest(absltest.TestCase):
     self.assertTrue(hasattr(mctx, "PolicyOutput"))
     self.assertTrue(hasattr(mctx, "RootFnOutput"))
     self.assertTrue(hasattr(mctx, "RecurrentFnOutput"))
-
+    self.assertTrue(hasattr(mctx, "get_subtree"))
+    self.assertTrue(hasattr(mctx, "reset_search_tree"))
 
 if __name__ == "__main__":
   absltest.main()

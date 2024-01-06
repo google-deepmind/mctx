@@ -97,10 +97,17 @@ def _fold_action_in(rng_key, action, num_actions):
 def tree_to_pytree(tree: mctx.Tree, batch_i: int = 0):
   """Converts the MCTS tree to nested dicts."""
   nodes = {}
+  if tree.node_visits[batch_i, 0] == 0:
+    # The root node is unvisited, so there is no tree.
+    return _create_bare_root(prior=1.0)
   nodes[0] = _create_pynode(
       tree, batch_i, 0, prior=1.0, action=None, reward=None)
   children_prior_probs = jax.nn.softmax(tree.children_prior_logits, axis=-1)
   for node_i in range(tree.num_simulations + 1):
+    # Ignore unvisited nodes
+    visits = tree.node_visits[batch_i, node_i]
+    if visits == 0:
+      continue
     for a_i in range(tree.num_actions):
       prior = children_prior_probs[batch_i, node_i, a_i]
       # Index of children, or -1 if not expanded
@@ -142,31 +149,67 @@ def _create_bare_pynode(prior, action):
       action=action,
   )
 
+def _create_bare_root(prior):
+  return dict(
+      prior=_round_float(prior),
+      child_stats=[],
+  )
 
 def _round_float(value, ndigits=10):
   return round(float(value), ndigits)
 
 
 class TreeTest(parameterized.TestCase):
-
   # Make sure to adjust the `shard_count` parameter in the build file to match
   # the number of parameter configurations passed to test_tree.
   # pylint: disable=line-too-long
-  @parameterized.named_parameters(
-      ("muzero_norescale",
-       "../mctx/_src/tests/test_data/muzero_tree.json"),
-      ("muzero_qtransform",
-       "../mctx/_src/tests/test_data/muzero_qtransform_tree.json"),
-      ("gumbel_muzero_norescale",
-       "../mctx/_src/tests/test_data/gumbel_muzero_tree.json"),
-      ("gumbel_muzero_reward",
-       "../mctx/_src/tests/test_data/gumbel_muzero_reward_tree.json"))
+  TREES = [("muzero_norescale",
+          "./mctx/_src/tests/test_data/muzero_tree.json"),
+          ("muzero_qtransform",
+          "./mctx/_src/tests/test_data/muzero_qtransform_tree.json"),
+          ("gumbel_muzero_norescale",
+          "./mctx/_src/tests/test_data/gumbel_muzero_tree.json"),
+          ("gumbel_muzero_reward",
+          "./mctx/_src/tests/test_data/gumbel_muzero_reward_tree.json")]
   # pylint: enable=line-too-long
+
+  @parameterized.named_parameters(*TREES)
   def test_tree(self, tree_data_path):
     with open(tree_data_path, "rb") as fd:
       tree = json.load(fd)
-    reproduced = self._reproduce_tree(tree)
+    reproduced, _ = self._reproduce_tree(tree)
     chex.assert_trees_all_close(tree["tree"], reproduced, atol=1e-3)
+
+  @parameterized.named_parameters(*TREES)
+  def test_subtree(self, tree_data_path):
+    with open(tree_data_path, "rb") as fd:
+      tree = json.load(fd)
+    reproduced, jax_tree = self._reproduce_tree(tree)
+
+    def rm_evaluation_index(node):
+      if isinstance(node, dict):
+        node.pop("evaluation_index", None)
+        for child in node["child_stats"]:
+          rm_evaluation_index(child)
+
+    # test populated subtree
+    for child_tree in reproduced["child_stats"]:
+      action = child_tree["action"]
+      # reflect that the chosen child node is now a root node
+      child_tree["prior"] = 1.0
+      child_tree.pop("action")
+      if "reward" in child_tree:
+        child_tree.pop("reward")
+
+      subtree = mctx.get_subtree(jax_tree, jnp.array([action, action, action]))
+      reproduced_subtree = tree_to_pytree(subtree)
+
+      # evaluation indices will not match since subtree indices are
+      # collapsed down so check everything but evaluation indices
+      rm_evaluation_index(child_tree)
+      rm_evaluation_index(reproduced_subtree)
+
+      chex.assert_trees_all_close(reproduced_subtree, child_tree, atol=1e-3)
 
   def _reproduce_tree(self, tree):
     """Reproduces the given JSON tree by running a search."""
@@ -205,7 +248,7 @@ class TreeTest(parameterized.TestCase):
     policy_output = jax.jit(run_policy)()
     logging.info("Done search.")
 
-    return tree_to_pytree(policy_output.search_tree)
+    return tree_to_pytree(policy_output.search_tree), policy_output.search_tree
 
 
 if __name__ == "__main__":
