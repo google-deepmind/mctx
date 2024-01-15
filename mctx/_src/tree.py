@@ -205,7 +205,7 @@ def get_subtree(
   def translate(x, null_value=0):
     return jnp.where(
         erase_idxs.reshape((-1,) + (1,) * (x.ndim - 1)),
-        null_value,
+        jnp.full_like(x, null_value),
         # cases where translation == -1 will set last index
         # but since we are at least removing the root node
         # (and making one of its children the new root)
@@ -217,7 +217,7 @@ def get_subtree(
   def translate_idx(x, null_value=tree.UNVISITED):
     return jnp.where(
         erase_idxs.reshape((-1,) + (1,) * (x.ndim - 1)),
-        null_value,
+        jnp.full_like(x, null_value),
         # in this case we need to explicitly check for index
         # mappings to UNVISITED, since otherwise thsese will
         # map to the value of the last index of the translation
