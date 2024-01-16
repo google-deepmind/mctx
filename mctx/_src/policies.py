@@ -137,10 +137,8 @@ def gumbel_muzero_policy(
     root: base.RootFnOutput,
     recurrent_fn: base.RecurrentFn,
     num_simulations: int,
-    tree: Optional[search.Tree] = None,
     invalid_actions: Optional[chex.Array] = None,
     max_depth: Optional[int] = None,
-    max_nodes: Optional[int] = None,
     loop_fn: base.LoopFn = jax.lax.fori_loop,
     *,
     qtransform: base.QTransform = qtransforms.qtransform_completed_by_mix_value,
@@ -170,14 +168,9 @@ def gumbel_muzero_policy(
       `(params, rng_key, action, embedding)` and returns a `RecurrentFnOutput`
       and the new state embedding. The `rng_key` argument is consumed.
     num_simulations: the number of simulations.
-    tree: a pre-initialized search tree. If given, search will continue to 
-    expand the tree. If not given, a new tree will be initialized.
     invalid_actions: a mask with invalid actions. Invalid actions
       have ones, valid actions have zeros in the mask. Shape `[B, num_actions]`.
     max_depth: maximum search tree depth allowed during simulation.
-    max_nodes: maximum number of nodes allowed in the search tree. If `None`,
-      max_nodes == num_simulations + 1. This only applies when `tree` is `None` 
-      (i.e. when a new tree is initialized).
     loop_fn: Function used to run the simulations. It may be required to pass
       hk.fori_loop if using this function inside a Haiku module.
     qtransform: function to obtain completed Q-values for a node.
@@ -219,8 +212,6 @@ def gumbel_muzero_policy(
       ),
       num_simulations=num_simulations,
       max_depth=max_depth,
-      max_nodes=max_nodes,
-      tree=tree,
       invalid_actions=invalid_actions,
       extra_data=extra_data,
       loop_fn=loop_fn)

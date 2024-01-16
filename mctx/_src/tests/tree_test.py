@@ -165,14 +165,15 @@ class TreeTest(parameterized.TestCase):
   # Make sure to adjust the `shard_count` parameter in the build file to match
   # the number of parameter configurations passed to test_tree.
   # pylint: disable=line-too-long
-  TREES = [("muzero_norescale",
+  MUZERO_TREES = [("muzero_norescale",
           "../mctx/_src/tests/test_data/muzero_tree.json"),
           ("muzero_qtransform",
-          "../mctx/_src/tests/test_data/muzero_qtransform_tree.json"),
-          ("gumbel_muzero_norescale",
+          "../mctx/_src/tests/test_data/muzero_qtransform_tree.json")]
+  GUMBEL_MUZERO_TREES = [("gumbel_muzero_norescale",
           "../mctx/_src/tests/test_data/gumbel_muzero_tree.json"),
           ("gumbel_muzero_reward",
           "../mctx/_src/tests/test_data/gumbel_muzero_reward_tree.json")]
+  TREES = MUZERO_TREES + GUMBEL_MUZERO_TREES
   # pylint: enable=line-too-long
 
   @parameterized.named_parameters(*TREES)
@@ -183,7 +184,7 @@ class TreeTest(parameterized.TestCase):
     chex.assert_trees_all_close(tree["tree"], reproduced, atol=1e-3)
 
 
-  @parameterized.named_parameters(*TREES)
+  @parameterized.named_parameters(*MUZERO_TREES)
   def test_subtree(self, tree_data_path):
     with open(tree_data_path, "rb") as fd:
       tree = json.load(fd)
