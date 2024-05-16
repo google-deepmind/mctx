@@ -202,7 +202,7 @@ class TreeTest(parameterized.TestCase):
           invalid_actions=invalid_actions,
           **tree["algorithm_config"])
 
-    policy_output = jax.jit(run_policy)()
+    policy_output = jax.jit(run_policy)()  # pylint: disable=not-callable
     logging.info("Done search.")
 
     return tree_to_pytree(policy_output.search_tree)
