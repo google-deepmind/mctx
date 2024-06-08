@@ -42,7 +42,7 @@ class Tree(Generic[T]):
     node.
   children_index: `[B, N, num_actions]` the node index of the children for each
     action.
-  children_prior_logits: `[B, N, Anum_actions` the action prior logits of each
+  children_prior_logits: `[B, N, num_actions]` the action prior logits of each
     node.
   children_visits: `[B, N, num_actions]` the visit counts for children for
     each action.
