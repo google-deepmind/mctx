@@ -219,7 +219,7 @@ def expand(
   chex.assert_shape([parent_index, action, next_node_index], (batch_size,))
 
   # Retrieve states for nodes to be evaluated.
-  embedding = jax.tree_util.tree_map(
+  embedding = jax.tree.map(
       lambda x: x[batch_range, parent_index], tree.embeddings)
 
   # Evaluate and create a new node.
@@ -335,7 +335,7 @@ def update_tree_node(
           tree.node_values, value, node_index),
       node_visits=batch_update(
           tree.node_visits, new_visit, node_index),
-      embeddings=jax.tree_util.tree_map(
+      embeddings=jax.tree.map(
           lambda t, s: batch_update(t, s, node_index),
           tree.embeddings, embedding))
 
@@ -375,7 +375,7 @@ def instantiate_tree_from_root(
       children_visits=jnp.zeros(batch_node_action, dtype=jnp.int32),
       children_rewards=jnp.zeros(batch_node_action, dtype=data_dtype),
       children_discounts=jnp.zeros(batch_node_action, dtype=data_dtype),
-      embeddings=jax.tree_util.tree_map(_zeros, root.embedding),
+      embeddings=jax.tree.map(_zeros, root.embedding),
       root_invalid_actions=root_invalid_actions,
       extra_data=extra_data)
 
