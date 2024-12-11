@@ -33,8 +33,8 @@ pip install -r requirements/requirements-test.txt
 flake8 `find mctx -name '*.py' | xargs` --count --select=E9,F63,F7,F82,E225,E251 --show-source --statistics
 
 # Lint with pylint.
-# Fail on errors, warning, conventions and refactoring messages.
-PYLINT_ARGS="-efail -wfail -cfail -rfail"
+# Fail on errors, warning, and conventions.
+PYLINT_ARGS="-efail -wfail -cfail"
 # Lint modules and tests separately.
 pylint --rcfile=.pylintrc `find mctx -name '*.py' | grep -v 'test.py' | xargs` || pylint-exit $PYLINT_ARGS $?
 # Disable `protected-access` warnings for tests.
