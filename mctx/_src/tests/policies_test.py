@@ -22,6 +22,8 @@ import mctx
 from mctx._src import policies
 import numpy as np
 
+jax.config.update("jax_threefry_partitionable", False)
+
 
 def _make_bandit_recurrent_fn(rewards, dummy_embedding=()):
   """Returns a recurrent_fn with discount=0."""

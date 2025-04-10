@@ -26,6 +26,8 @@ import jax.numpy as jnp
 import mctx
 import numpy as np
 
+jax.config.update("jax_threefry_partitionable", False)
+
 
 def _prepare_root(batch_size, num_actions):
   """Returns a root consistent with the stored expected trees."""
