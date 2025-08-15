@@ -477,9 +477,9 @@ def _make_stochastic_recurrent_fn(
           expanded_is_decision,
           decision_leaf, chance_leaf)
 
-    output = jax.tree.map(_broadcast_where,
-                          output_if_decision_node,
-                          output_if_chance_node)
+    output = jax.tree_util.tree_map(_broadcast_where,
+                                    output_if_decision_node,
+                                    output_if_chance_node)
     return output, new_state
 
   return stochastic_recurrent_fn
