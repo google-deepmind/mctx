@@ -5,6 +5,7 @@
 build/
 dist/
 venv/
+_testing/
 
 # Mac OS
 .DS_Store

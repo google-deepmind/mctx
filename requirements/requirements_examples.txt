@@ -1,2 +1,0 @@
-absl-py>=2.3.1
-pygraphviz>=1.7

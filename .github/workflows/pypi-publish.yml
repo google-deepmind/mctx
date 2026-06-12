@@ -22,7 +22,7 @@ jobs:
     - name: Check consistency between the package version and release tag
       run: |
         RELEASE_VER=${GITHUB_REF#refs/*/}
-        PACKAGE_VER="v`python setup.py --version`"
+        PACKAGE_VER="v`python -c 'import mctx; print(mctx.__version__)'`"
         if [ $RELEASE_VER != $PACKAGE_VER ]
         then
           echo "package ver. ($PACKAGE_VER) != release ver. ($RELEASE_VER)"; exit 1

@@ -1,4 +1,0 @@
-include README.md
-include LICENSE
-include requirements/*
-include mctx/py.typed
