@@ -18,17 +18,18 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install setuptools wheel twine
+        pip install setuptools wheel twine build
     - name: Check consistency between the package version and release tag
       run: |
+        pip install .
         RELEASE_VER=${GITHUB_REF#refs/*/}
         PACKAGE_VER="v`python -c 'import mctx; print(mctx.__version__)'`"
         if [ $RELEASE_VER != $PACKAGE_VER ]
         then
           echo "package ver. ($PACKAGE_VER) != release ver. ($RELEASE_VER)"; exit 1
         fi
-    - name: Build
+    - name: Build and publish
       run: |
-        python setup.py sdist bdist_wheel
+        python -m build
     - name: Publish package distributions to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
