@@ -250,7 +250,7 @@ class PoliciesTest(absltest.TestCase):
         jax.tree.map(lambda x: x[0], policy_output.search_tree),
         policy_output.search_tree.ROOT_INDEX)
     self.assertEqual(max_depth, max_found_depth)
-    self.assertEqual(6, policy_output.search_tree.node_visits[0, leaf])
+    self.assertEqual(6, policy_output.search_tree.node_visits[0, leaf])  # pyrefly: ignore[bad-index]
 
   def test_gumbel_muzero_policy_without_invalid_actions(self):
     root_value = jnp.array([-5.0])

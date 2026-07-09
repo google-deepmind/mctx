@@ -86,7 +86,7 @@ def muzero_policy(
           jax.nn.softmax(root.prior_logits),
           dirichlet_fraction=dirichlet_fraction,
           dirichlet_alpha=dirichlet_alpha))
-  root = root.replace(
+  root = root.replace(  # pyrefly: ignore[missing-attribute]
       prior_logits=_mask_invalid_actions(noisy_logits, invalid_actions))
 
   # Running the search.
@@ -176,7 +176,7 @@ def gumbel_muzero_policy(
     search tree.
   """
   # Masking invalid actions.
-  root = root.replace(
+  root = root.replace(  # pyrefly: ignore[missing-attribute]
       prior_logits=_mask_invalid_actions(root.prior_logits, invalid_actions))
 
   # Generating Gumbel.
@@ -301,7 +301,7 @@ def stochastic_muzero_policy(
           dirichlet_fraction=dirichlet_fraction,
           dirichlet_alpha=dirichlet_alpha))
 
-  root = root.replace(
+  root = root.replace(  # pyrefly: ignore[missing-attribute]
       prior_logits=_mask_invalid_actions(noisy_logits, invalid_actions))
 
   # construct a dummy afterstate embedding
@@ -509,7 +509,7 @@ def _mask_tree(tree: search.Tree, num_actions: int, mode: str) -> search.Tree:
     else:
       raise ValueError(f'Unknown mode: {mode}.')
 
-  return tree.replace(
+  return tree.replace(  # pyrefly: ignore[missing-attribute]
       children_index=_take_slice(tree.children_index),
       children_prior_logits=_take_slice(tree.children_prior_logits),
       children_visits=_take_slice(tree.children_visits),
@@ -531,7 +531,8 @@ def _make_stochastic_action_selection_fn(
       tree: search.Tree,
       node_index: chex.Array,
   ) -> chex.Array:
-    num_chance = tree.children_visits[node_index]
+    num_chance = tree.children_visits[node_index]  # pyrefly: ignore[bad-index]
+    # pyrefly: ignore[bad-index]
     chance_logits = tree.children_prior_logits[node_index]
     prob_chance = jax.nn.softmax(chance_logits)
     argmax_chance = jnp.argmax(prob_chance / (num_chance + 1), axis=-1).astype(

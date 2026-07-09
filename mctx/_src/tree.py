@@ -98,11 +98,12 @@ class Tree(Generic[T]):
     """Extract summary statistics for the root node."""
     # Get state and action values for the root nodes.
     chex.assert_rank(self.node_values, 2)
-    value = self.node_values[:, Tree.ROOT_INDEX]
+    value = self.node_values[:, Tree.ROOT_INDEX]  # pyrefly: ignore[bad-index]
     batch_size, = value.shape
     root_indices = jnp.full((batch_size,), Tree.ROOT_INDEX)
     qvalues = self.qvalues(root_indices)
     # Extract visit counts and induced probabilities for the root nodes.
+    # pyrefly: ignore[bad-index]
     visit_counts = self.children_visits[:, Tree.ROOT_INDEX].astype(value.dtype)
     total_counts = jnp.sum(visit_counts, axis=-1, keepdims=True)
     visit_probs = visit_counts / jnp.maximum(total_counts, 1)
@@ -137,6 +138,8 @@ class SearchSummary:
 def _unbatched_qvalues(tree: Tree, index: int) -> int:
   chex.assert_rank(tree.children_discounts, 2)
   return (  # pytype: disable=bad-return-type  # numpy-scalars
+      # pyrefly: ignore[bad-index, bad-return]
       tree.children_rewards[index]
+      # pyrefly: ignore[bad-index]
       + tree.children_discounts[index] * tree.children_values[index]
   )

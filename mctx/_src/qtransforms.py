@@ -44,8 +44,9 @@ def qtransform_by_min_max(
   """
   chex.assert_shape(node_index, ())
   qvalues = tree.qvalues(node_index)
-  visit_counts = tree.children_visits[node_index]
+  visit_counts = tree.children_visits[node_index]  # pyrefly: ignore[bad-index]
   value_score = jnp.where(visit_counts > 0, qvalues, min_value)
+  # pyrefly: ignore[unsupported-operation]
   value_score = (value_score - min_value) / ((max_value - min_value))
   return value_score
 
@@ -69,9 +70,9 @@ def qtransform_by_parent_and_siblings(
   """
   chex.assert_shape(node_index, ())
   qvalues = tree.qvalues(node_index)
-  visit_counts = tree.children_visits[node_index]
+  visit_counts = tree.children_visits[node_index]  # pyrefly: ignore[bad-index]
   chex.assert_rank([qvalues, visit_counts, node_index], [1, 1, 0])
-  node_value = tree.node_values[node_index]
+  node_value = tree.node_values[node_index]  # pyrefly: ignore[bad-index]
   safe_qvalues = jnp.where(visit_counts > 0, qvalues, node_value)
   chex.assert_equal_shape([safe_qvalues, qvalues])
   min_value = jnp.minimum(node_value, jnp.min(safe_qvalues, axis=-1))
@@ -119,12 +120,12 @@ def qtransform_completed_by_mix_value(
   """
   chex.assert_shape(node_index, ())
   qvalues = tree.qvalues(node_index)
-  visit_counts = tree.children_visits[node_index]
+  visit_counts = tree.children_visits[node_index]  # pyrefly: ignore[bad-index]
 
   # Computing the mixed value and producing completed_qvalues.
-  raw_value = tree.raw_values[node_index]
+  raw_value = tree.raw_values[node_index]  # pyrefly: ignore[bad-index]
   prior_probs = jax.nn.softmax(
-      tree.children_prior_logits[node_index])
+      tree.children_prior_logits[node_index])  # pyrefly: ignore[bad-index]
   if use_mixed_value:
     value = _compute_mixed_value(
         raw_value,

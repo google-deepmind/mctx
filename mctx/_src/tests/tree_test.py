@@ -106,9 +106,9 @@ def tree_to_pytree(tree: mctx.Tree, batch_i: int = 0):
     for a_i in range(tree.num_actions):
       prior = children_prior_probs[batch_i, node_i, a_i]
       # Index of children, or -1 if not expanded
-      child_i = int(tree.children_index[batch_i, node_i, a_i])
+      child_i = int(tree.children_index[batch_i, node_i, a_i])  # pyrefly: ignore[bad-index]
       if child_i >= 0:
-        reward = tree.children_rewards[batch_i, node_i, a_i]
+        reward = tree.children_rewards[batch_i, node_i, a_i]  # pyrefly: ignore[bad-index]
         child = _create_pynode(
             tree, batch_i, child_i, prior=prior, action=a_i, reward=reward)
         nodes[child_i] = child

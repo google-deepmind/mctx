@@ -71,14 +71,16 @@ def muzero_action_selection(
   Returns:
     action: the action selected from the given node.
   """
-  visit_counts = tree.children_visits[node_index]
-  node_visit = tree.node_visits[node_index]
+  visit_counts = tree.children_visits[node_index]  # pyrefly: ignore[bad-index]
+  node_visit = tree.node_visits[node_index]  # pyrefly: ignore[bad-index]
   pb_c = pb_c_init + jnp.log((node_visit + pb_c_base + 1.) / pb_c_base)
+  # pyrefly: ignore[bad-index]
   prior_logits = tree.children_prior_logits[node_index]
   prior_probs = jax.nn.softmax(prior_logits)
   policy_score = jnp.sqrt(node_visit) * pb_c * prior_probs / (visit_counts + 1)
   chex.assert_shape([node_index, node_visit], ())
   chex.assert_equal_shape([prior_probs, visit_counts, policy_score])
+  # pyrefly: ignore[bad-argument-type]
   value_score = qtransform(tree, node_index)
 
   # Add tiny bit of randomness for tie break
@@ -129,9 +131,12 @@ def gumbel_muzero_root_action_selection(
   """
   del rng_key
   chex.assert_shape([node_index], ())
+  # pyrefly: ignore[bad-index]
   visit_counts = tree.children_visits[node_index]
+  # pyrefly: ignore[bad-index]
   prior_logits = tree.children_prior_logits[node_index]
   chex.assert_equal_shape([visit_counts, prior_logits])
+  # pyrefly: ignore[bad-argument-type]
   completed_qvalues = qtransform(tree, node_index)
 
   table = jnp.array(seq_halving.get_table_of_considered_visits(
@@ -180,9 +185,11 @@ def gumbel_muzero_interior_action_selection(
   """
   del rng_key, depth
   chex.assert_shape([node_index], ())
-  visit_counts = tree.children_visits[node_index]
+  visit_counts = tree.children_visits[node_index]  # pyrefly: ignore[bad-index]
+  # pyrefly: ignore[bad-index]
   prior_logits = tree.children_prior_logits[node_index]
   chex.assert_equal_shape([visit_counts, prior_logits])
+  # pyrefly: ignore[bad-argument-type]
   completed_qvalues = qtransform(tree, node_index)
 
   # The `prior_logits + completed_qvalues` provide an improved policy,
