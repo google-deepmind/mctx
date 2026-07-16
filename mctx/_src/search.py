@@ -246,6 +246,32 @@ def expand(
           tree.action_from_parent, action, next_node_index))
 
 
+class _BackwardState(NamedTuple):
+  """The state for the backward while loop.
+
+  The loop carry deliberately contains only O(num_nodes) data. Carrying the
+  whole tree (with its [num_nodes, num_actions] children arrays) and updating
+  it inside the loop body makes XLA:GPU insert full copies of
+  `children_values` and `children_visits` on every loop iteration, because
+  the same buffers are both read and scattered into within one iteration.
+  With large action spaces this makes each simulation cost
+  O(depth * num_nodes * num_actions) in memory traffic, i.e. the search
+  becomes super-linear in `num_simulations`. Instead, the path from the leaf
+  to the root is recorded here and the tree is updated by a single scatter
+  per array after the loop.
+  """
+  step: chex.Array
+  index: chex.Array
+  leaf_value: chex.Array
+  child_value: chex.Array
+  path_parents: chex.Array
+  path_actions: chex.Array
+  path_node_values: chex.Array
+  path_node_visits: chex.Array
+  path_children_values: chex.Array
+  path_children_visits: chex.Array
+
+
 @jax.vmap
 def backward(
     tree: Tree[T],
@@ -259,40 +285,70 @@ def backward(
   Returns:
     Updated MCTS tree state.
   """
+  num_nodes = tree.node_values.shape[0]
+  leaf_index = jnp.asarray(leaf_index, dtype=jnp.int32)
 
-  def cond_fun(loop_state):
-    _, _, index = loop_state
-    return index != Tree.ROOT_INDEX
+  def cond_fun(state):
+    return state.index != Tree.ROOT_INDEX
 
-  def body_fun(loop_state):
+  def body_fun(state):
     # Here we update the value of our parent, so we start by reversing.
-    tree, leaf_value, index = loop_state
+    index = state.index
     parent = tree.parents[index]
     count = tree.node_visits[parent]
     action = tree.action_from_parent[index]
     reward = tree.children_rewards[parent, action]
-    leaf_value = reward + tree.children_discounts[parent, action] * leaf_value
+    leaf_value = reward + tree.children_discounts[parent, action] * (
+        state.leaf_value)
     parent_value = (
         tree.node_values[parent] * count + leaf_value) / (count + 1.0)
-    children_values = tree.node_values[index]
-    children_counts = tree.children_visits[parent, action] + 1
+    step = state.step
+    # pyrefly: ignore[bad-argument-type]
+    return _BackwardState(
+        step=step + 1,
+        index=parent,
+        leaf_value=leaf_value,
+        # The next edge reads the just-updated value of this path node; the
+        # original in-loop version reads it from the freshly updated tree.
+        child_value=parent_value,
+        path_parents=state.path_parents.at[step].set(parent),
+        path_actions=state.path_actions.at[step].set(action),
+        path_node_values=state.path_node_values.at[step].set(parent_value),
+        path_node_visits=state.path_node_visits.at[step].set(count + 1),
+        path_children_values=state.path_children_values.at[step].set(
+            state.child_value),
+        path_children_visits=state.path_children_visits.at[step].set(
+            tree.children_visits[parent, action] + 1))
 
-    tree = tree.replace(
-        node_values=update(tree.node_values, parent_value, parent),
-        node_visits=update(tree.node_visits, count + 1, parent),
-        children_values=update(
-            tree.children_values, children_values, parent, action),
-        children_visits=update(
-            tree.children_visits, children_counts, parent, action))
+  # Unused path slots keep index `num_nodes`, dropped by the scatters below.
+  # pyrefly: ignore[bad-index,bad-argument-type]
+  initial_state = _BackwardState(
+      step=jnp.zeros((), dtype=jnp.int32),
+      index=leaf_index,
+      leaf_value=tree.node_values[leaf_index],
+      child_value=tree.node_values[leaf_index],
+      path_parents=jnp.full([num_nodes], num_nodes, dtype=jnp.int32),
+      path_actions=jnp.zeros([num_nodes], dtype=jnp.int32),
+      path_node_values=jnp.zeros([num_nodes], dtype=tree.node_values.dtype),
+      path_node_visits=jnp.zeros([num_nodes], dtype=tree.node_visits.dtype),
+      path_children_values=jnp.zeros(
+          [num_nodes], dtype=tree.children_values.dtype),
+      path_children_visits=jnp.zeros(
+          [num_nodes], dtype=tree.children_visits.dtype))
+  end_state = jax.lax.while_loop(cond_fun, body_fun, initial_state)
 
-    return tree, leaf_value, parent
-
-  leaf_index = jnp.asarray(leaf_index, dtype=jnp.int32)
-  # pyrefly: ignore[bad-index]
-  loop_state = (tree, tree.node_values[leaf_index], leaf_index)
-  tree, _, _ = jax.lax.while_loop(cond_fun, body_fun, loop_state)
-
-  return tree
+  parents = end_state.path_parents
+  actions = end_state.path_actions
+  # pyrefly: ignore[missing-attribute]
+  return tree.replace(
+      node_values=tree.node_values.at[parents].set(
+          end_state.path_node_values, mode="drop"),
+      node_visits=tree.node_visits.at[parents].set(
+          end_state.path_node_visits, mode="drop"),
+      children_values=tree.children_values.at[parents, actions].set(
+          end_state.path_children_values, mode="drop"),
+      children_visits=tree.children_visits.at[parents, actions].set(
+          end_state.path_children_visits, mode="drop"))
 
 
 # Utility function to set the values of certain indices to prescribed values.
