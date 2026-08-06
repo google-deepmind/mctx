@@ -136,8 +136,10 @@ def main(_):
     # Printing the obtained increase of the policy value.
     # The obtained increase should be non-negative.
     action_value_improvement = (
+        # pyrefly: ignore[unsupported-operation]
         output.selected_action_value - output.prior_policy_action_value)
     weights_value_improvement = (
+        # pyrefly: ignore[unsupported-operation]
         output.action_weights_policy_value - output.prior_policy_value)
     print("action value improvement:         %.3f (min=%.3f)" %
           (action_value_improvement.mean(), action_value_improvement.min()))
