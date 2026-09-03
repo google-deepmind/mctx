@@ -16,6 +16,7 @@
 # pylint: disable=use-dict-literal
 import functools
 import json
+import os
 
 from absl import logging
 from absl.testing import absltest
@@ -153,19 +154,14 @@ class TreeTest(parameterized.TestCase):
 
   # Make sure to adjust the `shard_count` parameter in the build file to match
   # the number of parameter configurations passed to test_tree.
-  # pylint: disable=line-too-long
   @parameterized.named_parameters(
-      ("muzero_norescale",
-       "../mctx/_src/tests/test_data/muzero_tree.json"),
-      ("muzero_qtransform",
-       "../mctx/_src/tests/test_data/muzero_qtransform_tree.json"),
-      ("gumbel_muzero_norescale",
-       "../mctx/_src/tests/test_data/gumbel_muzero_tree.json"),
-      ("gumbel_muzero_reward",
-       "../mctx/_src/tests/test_data/gumbel_muzero_reward_tree.json"))
-  # pylint: enable=line-too-long
+      ("muzero_norescale", "muzero_tree.json"),
+      ("muzero_qtransform", "muzero_qtransform_tree.json"),
+      ("gumbel_muzero_norescale", "gumbel_muzero_tree.json"),
+      ("gumbel_muzero_reward", "gumbel_muzero_reward_tree.json"))
   def test_tree(self, tree_data_path):
-    with open(tree_data_path, "rb") as fd:
+    test_data_dir = os.path.join(os.path.dirname(__file__), "test_data")
+    with open(os.path.join(test_data_dir, tree_data_path), "rb") as fd:
       tree = json.load(fd)
     reproduced = self._reproduce_tree(tree)
     chex.assert_trees_all_close(tree["tree"], reproduced, atol=1e-3)
