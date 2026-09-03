@@ -51,7 +51,6 @@ def _prepare_root(batch_size, num_actions):
 def _produce_prediction_output(rng_key, num_actions):
   """Producing the model output as in the stored expected trees."""
   policy_rng, value_rng, reward_rng = jax.random.split(rng_key, 3)
-  policy_rng, value_rng, reward_rng = jax.random.split(rng_key, 3)
   del rng_key
   # Producing value from [-1, +1).
   value = jax.random.uniform(value_rng, shape=(), minval=-1.0, maxval=1.0)
