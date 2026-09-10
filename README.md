@@ -106,6 +106,57 @@ action can be passed to the environment. To improve the policy, the
 `policy_output.action_weights` contain targets usable to train the policy
 probabilities.
 
+### Early stopping
+
+The search functions accept a `loop_fn` with the same interface as
+`jax.lax.fori_loop`. This can be replaced by a `jax.lax.while_loop` when the
+simulation budget should stop early. For example, the helper below stops once
+all batch elements have gone more than `patience` simulations without improving
+the best observed transition reward:
+
+```python
+import jax
+import jax.numpy as jnp
+import mctx
+
+
+def make_early_stopping_loop_fn(patience):
+  def loop_fn(lower, upper, body_fun, init_val):
+    _, tree = init_val
+    batch_size = tree.node_visits.shape[0]
+    best_reward = jnp.full((batch_size,), -jnp.inf, tree.node_values.dtype)
+    best_step = jnp.full((batch_size,), lower, dtype=jnp.int32)
+
+    def cond_fn(state):
+      step, _, _, last_improvement = state
+      still_improving = jnp.any(step - last_improvement <= patience)
+      return (step < upper) & still_improving
+
+    def body_fn(state):
+      step, loop_state, best_reward, best_step = state
+      loop_state = body_fun(step, loop_state)
+      _, tree = loop_state
+      visited = tree.children_index != mctx.Tree.UNVISITED
+      current_best = jnp.max(
+          jnp.where(visited, tree.children_rewards, -jnp.inf), axis=(1, 2)
+      )
+      improved = current_best > best_reward
+      best_reward = jnp.maximum(best_reward, current_best)
+      best_step = jnp.where(improved, step + 1, best_step)
+      return step + 1, loop_state, best_reward, best_step
+
+    initial_state = (lower, init_val, best_reward, best_step)
+    _, final_val, _, _ = jax.lax.while_loop(cond_fn, body_fn, initial_state)
+    return final_val
+
+  return loop_fn
+```
+
+Pass the result as the policy's `loop_fn`, for example
+`loop_fn=make_early_stopping_loop_fn(patience=10)`. Other stopping criteria can
+be implemented in the same way by inspecting the search tree carried in the
+loop state. The configured `num_simulations` remains the hard upper bound.
+
 We recommend to use the `gumbel_muzero_policy`.
 [Gumbel MuZero](https://openreview.net/forum?id=bERaNdoegnO) guarantees a policy
 improvement if the action values are correctly evaluated. The policy improvement
