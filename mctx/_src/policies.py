@@ -311,7 +311,7 @@ def stochastic_muzero_policy(
       params, rng_key, dummy_action, root.embedding)
   num_chance_outcomes = dummy_output.chance_logits.shape[-1]
 
-  root = root.replace(
+  root = root.replace(  # pyrefly: ignore[missing-attribute]
       # pad action logits with num_chance_outcomes so dim is A + C
       prior_logits=jnp.concatenate([
           root.prior_logits,
