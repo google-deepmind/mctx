@@ -92,8 +92,8 @@ def muzero_policy(
   # Running the search.
   interior_action_selection_fn = functools.partial(
       action_selection.muzero_action_selection,
-      pb_c_base=pb_c_base,
-      pb_c_init=pb_c_init,
+      pb_c_base=pb_c_base,  # pyrefly: ignore[bad-argument-type]
+      pb_c_init=pb_c_init,  # pyrefly: ignore[bad-argument-type]
       qtransform=qtransform)
   root_action_selection_fn = functools.partial(
       interior_action_selection_fn,
@@ -215,7 +215,7 @@ def gumbel_muzero_policy(
   considered_visit = jnp.max(summary.visit_counts, axis=-1, keepdims=True)
   # The completed_qvalues include imputed values for unvisited actions.
   completed_qvalues = jax.vmap(qtransform, in_axes=[0, None])(  # pytype: disable=wrong-arg-types  # numpy-scalars  # pylint: disable=line-too-long
-      search_tree, search_tree.ROOT_INDEX)
+      search_tree, search_tree.ROOT_INDEX)  # pyrefly: ignore[bad-argument-type]
   to_argmax = seq_halving.score_considered(
       considered_visit, gumbel, root.prior_logits, completed_qvalues,
       summary.visit_counts)
@@ -311,7 +311,7 @@ def stochastic_muzero_policy(
       params, rng_key, dummy_action, root.embedding)
   num_chance_outcomes = dummy_output.chance_logits.shape[-1]
 
-  root = root.replace(
+  root = root.replace(  # pyrefly: ignore[missing-attribute]
       # pad action logits with num_chance_outcomes so dim is A + C
       prior_logits=jnp.concatenate([
           root.prior_logits,
@@ -338,15 +338,17 @@ def stochastic_muzero_policy(
 
   interior_decision_node_selection_fn = functools.partial(
       action_selection.muzero_action_selection,
-      pb_c_base=pb_c_base,
-      pb_c_init=pb_c_init,
+      pb_c_base=pb_c_base,  # pyrefly: ignore[bad-argument-type]
+      pb_c_init=pb_c_init,  # pyrefly: ignore[bad-argument-type]
       qtransform=qtransform)
 
   interior_action_selection_fn = _make_stochastic_action_selection_fn(
       interior_decision_node_selection_fn, num_actions)
 
   root_action_selection_fn = functools.partial(
-      interior_action_selection_fn, depth=0)
+      interior_action_selection_fn,
+      depth=0,  # pyrefly: ignore[unexpected-keyword]
+  )
 
   search_tree = search.search(
       params=params,

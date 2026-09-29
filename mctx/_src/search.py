@@ -186,7 +186,7 @@ def simulate(
 
   # Returning a node with a selected action.
   # The action can be already visited, if the max_depth is reached.
-  return end_state.node_index, end_state.action
+  return end_state.node_index, end_state.action  # pyrefly: ignore[bad-return]
 
 
 def expand(
