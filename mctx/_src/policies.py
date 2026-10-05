@@ -115,6 +115,7 @@ def muzero_policy(
   action_weights = summary.visit_probs
   action_logits = _apply_temperature(
       _get_logits_from_probs(action_weights), temperature)
+  action_logits = _mask_invalid_actions(action_logits, invalid_actions)
   action = jax.random.categorical(rng_key, action_logits)
   return base.PolicyOutput(
       action=action,
@@ -368,6 +369,7 @@ def stochastic_muzero_policy(
   action_weights = summary.visit_probs
   action_logits = _apply_temperature(
       _get_logits_from_probs(action_weights), temperature)
+  action_logits = _mask_invalid_actions(action_logits, invalid_actions)
   action = jax.random.categorical(rng_key, action_logits)
   return base.PolicyOutput(
       action=action, action_weights=action_weights, search_tree=search_tree)
