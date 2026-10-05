@@ -308,6 +308,58 @@ class PoliciesTest(absltest.TestCase):
         [[6, 2, 2, 7]])
     np.testing.assert_array_equal(expected_visit_counts, summary.visit_counts)
 
+  def test_policies_without_simulations(self):
+    """With no simulations, the policies act on the prior alone."""
+    root = mctx.RootFnOutput(
+        prior_logits=jnp.array([
+            [0.0, -1.0, 2.0, 3.0],
+            [1.0, 5.0, 0.0, 2.0],
+        ]),
+        value=jnp.array([-5.0, 1.0]),
+        # Stochastic MuZero infers the batch size from the embedding.
+        embedding=jnp.zeros([2, 4]),
+    )
+    invalid_actions = jnp.array([
+        [0.0, 0.0, 0.0, 1.0],
+        [0.0, 1.0, 0.0, 0.0],
+    ])
+    rewards = jnp.zeros_like(root.prior_logits)
+    recurrent_fn = _make_bandit_recurrent_fn(rewards)
+    decision_recurrent_fn, chance_recurrent_fn = (
+        _make_bandit_decision_and_chance_fns(rewards, num_chance_outcomes=2))
+    kwargs = dict(
+        params=(),
+        rng_key=jax.random.PRNGKey(0),
+        root=root,
+        num_simulations=0,
+        invalid_actions=invalid_actions)
+    muzero_kwargs = dict(kwargs, dirichlet_fraction=0.0, temperature=0.0)
+    policy_outputs = {
+        "muzero_policy": mctx.muzero_policy(
+            recurrent_fn=recurrent_fn, **muzero_kwargs),
+        "gumbel_muzero_policy": mctx.gumbel_muzero_policy(
+            recurrent_fn=recurrent_fn, gumbel_scale=0.0, **kwargs),
+        "stochastic_muzero_policy": mctx.stochastic_muzero_policy(
+            decision_recurrent_fn=decision_recurrent_fn,
+            chance_recurrent_fn=chance_recurrent_fn,
+            **muzero_kwargs),
+    }
+
+    # The valid actions with the highest prior logits.
+    expected_action = jnp.array([2, 3], dtype=jnp.int32)
+    # The prior restricted to the valid actions.
+    expected_action_weights = jax.nn.softmax(
+        policies._mask_invalid_actions(root.prior_logits, invalid_actions))
+    for name, policy_output in policy_outputs.items():
+      with self.subTest(policy=name):
+        np.testing.assert_array_equal(expected_action, policy_output.action)
+        np.testing.assert_allclose(expected_action_weights,
+                                   policy_output.action_weights,
+                                   atol=1e-6)
+        # No action was visited.
+        summary = policy_output.search_tree.summary()
+        np.testing.assert_array_equal(jnp.zeros([2, 4]), summary.visit_counts)
+
   def test_stochastic_muzero_policy(self):
     """Tests that SMZ is equivalent to MZ with a dummy chance function."""
     root = mctx.RootFnOutput(

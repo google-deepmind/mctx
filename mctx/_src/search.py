@@ -109,8 +109,11 @@ def search(
   tree = instantiate_tree_from_root(root, num_simulations,
                                     root_invalid_actions=invalid_actions,
                                     extra_data=extra_data)
-  _, tree = loop_fn(
-      0, num_simulations, body_fun, (rng_key, tree))
+  # Tracing `body_fun` requires a simulation (e.g., Gumbel MuZero indexes a
+  # table with one column per simulation).
+  if num_simulations > 0:
+    _, tree = loop_fn(
+        0, num_simulations, body_fun, (rng_key, tree))
 
   return tree
 

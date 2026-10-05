@@ -111,8 +111,7 @@ def muzero_policy(
       loop_fn=loop_fn)
 
   # Sampling the proposed action proportionally to the visit counts.
-  summary = search_tree.summary()
-  action_weights = summary.visit_probs
+  action_weights = _get_action_weights(search_tree)
   action_logits = _apply_temperature(
       _get_logits_from_probs(action_weights), temperature)
   action = jax.random.categorical(rng_key, action_logits)
@@ -364,13 +363,24 @@ def stochastic_muzero_policy(
 
   # Sampling the proposed action proportionally to the visit counts.
   search_tree = _mask_tree(search_tree, num_actions, 'decision')
-  summary = search_tree.summary()
-  action_weights = summary.visit_probs
+  action_weights = _get_action_weights(search_tree)
   action_logits = _apply_temperature(
       _get_logits_from_probs(action_weights), temperature)
   action = jax.random.categorical(rng_key, action_logits)
   return base.PolicyOutput(
       action=action, action_weights=action_weights, search_tree=search_tree)
+
+
+def _get_action_weights(tree: search.Tree) -> chex.Array:
+  """Returns the root visit probabilities, or the prior if there are no visits.
+
+  Unlike the uniform `visit_probs` of an unvisited root, the prior excludes
+  invalid actions.
+  """
+  if tree.num_simulations == 0:
+    # pyrefly: ignore[bad-index]
+    return jax.nn.softmax(tree.children_prior_logits[:, tree.ROOT_INDEX])
+  return tree.summary().visit_probs
 
 
 def _mask_invalid_actions(logits, invalid_actions):
