@@ -72,7 +72,7 @@ def convert_tree_to_graph(
     probs = jax.nn.softmax(tree.children_prior_logits[batch_index, node_i])  # pyrefly: ignore[bad-index]
     # pyrefly: ignore[unsupported-operation]
     return (f"{action_labels[a_i]}\n"
-            f"Q: {tree.qvalues(node_index)[batch_index, a_i]:.2f}\n"  # pytype: disable=unsupported-operands  # always-use-return-annotations
+            f"Q: {tree.qvalues(node_index)[batch_index, a_i]:.2f}\n"
             f"p: {probs[a_i]:.2f}\n")
 
   graph = pygraphviz.AGraph(directed=True)
@@ -179,11 +179,11 @@ def _make_batched_env_model(
     chex.assert_shape(action, [batch_size])
     chex.assert_shape(embedding, [batch_size])
     recurrent_fn_output = mctx.RecurrentFnOutput(
-        reward=rewards[embedding, action],  # pyrefly: ignore[bad-index]
-        discount=discounts[embedding, action],  # pyrefly: ignore[bad-index]
-        prior_logits=prior_logits[embedding],  # pyrefly: ignore[bad-index]
-        value=values[embedding])  # pyrefly: ignore[bad-index]
-    next_embedding = transition_matrix[embedding, action]  # pyrefly: ignore[bad-index]
+        reward=rewards[embedding, action],
+        discount=discounts[embedding, action],
+        prior_logits=prior_logits[embedding],
+        value=values[embedding])
+    next_embedding = transition_matrix[embedding, action]
     return recurrent_fn_output, next_embedding
 
   return root, recurrent_fn

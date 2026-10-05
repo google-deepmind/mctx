@@ -87,12 +87,10 @@ class Tree(Generic[T]):
 
   def qvalues(self, indices):
     """Compute q-values for any node indices in the tree."""
-    # pytype: disable=wrong-arg-types  # jnp-type
     if jnp.asarray(indices).shape:
       return jax.vmap(_unbatched_qvalues)(self, indices)
     else:
       return _unbatched_qvalues(self, indices)
-    # pytype: enable=wrong-arg-types
 
   def summary(self) -> SearchSummary:
     """Extract summary statistics for the root node."""
@@ -109,7 +107,7 @@ class Tree(Generic[T]):
     visit_probs = visit_counts / jnp.maximum(total_counts, 1)
     visit_probs = jnp.where(total_counts > 0, visit_probs, 1 / self.num_actions)
     # Return relevant stats.
-    return SearchSummary(  # pytype: disable=wrong-arg-types  # numpy-scalars
+    return SearchSummary(
         visit_counts=visit_counts,
         visit_probs=visit_probs,
         value=value,
@@ -137,7 +135,7 @@ class SearchSummary:
 
 def _unbatched_qvalues(tree: Tree, index: int) -> int:
   chex.assert_rank(tree.children_discounts, 2)
-  return (  # pytype: disable=bad-return-type  # numpy-scalars
+  return (
       # pyrefly: ignore[bad-index, bad-return]
       tree.children_rewards[index]
       # pyrefly: ignore[bad-index]

@@ -115,7 +115,7 @@ def tree_to_pytree(tree: mctx.Tree, batch_i: int = 0):
       else:
         child = _create_bare_pynode(prior=prior, action=a_i)
       # pylint: disable=line-too-long
-      nodes[node_i]["child_stats"].append(child)  # pytype: disable=attribute-error
+      nodes[node_i]["child_stats"].append(child)
       # pylint: enable=line-too-long
   return nodes[0]
 
