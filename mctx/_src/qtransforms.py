@@ -44,11 +44,15 @@ def qtransform_by_min_max(
   """
   chex.assert_shape(node_index, ())
   qvalues = tree.qvalues(node_index)
+  value_dtype = jnp.result_type(qvalues, min_value, max_value)
+  qvalues = qvalues.astype(jnp.promote_types(value_dtype, jnp.float32))
+  min_value = jnp.asarray(min_value, dtype=qvalues.dtype)
+  max_value = jnp.asarray(max_value, dtype=qvalues.dtype)
   visit_counts = tree.children_visits[node_index]  # pyrefly: ignore[bad-index]
   value_score = jnp.where(visit_counts > 0, qvalues, min_value)
   # pyrefly: ignore[unsupported-operation]
   value_score = (value_score - min_value) / ((max_value - min_value))
-  return value_score
+  return value_score.astype(value_dtype)
 
 
 def qtransform_by_parent_and_siblings(
@@ -70,6 +74,8 @@ def qtransform_by_parent_and_siblings(
   """
   chex.assert_shape(node_index, ())
   qvalues = tree.qvalues(node_index)
+  value_dtype = jnp.result_type(qvalues, epsilon)
+  qvalues = qvalues.astype(jnp.promote_types(value_dtype, jnp.float32))
   visit_counts = tree.children_visits[node_index]  # pyrefly: ignore[bad-index]
   chex.assert_rank([qvalues, visit_counts, node_index], [1, 1, 0])
   node_value = tree.node_values[node_index]  # pyrefly: ignore[bad-index]
@@ -82,7 +88,7 @@ def qtransform_by_parent_and_siblings(
   normalized = (completed_by_min - min_value) / (
       jnp.maximum(max_value - min_value, epsilon))
   chex.assert_equal_shape([normalized, qvalues])
-  return normalized
+  return normalized.astype(value_dtype)
 
 
 def qtransform_completed_by_mix_value(
@@ -147,9 +153,12 @@ def qtransform_completed_by_mix_value(
 
 def _rescale_qvalues(qvalues, epsilon):
   """Rescales the given completed Q-values to be from the [0, 1] interval."""
+  value_dtype = jnp.result_type(qvalues, epsilon)
+  qvalues = qvalues.astype(jnp.promote_types(value_dtype, jnp.float32))
   min_value = jnp.min(qvalues, axis=-1, keepdims=True)
   max_value = jnp.max(qvalues, axis=-1, keepdims=True)
-  return (qvalues - min_value) / jnp.maximum(max_value - min_value, epsilon)
+  normalized = (qvalues - min_value) / jnp.maximum(max_value - min_value, epsilon)
+  return normalized.astype(value_dtype)
 
 
 def _complete_qvalues(qvalues, *, visit_counts, value):
