@@ -187,8 +187,9 @@ def _compute_mixed_value(raw_value, qvalues, visit_counts, prior_probs):
   # Summing the probabilities of the visited actions.
   sum_probs = jnp.sum(jnp.where(visit_counts > 0, prior_probs, 0.0),
                       axis=-1)
+  # Normalize first: multiplying tiny priors by Q-values can underflow.
   weighted_q = jnp.sum(jnp.where(
       visit_counts > 0,
-      prior_probs * qvalues / jnp.where(visit_counts > 0, sum_probs, 1.0),
+      (prior_probs / jnp.where(visit_counts > 0, sum_probs, 1.0)) * qvalues,
       0.0), axis=-1)
   return (raw_value + sum_visit_counts * weighted_q) / (sum_visit_counts + 1)
