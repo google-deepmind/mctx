@@ -270,8 +270,12 @@ def backward(
     action = tree.action_from_parent[index]
     reward = tree.children_rewards[parent, action]
     leaf_value = reward + tree.children_discounts[parent, action] * leaf_value
+    # Accumulate in at least float32 before returning to the tree's dtype.
+    value_dtype = jnp.promote_types(tree.node_values.dtype, jnp.float32)
     parent_value = (
-        tree.node_values[parent] * count + leaf_value) / (count + 1.0)
+        tree.node_values[parent].astype(value_dtype) * count
+        + leaf_value.astype(value_dtype)) / (count.astype(value_dtype) + 1.0)
+    parent_value = parent_value.astype(tree.node_values.dtype)
     children_values = tree.node_values[index]
     children_counts = tree.children_visits[parent, action] + 1
 
