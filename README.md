@@ -51,6 +51,31 @@ algorithms in Python. The search methods provided by Mctx are
 heavily configurable to allow researchers to explore a variety of ideas in
 this space, and contribute to the next generation of search based agents.
 
+## Optional bounded-scan tree traversal
+
+Mctx normally uses JAX while-loops to traverse and backpropagate through a
+search tree. On some accelerators, dynamic loop iterations can incur overhead.
+An **experimental, opt-in** alternative uses a fixed-length JAX scan with
+conditional execution of each traversal step. It may trade larger compiled
+programs for fewer dynamic loop launches.
+
+Set the environment variables **before JAX traces or compiles your policy**:
+
+~~~bash
+MCTX_USE_BOUNDED_SCAN=true MCTX_BOUNDED_SCAN_UNROLL=4 python your_script.py
+~~~
+
+The default remains unchanged: without MCTX_USE_BOUNDED_SCAN, traversal
+uses jax.lax.while_loop. A positive MCTX_BOUNDED_SCAN_UNROLL controls
+static scan unrolling (default: 4, minimum: 1). Bounds come from the
+allocated search tree capacity, so both the forward simulation and
+backpropagation loops can stop without running extra tree updates.
+
+Unrolling may increase XLA compilation time and memory consumption.
+Profile both modes with representative depth, batch size, and hardware
+before choosing one for production. Changing environment variables after
+a function has been compiled does not change that compiled function.
+
 ## Search in Reinforcement Learning
 
 In Reinforcement Learning the *agent* must learn to interact with the
