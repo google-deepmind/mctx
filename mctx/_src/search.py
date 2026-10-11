@@ -14,6 +14,7 @@
 # ==============================================================================
 """A JAX implementation of batched MCTS."""
 import functools
+import os
 from typing import Any, NamedTuple, Optional, Tuple, TypeVar
 
 import chex
@@ -26,6 +27,35 @@ from mctx._src import tree as tree_lib
 
 Tree = tree_lib.Tree
 T = TypeVar("T")
+
+
+def _tree_traversal_loop(cond_fun, body_fun, initial_state, max_iterations):
+  """Run tree traversal with an optional, static-length JAX scan.
+
+  The default while_loop implementation preserves existing execution and
+  compilation behavior. Set MCTX_USE_BOUNDED_SCAN=true to opt into an
+  unrolled scan with a fixed bound equal to the allocated tree capacity.
+  A conditional prevents executing the body after the traversal finishes.
+  """
+  if os.environ.get("MCTX_USE_BOUNDED_SCAN", "false").lower() not in (
+      "1", "true", "yes"
+  ):
+    return jax.lax.while_loop(cond_fun, body_fun, initial_state)
+
+  unroll = int(os.environ.get("MCTX_BOUNDED_SCAN_UNROLL", "4"))
+  if unroll < 1:
+    raise ValueError("MCTX_BOUNDED_SCAN_UNROLL must be at least 1")
+
+  def scan_step(state, _):
+    state = jax.lax.cond(
+        cond_fun(state), body_fun, lambda current: current, state
+    )
+    return state, None
+
+  final_state, _ = jax.lax.scan(
+      scan_step, initial_state, xs=None, length=max_iterations,
+      unroll=unroll)
+  return final_state
 
 
 def search(
@@ -180,7 +210,10 @@ def simulate(
       next_node_index=node_index,  # pyrefly: ignore[bad-argument-type]
       depth=depth,  # pyrefly: ignore[bad-argument-type]
       is_continuing=jnp.array(True))  # pyrefly: ignore[bad-argument-type]
-  end_state = jax.lax.while_loop(cond_fun, body_fun, initial_state)
+  # At most one different node per iteration can be traversed, so the
+  # allocated number of nodes is a safe static bound.
+  end_state = _tree_traversal_loop(
+      cond_fun, body_fun, initial_state, tree.node_values.shape[0])
 
   # Returning a node with a selected action.
   # The action can be already visited, if the max_depth is reached.
@@ -288,7 +321,10 @@ def backward(
   leaf_index = jnp.asarray(leaf_index, dtype=jnp.int32)
   # pyrefly: ignore[bad-index]
   loop_state = (tree, tree.node_values[leaf_index], leaf_index)
-  tree, _, _ = jax.lax.while_loop(cond_fun, body_fun, loop_state)
+  # No backward traversal can contain more parent edges than allocated
+  # non-root tree nodes.
+  tree, _, _ = _tree_traversal_loop(
+      cond_fun, body_fun, loop_state, tree.node_values.shape[0] - 1)
 
   return tree
 
