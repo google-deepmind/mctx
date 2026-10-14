@@ -172,7 +172,10 @@ def simulate(
         is_continuing=is_continuing)  # pyrefly: ignore[bad-argument-type]
 
   node_index = jnp.array(Tree.ROOT_INDEX, dtype=jnp.int32)
-  depth = jnp.zeros((), dtype=tree.children_prior_logits.dtype)
+  # An integer counter: with bfloat16 prior logits the float counter stops
+  # counting at 256 (256 + 1 rounds to 256), so `max_depth` above that
+  # would never be reached.
+  depth = jnp.zeros((), dtype=jnp.int32)
   initial_state = _SimulationState(
       rng_key=rng_key,
       node_index=tree.NO_PARENT,
