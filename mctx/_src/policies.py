@@ -179,10 +179,15 @@ def gumbel_muzero_policy(
   root = root.replace(  # pyrefly: ignore[missing-attribute]
       prior_logits=_mask_invalid_actions(root.prior_logits, invalid_actions))
 
-  # Generating Gumbel.
+  # Generating Gumbel. A static zero scale skips the sampling; the key is
+  # consumed either way, so the other keys do not change.
   rng_key, gumbel_rng = jax.random.split(rng_key)
-  gumbel = gumbel_scale * jax.random.gumbel(
-      gumbel_rng, shape=root.prior_logits.shape, dtype=root.prior_logits.dtype)
+  if _is_static_zero(gumbel_scale):
+    gumbel = jnp.zeros_like(root.prior_logits)
+  else:
+    gumbel = gumbel_scale * jax.random.gumbel(
+        gumbel_rng, shape=root.prior_logits.shape,
+        dtype=root.prior_logits.dtype)
 
   # Searching.
   extra_data = action_selection.GumbelMuZeroExtraData(root_gumbel=gumbel)
@@ -391,11 +396,24 @@ def _get_logits_from_probs(probs):
   return jnp.log(jnp.maximum(probs, tiny))
 
 
+def _is_static_zero(value) -> bool:
+  """Whether `value` is a Python number equal to zero (not a traced array)."""
+  return isinstance(value, (int, float)) and value == 0
+
+
 def _add_dirichlet_noise(rng_key, probs, *, dirichlet_alpha,
                          dirichlet_fraction):
   """Mixes the probs with Dirichlet noise."""
   chex.assert_rank(probs, 2)
   chex.assert_type([dirichlet_alpha, dirichlet_fraction], float)
+  if _is_static_zero(dirichlet_fraction):
+    # Nothing to mix: without this the Dirichlet sample (gamma sampling,
+    # several while loops) is still computed and multiplied by zero. The
+    # mixing promoted the probs to the sample's dtype (the default float
+    # type): keep that promotion, so bfloat16 or float16 probs give the same
+    # float32 result as before.
+    noise_dtype = jax.dtypes.canonicalize_dtype(jnp.float_)
+    return probs.astype(jnp.promote_types(probs.dtype, noise_dtype))
 
   batch_size, num_actions = probs.shape
   noise = jax.random.dirichlet(
