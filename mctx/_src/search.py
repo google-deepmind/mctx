@@ -244,50 +244,65 @@ def expand(
           tree.action_from_parent, action, next_node_index))
 
 
-@jax.vmap
 def backward(
     tree: Tree[T],
-    leaf_index: chex.Numeric) -> Tree[T]:
+    leaf_index: chex.Array) -> Tree[T]:
   """Goes up and updates the tree until all nodes reached the root.
 
+  The whole batch is processed by one loop with a scalar predicate (any row
+  still below the root). Vmapping an unbatched backward would make the loop
+  predicate batched, and JAX would then select between the old and the new
+  loop state for every array of the tree at each iteration. Here the rows that
+  have reached the root rewrite their current values, and each iteration only
+  scatters the entries on the paths.
+
   Args:
-    tree: the MCTS tree state to update, without the batch size.
-    leaf_index: the node index from which to do the backward.
+    tree: the MCTS tree state to update, with a batch dimension.
+    leaf_index: the node indices from which to do the backward. Shape `[B]`.
 
   Returns:
     Updated MCTS tree state.
   """
+  batch_range = jnp.arange(tree_lib.infer_batch_size(tree))
 
   def cond_fun(loop_state):
     _, _, index = loop_state
-    return index != Tree.ROOT_INDEX
+    return jnp.any(index != Tree.ROOT_INDEX)
 
   def body_fun(loop_state):
     # Here we update the value of our parent, so we start by reversing.
     tree, leaf_value, index = loop_state
-    parent = tree.parents[index]
-    count = tree.node_visits[parent]
-    action = tree.action_from_parent[index]
-    reward = tree.children_rewards[parent, action]
-    leaf_value = reward + tree.children_discounts[parent, action] * leaf_value
-    parent_value = (
-        tree.node_values[parent] * count + leaf_value) / (count + 1.0)
-    children_values = tree.node_values[index]
-    children_counts = tree.children_visits[parent, action] + 1
+    active = index != Tree.ROOT_INDEX
+    # Rows already at the root keep pointing at the root and leave the tree
+    # unchanged.
+    parent = jnp.where(active, tree.parents[batch_range, index],
+                       Tree.ROOT_INDEX)
+    action = jnp.where(active, tree.action_from_parent[batch_range, index], 0)
+    count = tree.node_visits[batch_range, parent]
+    reward = tree.children_rewards[batch_range, parent, action]
+    discount = tree.children_discounts[batch_range, parent, action]
+    new_leaf_value = reward + discount * leaf_value
+    node_value = tree.node_values[batch_range, parent]
+    parent_value = (node_value * count + new_leaf_value) / (count + 1.0)
+    children_values = tree.children_values[batch_range, parent, action]
+    children_counts = tree.children_visits[batch_range, parent, action]
 
     tree = tree.replace(
-        node_values=update(tree.node_values, parent_value, parent),
-        node_visits=update(tree.node_visits, count + 1, parent),
-        children_values=update(
-            tree.children_values, children_values, parent, action),
-        children_visits=update(
-            tree.children_visits, children_counts, parent, action))
+        node_values=tree.node_values.at[batch_range, parent].set(
+            jnp.where(active, parent_value, node_value)),
+        node_visits=tree.node_visits.at[batch_range, parent].set(
+            count + active),
+        children_values=tree.children_values.at[
+            batch_range, parent, action].set(
+                jnp.where(active, tree.node_values[batch_range, index],
+                          children_values)),
+        children_visits=tree.children_visits.at[
+            batch_range, parent, action].set(children_counts + active))
 
-    return tree, leaf_value, parent
+    return tree, jnp.where(active, new_leaf_value, leaf_value), parent
 
   leaf_index = jnp.asarray(leaf_index, dtype=jnp.int32)
-  # pyrefly: ignore[bad-index]
-  loop_state = (tree, tree.node_values[leaf_index], leaf_index)
+  loop_state = (tree, tree.node_values[batch_range, leaf_index], leaf_index)
   tree, _, _ = jax.lax.while_loop(cond_fun, body_fun, loop_state)
 
   return tree
