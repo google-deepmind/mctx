@@ -1,5 +1,9 @@
 # Mctx: MCTS-in-JAX
 
+<p align="center">
+  <b>English</b> · <a href="https://github.com/google-deepmind/mctx/blob/main/README.zh.md">简体中文</a>
+</p>
+
 Mctx is a library with a [JAX](https://github.com/jax-ml/jax)-native
 implementation of Monte Carlo tree search (MCTS) algorithms such as
 [AlphaZero](https://deepmind.com/blog/article/alphazero-shedding-new-light-grand-games-chess-shogi-and-go),
