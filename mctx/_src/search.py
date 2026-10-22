@@ -95,13 +95,17 @@ def search(
     # A node first expanded on simulation `i`, will have node index `i`.
     # Node 0 corresponds to the root node.
     next_node_index = tree.children_index[batch_range, parent_index, action]
+    is_revisit = next_node_index != Tree.UNVISITED
     next_node_index = jnp.where(next_node_index == Tree.UNVISITED,
                                 sim + 1, next_node_index)
+    previous = _leaf_statistics(tree, parent_index, action, next_node_index)
     tree = expand(
         # pyrefly: ignore[bad-argument-type]
         params, expand_key, tree, recurrent_fn, parent_index,
         action, next_node_index)
     tree = backward(tree, next_node_index)
+    tree = _average_revisited_leaf(
+        tree, previous, is_revisit, parent_index, action, next_node_index)
     loop_state = rng_key, tree
     return loop_state
 
@@ -113,6 +117,65 @@ def search(
       0, num_simulations, body_fun, (rng_key, tree))
 
   return tree
+
+
+class _LeafStatistics(NamedTuple):
+  """Statistics of an expanded edge and its child node, before an update."""
+  reward: chex.Array
+  discount: chex.Array
+  value: chex.Array
+  num_samples: chex.Array
+
+
+def _leaf_statistics(
+    tree: Tree,
+    parent_index: chex.Array,
+    action: chex.Array,
+    leaf_index: chex.Array) -> _LeafStatistics:
+  batch_range = jnp.arange(tree_lib.infer_batch_size(tree))
+  return _LeafStatistics(
+      reward=tree.children_rewards[batch_range, parent_index, action],
+      discount=tree.children_discounts[batch_range, parent_index, action],
+      value=tree.node_values[batch_range, leaf_index],
+      num_samples=tree.children_visits[batch_range, parent_index, action])
+
+
+def _average_revisited_leaf(
+    tree: Tree[T],
+    previous: _LeafStatistics,
+    is_revisit: chex.Array,
+    parent_index: chex.Array,
+    action: chex.Array,
+    leaf_index: chex.Array) -> Tree[T]:
+  """Keeps sample means for a leaf that `max_depth` made us expand again.
+
+  At the depth cutoff, `simulate` can return an edge whose child already
+  exists, and `expand` evaluates it again. With a stochastic `recurrent_fn`,
+  each evaluation is a new sample of the reward, discount and value, but
+  `expand` overwrites the previous one. `backward` should use that new sample,
+  so the ancestors' values stay unbiased averages of sampled returns. The
+  edge's own statistics, read by `Tree.qvalues` and action selection, should
+  instead average every sample taken so far, like its visit count does.
+  """
+  batch_range = jnp.arange(tree_lib.infer_batch_size(tree))
+  latest = _leaf_statistics(tree, parent_index, action, leaf_index)
+  num_samples = previous.num_samples + 1
+
+  def average(previous_mean, sample):
+    mean = previous_mean + (sample - previous_mean) / num_samples
+    return jnp.where(is_revisit, mean, sample)
+
+  value = average(previous.value, latest.value)
+  return tree.replace(  # pyrefly: ignore[missing-attribute]
+      node_values=batch_update(tree.node_values, value, leaf_index),
+      children_values=batch_update(
+          tree.children_values, value, parent_index, action),
+      children_rewards=batch_update(
+          tree.children_rewards,
+          average(previous.reward, latest.reward), parent_index, action),
+      children_discounts=batch_update(
+          tree.children_discounts,
+          average(previous.discount, latest.discount), parent_index, action))
 
 
 class _SimulationState(NamedTuple):

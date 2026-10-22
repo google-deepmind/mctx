@@ -308,6 +308,86 @@ class PoliciesTest(absltest.TestCase):
         [[6, 2, 2, 7]])
     np.testing.assert_array_equal(expected_visit_counts, summary.visit_counts)
 
+  def test_depth_limited_search_averages_stochastic_samples(self):
+    """At `max_depth`, every expansion of an edge draws a new sample.
+
+    The edge's Q-value must be the mean of those samples, consistent with its
+    visit count and with the root value that `backward` builds from them.
+    """
+    num_simulations = 32
+    root = mctx.RootFnOutput(
+        prior_logits=jnp.zeros((1, 2)),
+        value=jnp.zeros((1,)),
+        embedding=(),
+    )
+
+    def recurrent_fn(params, rng_key, action, embedding):
+      del params, action
+      reward_key, value_key = jax.random.split(rng_key)
+      return mctx.RecurrentFnOutput(
+          reward=jax.random.uniform(reward_key, (1,)),
+          discount=jnp.full((1,), 0.5),
+          prior_logits=jnp.zeros((1, 2)),
+          value=jax.random.uniform(value_key, (1,)),
+      ), embedding
+
+    policy_output = mctx.gumbel_muzero_policy(
+        params=(),
+        rng_key=jax.random.PRNGKey(0),
+        root=root,
+        recurrent_fn=recurrent_fn,
+        num_simulations=num_simulations,
+        invalid_actions=jnp.array([[0.0, 1.0]]),
+        max_depth=1,
+    )
+    summary = policy_output.search_tree.summary()
+    np.testing.assert_array_equal([[num_simulations, 0]], summary.visit_counts)
+    # The root value averages its initial value of 0 and each sampled return.
+    mean_return = summary.value[0] * (num_simulations + 1) / num_simulations
+    np.testing.assert_allclose(mean_return, summary.qvalues[0, 0], rtol=1e-5)
+
+  def test_depth_limited_search_selects_better_stochastic_arm(self):
+    # Arm 0 pays 0.25 or 1.0 (mean 0.625); arm 1 always pays 0.5. This is the
+    # stochastic bandit setting recommended in
+    # https://github.com/google-deepmind/mctx/issues/33.
+    num_simulations = 64
+    root = mctx.RootFnOutput(
+        prior_logits=jnp.zeros((1, 2)),
+        value=jnp.zeros((1,)),
+        embedding=(),
+    )
+
+    def recurrent_fn(params, rng_key, action, embedding):
+      del params
+      reward = jnp.where(
+          action == 0,
+          0.25 + 0.75 * jax.random.bernoulli(rng_key, 0.5, action.shape),
+          0.5)
+      return mctx.RecurrentFnOutput(
+          reward=reward,
+          discount=jnp.zeros_like(reward),
+          prior_logits=jnp.zeros((1, 2)),
+          value=jnp.zeros_like(reward),
+      ), embedding
+
+    policy_output = mctx.gumbel_muzero_policy(
+        params=(),
+        rng_key=jax.random.PRNGKey(0),
+        root=root,
+        recurrent_fn=recurrent_fn,
+        num_simulations=num_simulations,
+        max_depth=1,
+        gumbel_scale=0.0,
+    )
+    summary = policy_output.search_tree.summary()
+    visits = summary.visit_counts[0]
+    arm_0_mean = (
+        summary.value[0] * (num_simulations + 1) - 0.5 * visits[1]) / visits[0]
+    np.testing.assert_allclose(
+        [arm_0_mean, 0.5], summary.qvalues[0], rtol=1e-5)
+    self.assertGreater(arm_0_mean, 0.5)
+    np.testing.assert_array_equal([0], policy_output.action)
+
   def test_stochastic_muzero_policy(self):
     """Tests that SMZ is equivalent to MZ with a dummy chance function."""
     root = mctx.RootFnOutput(
